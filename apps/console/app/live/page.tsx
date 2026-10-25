@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { Handoff, Session } from "@nextmove/contracts";
 import { useApi } from "@nextmove/contracts/client";
+import { RealtimeBadge } from "@/components/realtime-badge";
 import { ApiState } from "@/components/state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,10 +42,7 @@ export default function LiveActivity() {
               <CardDescription>Customers who asked for a person</CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant={realtime === "live" ? "secondary" : "outline"} aria-live="polite">
-                <span className={`size-2 rounded-full ${realtime === "live" ? "bg-green-500" : "bg-muted-foreground"}`} aria-hidden />
-                {realtime === "live" ? "Realtime live" : realtime === "connecting" ? "Connecting…" : "Realtime offline · mock list only"}
-              </Badge>
+              <RealtimeBadge realtime={realtime} offline="mock list only" />
               {DEV && <Button variant="outline" size="sm" onClick={simulate}>Simulate customer handoff</Button>}
             </div>
           </CardHeader>
