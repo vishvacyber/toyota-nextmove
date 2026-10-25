@@ -134,6 +134,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/estimate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Walk-in estimate (no account). The engine prices each car, the loan and lease, and an optional trade-in. */
+        post: operations["estimate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/agents/advisor/ask": {
         parameters: {
             query?: never;
@@ -176,6 +193,55 @@ export interface paths {
         get: operations["listHandoffs"];
         put?: never;
         post: operations["createHandoff"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Voice calls, newest first. The call itself runs over the WebSocket /voice/{customer_id} (not expressible in OpenAPI, see docs/DECISIONS.md); every change is broadcast on Realtime channel `calls`, event `updated`, as a full Call. */
+        get: operations["listCalls"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/calls/{id}/takeover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["takeOverCall"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/calls/{id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["sendCallMessage"];
         delete?: never;
         options?: never;
         head?: never;
@@ -989,6 +1055,83 @@ export interface components {
             /** Format: date-time */
             deployed_at?: string;
         };
+        TradeInRequest: {
+            model: components["schemas"]["Model"];
+            year: number;
+            odometer_miles: number;
+            /** @description What is still owed on it (0 if paid off) */
+            payoff: number;
+        };
+        EstimateRequest: {
+            models: components["schemas"]["Model"][];
+            /** @default 0 */
+            down_payment: number;
+            /** @default 60 */
+            term_months: number;
+            credit_tier?: components["schemas"]["CreditTier"];
+            /** @default 12000 */
+            annual_miles: number;
+            trade_in?: components["schemas"]["TradeInRequest"];
+        };
+        TradeInValue: {
+            estimated_value: number;
+            payoff: number;
+            /** @description estimated_value − payoff (negative = owe more than it's worth) */
+            equity: number;
+            source: string;
+            as_of: string;
+        };
+        EstimateVehicle: {
+            vehicle: components["schemas"]["Vehicle"];
+            msrp: number;
+            /** @description Where the price came from, with its as-of date */
+            msrp_source: string;
+            apr: number;
+            loan_payment: number;
+            lease_payment: number;
+            lease_term_months: number;
+            residual: number;
+            true_cost: components["schemas"]["TrueCost"];
+            /** @description Down payment + loan payments + fuel */
+            five_year_cost: number;
+        };
+        Estimate: {
+            vehicles: components["schemas"]["EstimateVehicle"][];
+            trade_in?: components["schemas"]["TradeInValue"];
+            assumptions: string[];
+            /** Format: date-time */
+            generated_at: string;
+        };
+        /** @enum {string} */
+        CallRole: "customer" | "agent" | "employee" | "system";
+        /** @enum {string} */
+        CallStatus: "ai" | "human" | "ended";
+        CallLine: {
+            role: components["schemas"]["CallRole"];
+            text: string;
+            /** Format: date-time */
+            at: string;
+            guardian?: components["schemas"]["GuardianVerdict"];
+        };
+        Call: {
+            id: string;
+            customer_id: string;
+            surface: components["schemas"]["Surface"];
+            status: components["schemas"]["CallStatus"];
+            taken_by?: string;
+            /** Format: date-time */
+            started_at: string;
+            /** Format: date-time */
+            ended_at?: string;
+            lines: components["schemas"]["CallLine"][];
+            trace_id?: string;
+        };
+        Takeover: {
+            employee: string;
+        };
+        CallMessage: {
+            text: string;
+        };
     };
     responses: {
         /** @description The AI is busy or rate-limited and nothing checked is ready yet. Retry. */
@@ -1216,6 +1359,30 @@ export interface operations {
             };
         };
     };
+    estimate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EstimateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Estimate"];
+                };
+            };
+        };
+    };
     askAdvisor: {
         parameters: {
             query?: never;
@@ -1312,6 +1479,80 @@ export interface operations {
                     "application/json": components["schemas"]["Handoff"];
                 };
             };
+        };
+    };
+    listCalls: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"][];
+                };
+            };
+        };
+    };
+    takeOverCall: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Takeover"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"];
+                };
+            };
+            404: components["responses"]["NotFound"];
+        };
+    };
+    sendCallMessage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallMessage"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"];
+                };
+            };
+            404: components["responses"]["NotFound"];
         };
     };
     updateHandoff: {

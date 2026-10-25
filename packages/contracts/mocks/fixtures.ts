@@ -1,6 +1,6 @@
 // Synthetic mock data for Stage 0. The B1 engine replaces these numbers; until then they are hand-set to be plausible.
 import type {
-  AgentTrace, Alert, AuditEntry, Customer, DealPacket, Dealer, FairnessReport, Handoff, InspectionResult,
+  AgentTrace, Alert, AuditEntry, Call, components, Customer, DealPacket, Dealer, FairnessReport, Handoff, InspectionResult,
   KpiSnapshot, MarketQuote, Model, Offer, Opportunity, Recommendation, Scenario, Session, StudioAgent, TimingPlan, Vehicle,
 } from "../index";
 
@@ -349,3 +349,187 @@ export const inspectionFor = (customer_id: string): InspectionResult => ({
   ],
   total_estimated_charge: 400,
 });
+
+// Walk-in estimate per model ($2,000 down, 60 months, credit B), captured from the engine (POST /estimate).
+export const estimateVehicles: Record<Model, components["schemas"]["EstimateVehicle"]> = {
+  "Camry": {
+    "vehicle": {
+      "vin": "SYNNEWCAMRY",
+      "model": "Camry",
+      "year": 2027,
+      "trim": "SE Hybrid",
+      "powertrain": "hybrid",
+      "color": "Supersonic Red",
+      "odometer_miles": 12,
+      "mpg": 51.0
+    },
+    "msrp": 32200.0,
+    "msrp_source": "MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
+    "apr": 7.4,
+    "loan_payment": 616.71,
+    "lease_payment": 474.97,
+    "lease_term_months": 36,
+    "residual": 19320.0,
+    "true_cost": {
+      "payment": 616.71,
+      "fuel": 66.67,
+      "maintenance": 45.0,
+      "insurance": 145.0,
+      "total_monthly": 873.37,
+      "co2_kg_per_year": 2091.0
+    },
+    "five_year_cost": 54402.55
+  },
+  "RAV4": {
+    "vehicle": {
+      "vin": "SYNNEWRAV4",
+      "model": "RAV4",
+      "year": 2027,
+      "trim": "XLE Hybrid",
+      "powertrain": "hybrid",
+      "color": "Supersonic Red",
+      "odometer_miles": 12,
+      "mpg": 41.0
+    },
+    "msrp": 36800.0,
+    "msrp_source": "list price from the NextMove catalog (synthetic)",
+    "apr": 7.4,
+    "loan_payment": 708.66,
+    "lease_payment": 548.77,
+    "lease_term_months": 36,
+    "residual": 22080.0,
+    "true_cost": {
+      "payment": 708.66,
+      "fuel": 82.93,
+      "maintenance": 45.0,
+      "insurance": 150.0,
+      "total_monthly": 986.59,
+      "co2_kg_per_year": 2601.0
+    },
+    "five_year_cost": 61195.51
+  },
+  "Tacoma": {
+    "vehicle": {
+      "vin": "SYNNEWTACOMA",
+      "model": "Tacoma",
+      "year": 2027,
+      "trim": "TRD Sport i-FORCE MAX",
+      "powertrain": "hybrid",
+      "color": "Supersonic Red",
+      "odometer_miles": 12,
+      "mpg": 23.0
+    },
+    "msrp": 46500.0,
+    "msrp_source": "list price from the NextMove catalog (synthetic)",
+    "apr": 7.4,
+    "loan_payment": 902.57,
+    "lease_payment": 704.4,
+    "lease_term_months": 36,
+    "residual": 27900.0,
+    "true_cost": {
+      "payment": 902.57,
+      "fuel": 147.83,
+      "maintenance": 45.0,
+      "insurance": 165.0,
+      "total_monthly": 1260.4,
+      "co2_kg_per_year": 4637.0
+    },
+    "five_year_cost": 77623.96
+  },
+  "Highlander": {
+    "vehicle": {
+      "vin": "SYNNEWHIGHLANDER",
+      "model": "Highlander",
+      "year": 2027,
+      "trim": "XLE Hybrid",
+      "powertrain": "hybrid",
+      "color": "Supersonic Red",
+      "odometer_miles": 12,
+      "mpg": 35.0
+    },
+    "msrp": 47500.0,
+    "msrp_source": "list price from the NextMove catalog (synthetic)",
+    "apr": 7.4,
+    "loan_payment": 922.56,
+    "lease_payment": 720.45,
+    "lease_term_months": 36,
+    "residual": 28500.0,
+    "true_cost": {
+      "payment": 922.56,
+      "fuel": 97.14,
+      "maintenance": 45.0,
+      "insurance": 175.0,
+      "total_monthly": 1239.7,
+      "co2_kg_per_year": 3047.0
+    },
+    "five_year_cost": 76381.99
+  },
+  "Prius": {
+    "vehicle": {
+      "vin": "SYNNEWPRIUS",
+      "model": "Prius",
+      "year": 2027,
+      "trim": "XLE",
+      "powertrain": "hybrid",
+      "color": "Supersonic Red",
+      "odometer_miles": 12,
+      "mpg": 57.0
+    },
+    "msrp": 32200.0,
+    "msrp_source": "MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
+    "apr": 7.4,
+    "loan_payment": 616.71,
+    "lease_payment": 474.97,
+    "lease_term_months": 36,
+    "residual": 19320.0,
+    "true_cost": {
+      "payment": 616.71,
+      "fuel": 59.65,
+      "maintenance": 45.0,
+      "insurance": 140.0,
+      "total_monthly": 861.35,
+      "co2_kg_per_year": 1871.0
+    },
+    "five_year_cost": 53681.35
+  },
+  "bZ": {
+    "vehicle": {
+      "vin": "SYNNEWBZ",
+      "model": "bZ",
+      "year": 2027,
+      "trim": "XLE",
+      "powertrain": "ev",
+      "color": "Supersonic Red",
+      "odometer_miles": 12,
+      "mpg": 114.0
+    },
+    "msrp": 34980.0,
+    "msrp_source": "MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
+    "apr": 7.4,
+    "loan_payment": 672.28,
+    "lease_payment": 519.57,
+    "lease_term_months": 36,
+    "residual": 20988.0,
+    "true_cost": {
+      "payment": 672.28,
+      "fuel": 47.3,
+      "maintenance": 35.0,
+      "insurance": 160.0,
+      "total_monthly": 914.58,
+      "co2_kg_per_year": 1313.0
+    },
+    "five_year_cost": 56874.76
+  }
+};
+
+export const calls: Call[] = [{
+  id: "CALL-01", customer_id: "CUST-MARIA", surface: "kiosk", status: "ended", started_at: ago(25), ended_at: ago(22),
+  trace_id: "TR-0004",
+  lines: [
+    { role: "agent", text: "Hi, thanks for calling Toyota Financial Services. How can I help with your Toyota today?", at: ago(25),
+      guardian: { verdict: "pass", checks: [] } },
+    { role: "customer", text: "Should I buy my RAV4 at lease end or return it?", at: ago(24) },
+    { role: "agent", text: "Buying it out looks better for you than returning it, mainly because of the mileage charges you'd avoid.", at: ago(24),
+      guardian: { verdict: "pass", checks: [] } },
+  ],
+}];

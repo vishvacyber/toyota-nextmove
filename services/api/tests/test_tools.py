@@ -14,7 +14,7 @@ from tools import REGISTRY, ToolError, actions, call
 from tools.mcp_server import server
 
 SPEC_TOOLS = {"get_customer", "run_scenario", "check_eligibility", "get_market_value", "find_dealer", "get_recalls",
-              "book_appointment", "create_offer_draft", "handoff_to_human", "log_decision", "inspect_photos", "get_timing"}
+              "book_appointment", "create_offer_draft", "handoff_to_human", "log_decision", "inspect_photos", "get_timing", "estimate_payment"}
 
 
 def test_registry_has_the_12_spec_tools_with_schemas():

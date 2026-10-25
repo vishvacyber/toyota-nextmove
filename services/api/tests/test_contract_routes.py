@@ -20,5 +20,5 @@ def test_every_contract_operation_has_a_route():
     wanted = {(m.upper(), norm(p)) for p, ops in spec["paths"].items() for m in ops
               if m in ("get", "post", "put", "patch", "delete")}
     have = {(m, norm(r.path)) for r in app.routes if isinstance(r, APIRoute) for m in r.methods}
-    assert len(wanted) == 30   # update when the contract changes (it is frozen after Stage 0)
+    assert len(wanted) == 34   # update when the contract changes (it is frozen after Stage 0)
     assert not wanted - have, f"Contract operations with no API route: {sorted(wanted - have)}"

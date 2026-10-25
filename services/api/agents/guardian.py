@@ -100,7 +100,9 @@ def _check(name: Name, ok: bool, detail: str | None = None) -> Check:
     return Check(name=name, passed=ok, detail=None if ok else detail)
 
 
-def check(text: str, tool_outputs: list[tuple[str, object]], user_message: str = "") -> tuple[GuardianVerdict, list[Match]]:
+def check(text: str, tool_outputs: list[tuple[str, object]], user_message: str = "",
+          spoken: bool = False) -> tuple[GuardianVerdict, list[Match]]:
+    """spoken: a voice-call turn. The written estimate disclosure is on the call screen, so it isn't required in speech."""
     known = tool_numbers(tool_outputs)
     allowed = {v for v, _ in numbers(user_message)} | SMALL_COUNTS
     matches, unmatched = [], []
@@ -123,6 +125,8 @@ def check(text: str, tool_outputs: list[tuple[str, object]], user_message: str =
         _check(Name.prompt_injection, not INJECTION.search(user_message) and not LEAK.search(text),
                "Prompt injection in the request or instructions leaked in the answer"),
     ]
+    if spoken:
+        checks = [c for c in checks if c.name != Name.disclosures]
     failed = {c.name for c in checks if not c.passed}
     if failed & {Name.numbers_match_tools, Name.fairness, Name.prompt_injection}:
         verdict = Verdict.block

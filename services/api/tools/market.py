@@ -2,8 +2,8 @@
 
 from pydantic import BaseModel, Field
 
-from app.models import Dealer, MarketQuote, Model, Recall, Region, Trend
-from engine import finance, scenarios
+from app.models import Dealer, Estimate, EstimateRequest, MarketQuote, Model, Recall, Region, Trend
+from engine import estimate, finance, scenarios
 from engine.scenarios import AS_OF, CFG, TODAY
 from serpapi import client, market
 from serpapi import queries as q
@@ -117,3 +117,10 @@ def get_recalls(args: RecallIn) -> dict:
         raise ToolError(f"No cached recall news for {args.model.value}")
     return {"recalls": [Recall(**x) for x in market.parse_recalls(resp, args.model.value)], "source": lk.source,
             "as_of": lk.as_of, "note": "News coverage; confirm by VIN at nhtsa.gov/recalls."}
+
+
+@tool()
+def estimate_payment(args: EstimateRequest) -> Estimate:
+    """Walk-in estimate, no account needed: loan and lease payments, 5-year cost and CO2 for up to 3 new Toyotas at
+    the real cached MSRP, with an optional trade-in valued from comps. Source and as-of included."""
+    return estimate.estimate(args)

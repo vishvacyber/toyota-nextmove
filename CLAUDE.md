@@ -16,14 +16,14 @@ You are building **Toyota NextMove**, a proactive, agentic financial co-pilot fo
 - Console: Next.js (App Router) + TypeScript + shadcn/ui + Tailwind + TanStack Table + shadcn charts (Recharts) + Framer Motion.
 - Customer App: Next.js PWA + TypeScript + Tailwind + Framer Motion; real CC-licensed Wikimedia Commons car photos (credited on screen); Web Speech API for voice.
 - API: Python 3.11+, FastAPI, Pydantic, pytest.
-- Data + realtime + auth: Supabase (Postgres, Realtime). Channels: `sessions`, `handoffs`, `traces`, `alerts`.
-- LLM: **Gemini is primary** (`GEMINI_API_KEY`, REST, same tool registry); the **Claude Agent SDK** (`claude-agent-sdk`, Python) on a separate Claude Pro login (`CLAUDE_CONFIG_DIR`) is the backup, through `agents/llm.py`. Tools come from the B2 registry as an in-process SDK MCP server. AI-native: every customer-facing explanation is written live by the model, Guardian-checked and cached (Supabase); there are no pre-written answers. When nothing checked is ready, the API answers 503 and the app retries. Claude's default model is Haiku-class for speed (`NEXTMOVE_MODEL`); Gemini's is `GEMINI_MODEL`. Guardian stays deterministic code run on every agent output.
+- Data + realtime + auth: Supabase (Postgres, Realtime). Channels: `sessions`, `handoffs`, `traces`, `alerts`, `calls`.
+- LLM: **Gemini is primary** (`GEMINI_API_KEY`, REST, same tool registry); the **Claude Agent SDK** (`claude-agent-sdk`, Python) on a separate Claude Pro login (`CLAUDE_CONFIG_DIR`) is the backup, through `agents/llm.py`. Tools come from the B2 registry as an in-process SDK MCP server. AI-native: every customer-facing explanation is written live by the model, Guardian-checked and cached (Supabase); there are no pre-written answers. When nothing checked is ready, the API answers 503 and the app retries. Claude's default model is Haiku-class for speed (`NEXTMOVE_MODEL`); Gemini's is `GEMINI_MODEL`. Voice calls use **Gemini Live** (`GEMINI_LIVE_MODEL`, `agents/live.py`): the Guardian checks each spoken turn as it ends and the agent self-corrects (DECISIONS). Guardian stays deterministic code run on every agent output.
 - Mocks: MSW in both frontends, fed by `packages/contracts/mocks`.
 - Package manager: pnpm workspaces.
 
 ## Non-negotiable rules
 1. **The engine computes every number. The LLM only explains engine output.** Never let the LLM produce a payment, cost, equity, fee, or rate.
-2. **Guardian check** runs before any agent output reaches a customer: every number must exist in tool output; block otherwise.
+2. **Guardian check** runs before any agent output reaches a customer: every number must exist in tool output; block otherwise. Live voice is checked per spoken turn as it ends, with self-correction (team decision, DECISIONS).
 3. **Autonomy levels:** L1 read/analyze = auto; L2 draft = auto + visible in console; L3 customer-facing action = consent or employee approval; L4 money/credit decision = never an agent.
 4. **No protected attributes** (race, sex, age, religion, national origin, etc.) anywhere in data or engine.
 5. **Synthetic data only.** Show a "Synthetic data" badge on every screen. Never real customer data.

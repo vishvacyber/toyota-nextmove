@@ -3,8 +3,9 @@ import { useRef, useState } from "react";
 import { encode } from "uqr";
 import { useI18n } from "@/lib/i18n";
 
-/** Kiosk → phone handoff: a QR of the `/app?id=` deep link, encoded on the device so the id never goes to a third-party QR service. */
-export function ContinueOnPhone({ customerId }: { customerId: string }) {
+/** Kiosk → phone: a QR of a phone-app link (`/app?id=` to continue, `/app/summary?…` to take an estimate home), encoded on
+ * the device so nothing goes to a third-party QR service. */
+export function ContinueOnPhone({ path, takeHome = false }: { path: string; takeHome?: boolean }) {
   const { t } = useI18n();
   const dialog = useRef<HTMLDialogElement>(null);
   const [url, setUrl] = useState<string>();
@@ -12,19 +13,19 @@ export function ContinueOnPhone({ customerId }: { customerId: string }) {
   function open() {
     // A laptop kiosk runs on localhost, which a phone can't open, so NEXT_PUBLIC_PHONE_URL can point at the public site.
     const base = process.env.NEXT_PUBLIC_PHONE_URL || location.origin;
-    setUrl(`${base}/app?id=${encodeURIComponent(customerId)}`);
+    setUrl(`${base}${path}`);
     dialog.current?.showModal();
   }
 
   const qr = url ? encode(url, { border: 2 }) : undefined;
   return (
     <>
-      <button type="button" onClick={open} className="rounded-full border border-line px-6 py-3 font-semibold">
-        📱 {t("continue_phone")}
+      <button type="button" onClick={open} className="min-h-14 rounded-full border border-line px-6 py-3 font-semibold">
+        📱 {t(takeHome ? "take_home" : "continue_phone")}
       </button>
       <dialog ref={dialog} aria-labelledby="phone-title" className="m-auto max-w-md rounded-3xl bg-bg p-8 text-fg backdrop:bg-fg/40">
-        <h2 id="phone-title" className="text-2xl font-semibold">{t("continue_phone")}</h2>
-        <p className="mt-2 text-muted">{t("continue_phone_body")}</p>
+        <h2 id="phone-title" className="text-2xl font-semibold">{t(takeHome ? "take_home" : "continue_phone")}</h2>
+        <p className="mt-2 text-muted">{t(takeHome ? "take_home_body" : "continue_phone_body")}</p>
         {qr && (
           <svg role="img" aria-label={t("qr_alt")} viewBox={`0 0 ${qr.size} ${qr.size}`} shapeRendering="crispEdges" className="mx-auto mt-6 aspect-square w-72 rounded-xl bg-white">
             <path

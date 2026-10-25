@@ -143,7 +143,11 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-  A["Kiosk attract screen<br/>or phone deep link"] --> B{"Sign in"}
+  K["Kiosk attract screen"] --> KH{"Kiosk home"}
+  KH -->|"No account"| W["Walk-in tools<br/>estimate · trade-in · compare<br/>QR to take it home"]
+  KH -->|"Any time"| V["Talk to someone<br/>live voice call"]
+  KH -->|"My Toyota account"| B{"Sign in"}
+  A["Phone deep link"] --> B
   B -->|"Customer ID or QR"| C["1. My situation<br/>vehicle, contract, key dates"]
   B -->|"Guest"| G["Short intro + ID entry"] --> C
   C --> D["2. My next move<br/>recommended option + alternatives"]
@@ -158,12 +162,42 @@ flowchart TD
   F6 --> X1["Start self-service"]
   F6 --> X2["Send deal packet"]
   F6 --> X3["Book follow-up"]
-  F6 --> X4["Talk to a person"]
+  F6 --> X4["Talk to someone<br/>live voice call"]
   D --> S["See it in the showroom<br/>real photos"]
   C --> H["5. Ask NextMove<br/>chat + voice, EN/ES"]
 ```
 
 Every action needs the customer's tap plus a confirmation (L3), and confirmed actions are recorded with TFS (they show in the console's audit log). After 60 seconds idle the kiosk resets to the attract screen and clears everything. "Continue on your phone" shows a QR code generated on the device.
+
+### Voice call (kiosk or phone, one service with the console)
+
+```mermaid
+sequenceDiagram
+  participant C as Customer (kiosk mic)
+  participant API as FastAPI /voice
+  participant G as Gemini Live
+  participant T as Engine tools
+  participant GD as Guardian
+  participant E as Console (Live calls)
+  C->>API: Talk to someone (ringback plays)
+  API->>G: setup: advisor prompt + tool registry, customer ID only
+  G-->>C: greeting (native audio)
+  C->>API: speech (PCM 16 kHz)
+  API->>G: audio
+  G->>API: tool call (run_scenario …)
+  API->>T: same registry as every agent
+  T-->>G: engine numbers
+  G-->>C: spoken answer (24 kHz) + captions
+  API->>GD: each finished agent turn
+  GD-->>API: pass, or flag → agent corrects itself out loud
+  API-->>E: transcript + Guardian flags (Realtime `calls`)
+  E->>API: Take over
+  API-->>C: "Alex from TFS joined"; AI leaves; claimed handoff
+  E->>API: typed message
+  API-->>C: shown + read aloud
+```
+
+The browser never sees the Gemini key. Speech can't be held for review, so the Guardian checks each finished agent turn immediately; a failed turn is flagged on screen and in the console, and the agent is told to correct itself (see DECISIONS). Walk-in guests can call too, with estimate and market tools only.
 
 ### Advisor question (agent flow)
 
@@ -391,7 +425,7 @@ The full schema (25+ types) is in [`packages/contracts/openapi.yaml`](packages/c
 
 ## API reference
 
-All 30 operations of the contract are implemented.
+All 34 operations of the contract are implemented, plus the `/voice/{customer_id}` WebSocket.
 
 | Method | Path | Used by | Purpose |
 | --- | --- | --- | --- |
@@ -566,6 +600,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 | --- | --- | --- | --- |
 | Orchestrator | Every request | Routes, keeps session context, enforces autonomy, writes traces | Code |
 | Advisor | App, kiosk, voice | Answers questions from engine output | Gemini → Claude |
+| Voice agent | "Talk to someone" (kiosk, app) | Live voice call over the same tools; Guardian on every turn; a rep can take over | Gemini Live |
 | Hardship | Payment stress | Proposes policy-limited options, escalates L4 to a human | Gemini → Claude |
 | Inspector | Photo pre-inspection | Names wear items; charges come from the engine | Gemini → Claude (vision) |
 | Sentinel | At startup / daily | Detects triggers, ranks the queue, drafts outreach (L2) | Code |
@@ -586,6 +621,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 | `create_offer_draft` | L2 | Draft offer |
 | `book_appointment` | L3 | Appointment pending approval |
 | `handoff_to_human` | L3 | Handoff in the console queue |
+| `estimate_payment` | L1 | Walk-in loan/lease payments, 5-year cost, CO2 and trade-in equity (no account) |
 
 **SerpApi:** cache-first, in this order: the Supabase `serpapi_cache` table, then the committed `snapshot.json`, then a live call only on a cache miss (at most 10 per process; never with `NEXTMOVE_OFFLINE=1`). The whole build used about 40 live searches.
 
@@ -606,7 +642,10 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
   - Payment help
   - Action center
 - **5. Ask NextMove:** chat and voice in EN/ES, with the numbers used and a "checked" note.
-- **Kiosk extras:** attract loop, 60 s idle reset, QR to continue on a phone, 64 px touch targets.
+- **Kiosk home:** four tiles (my account, estimate a payment, what's my trade worth, compare cars) and an always-on "Talk to someone".
+- **Walk-in tools (no account):** real MSRPs, engine loan and lease payments, 5-year cost, fuel and CO2; trade-in value from live SerpApi comps and equity after payoff; up to 3 cars side by side; "Take it home" QR to `/app/summary`, which re-prices on the phone (no numbers in the link).
+- **Talk to someone:** ringback, then a live Gemini voice agent with captions; a rep can take over from the console.
+- **Kiosk extras:** attract loop, 60 s idle reset (paused during a call), QR to continue on a phone, 64 px touch targets.
 - **Showroom:** a real photo of each trim's model (credited), what each part does, trims priced by the engine, "what reviewers say".
 
 **Employee Console** (14 pages):
@@ -614,7 +653,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 | Group | Pages |
 | --- | --- |
 | Portfolio | Command Center, Opportunity Queue, Customers + Customer 360 |
-| Act | NextMove Review, Live Activity (sessions + handoff inbox), Deal Packets, Alert Approvals |
+| Act | NextMove Review, Live Activity (live voice calls with Take over, sessions, handoff inbox), Deal Packets, Alert Approvals |
 | Prove | Proof, Long-term Profit, Offer Studio, Market Intel |
 | Trust | Agent Traces, Responsible AI, Agent Studio |
 
@@ -634,7 +673,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 | URL | What |
 | --- | --- |
-| http://localhost:3000/kiosk | Kiosk: tap the attract screen, pick a demo customer |
+| http://localhost:3000/kiosk | Kiosk: tap the attract screen, then a tile or "Talk to someone" |
 | http://localhost:3000/app?id=CUST-JAMES | Phone app, signed in as James |
 | http://localhost:3001 | Employee Console |
 | http://localhost:8000/docs | API docs (Swagger) |
@@ -648,6 +687,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 | `SERPAPI_API_KEY` | API | Live SerpApi on cache misses |
 | `GEMINI_API_KEY` | API | Gemini, the primary AI ([aistudio.google.com/apikey](https://aistudio.google.com/apikey)) |
 | `GEMINI_MODEL` | API | Gemini model (default `gemini-3.5-flash`) |
+| `GEMINI_LIVE_MODEL` | API | Gemini Live model for voice calls (default `gemini-3.8-live`) |
 | `CLAUDE_CONFIG_DIR` | API | Folder holding the Claude subscription login for the backup AI (absolute path) |
 | `NEXT_PUBLIC_API_URL` | frontends | API address (default `http://localhost:8000`) |
 | `NEXT_PUBLIC_API_MOCKING` | frontends | `disabled` (live), `enabled` (all mocks), or a comma list of path prefixes to keep mocked |
@@ -675,7 +715,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 ### Tests
 
-212 automated tests: 168 API (engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, Gemini provider, MSRP parsing, AI explanations, contract coverage, simulation, persistence), 34 contract (every endpoint has a working mock), 6 console and 4 customer app.
+231 automated tests: 179 API (engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, Gemini provider, live voice calls against a fake Gemini Live, walk-in estimates, MSRP parsing, AI explanations, contract coverage, simulation, persistence), 38 contract (every endpoint has a working mock), 6 console and 8 customer app (audio encoding, take-home links).
 
 ---
 

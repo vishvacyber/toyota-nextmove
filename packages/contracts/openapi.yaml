@@ -70,6 +70,14 @@ paths:
       responses:
         "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/ScenarioSet" } } } }
 
+  /estimate:
+    post:
+      operationId: estimate
+      description: Walk-in estimate (no account). The engine prices each car, the loan and lease, and an optional trade-in.
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/EstimateRequest" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Estimate" } } } }
+
   /agents/advisor/ask:
     post:
       operationId: askAdvisor
@@ -106,6 +114,32 @@ paths:
       requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/HandoffCreate" } } } }
       responses:
         "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/Handoff" } } } }
+
+  /calls:
+    get:
+      operationId: listCalls
+      description: >
+        Voice calls, newest first. The call itself runs over the WebSocket /voice/{customer_id} (not expressible in
+        OpenAPI, see docs/DECISIONS.md); every change is broadcast on Realtime channel `calls`, event `updated`, as a full Call.
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Call" } } } } }
+  /calls/{id}/takeover:
+    post:
+      operationId: takeOverCall
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/Takeover" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Call" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /calls/{id}/messages:
+    post:
+      operationId: sendCallMessage
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/CallMessage" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Call" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+
   /handoffs/{id}:
     patch:
       operationId: updateHandoff
@@ -883,3 +917,87 @@ components:
             required: [case, passed]
             properties: { case: { type: string }, passed: { type: boolean }, detail: { type: string } }
         deployed_at: { type: string, format: date-time }
+
+    # ---------- kiosk: walk-in estimate (added after freeze, see DECISIONS) ----------
+    TradeInRequest:
+      type: object
+      required: [model, year, odometer_miles, payoff]
+      properties:
+        model: { $ref: "#/components/schemas/Model" }
+        year: { type: integer, minimum: 2005, maximum: 2027 }
+        odometer_miles: { type: integer, minimum: 0, maximum: 400000 }
+        payoff: { type: number, minimum: 0, description: What is still owed on it (0 if paid off) }
+    EstimateRequest:
+      type: object
+      required: [models]
+      properties:
+        models: { type: array, minItems: 1, maxItems: 3, items: { $ref: "#/components/schemas/Model" } }
+        down_payment: { type: number, minimum: 0, maximum: 100000, default: 0 }
+        term_months: { type: integer, minimum: 24, maximum: 84, default: 60 }
+        credit_tier: { $ref: "#/components/schemas/CreditTier" }
+        annual_miles: { type: integer, minimum: 1000, maximum: 50000, default: 12000 }
+        trade_in: { $ref: "#/components/schemas/TradeInRequest" }
+    TradeInValue:
+      type: object
+      required: [estimated_value, payoff, equity, source, as_of]
+      properties:
+        estimated_value: { type: number }
+        payoff: { type: number }
+        equity: { type: number, description: estimated_value − payoff (negative = owe more than it's worth) }
+        source: { type: string }
+        as_of: { type: string }
+    EstimateVehicle:
+      type: object
+      required: [vehicle, msrp, msrp_source, apr, loan_payment, lease_payment, lease_term_months, residual, true_cost, five_year_cost]
+      properties:
+        vehicle: { $ref: "#/components/schemas/Vehicle" }
+        msrp: { type: number }
+        msrp_source: { type: string, description: "Where the price came from, with its as-of date" }
+        apr: { type: number }
+        loan_payment: { type: number }
+        lease_payment: { type: number }
+        lease_term_months: { type: integer }
+        residual: { type: number }
+        true_cost: { $ref: "#/components/schemas/TrueCost" }
+        five_year_cost: { type: number, description: Down payment + loan payments + fuel, maintenance and insurance over 5 years }
+    Estimate:
+      type: object
+      required: [vehicles, assumptions, generated_at]
+      properties:
+        vehicles: { type: array, items: { $ref: "#/components/schemas/EstimateVehicle" } }
+        trade_in: { $ref: "#/components/schemas/TradeInValue" }
+        assumptions: { type: array, items: { type: string } }
+        generated_at: { type: string, format: date-time }
+
+    # ---------- voice calls (added after freeze, see DECISIONS) ----------
+    CallRole: { type: string, enum: [customer, agent, employee, system] }
+    CallStatus: { type: string, enum: [ai, human, ended] }
+    CallLine:
+      type: object
+      required: [role, text, at]
+      properties:
+        role: { $ref: "#/components/schemas/CallRole" }
+        text: { type: string }
+        at: { type: string, format: date-time }
+        guardian: { $ref: "#/components/schemas/GuardianVerdict" }
+    Call:
+      type: object
+      required: [id, customer_id, surface, status, started_at, lines]
+      properties:
+        id: { type: string }
+        customer_id: { type: string }
+        surface: { $ref: "#/components/schemas/Surface" }
+        status: { $ref: "#/components/schemas/CallStatus" }
+        taken_by: { type: string }
+        started_at: { type: string, format: date-time }
+        ended_at: { type: string, format: date-time }
+        lines: { type: array, items: { $ref: "#/components/schemas/CallLine" } }
+        trace_id: { type: string }
+    Takeover:
+      type: object
+      required: [employee]
+      properties: { employee: { type: string } }
+    CallMessage:
+      type: object
+      required: [text]
+      properties: { text: { type: string, minLength: 1, maxLength: 500 } }

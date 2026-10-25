@@ -10,11 +10,13 @@ import { Alerts } from "@/components/alerts";
 import { DecideAct, HandoffBanner } from "@/components/decide-act";
 import { Attract } from "@/components/attract";
 import { CarPhoto } from "@/components/car-photo";
+import { TalkButton } from "@/components/call";
 import { ContinueOnPhone } from "@/components/continue-on-phone";
 import { KioskContext } from "@/components/kiosk";
 import { Showroom } from "@/components/showroom";
 import { SignIn } from "@/components/sign-in";
 import { TopBar } from "@/components/top-bar";
+import { WalkIn, type Mode } from "@/components/walk-in";
 import { useI18n, type Key } from "@/lib/i18n";
 import { useHandoffChannel } from "@/lib/realtime";
 
@@ -25,15 +27,19 @@ const ease = [0.22, 1, 0.36, 1] as const;
 export function NextMoveScreen({ customerId }: { customerId?: string }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useI18n();
   // Kiosk opens on the attract loop; the idle reset remounts this screen, which brings it back.
-  const [attract, setAttract] = useState(useContext(KioskContext));
+  const kiosk = useContext(KioskContext);
+  const [attract, setAttract] = useState(kiosk);
+  // Kiosk without a signed-in customer: the home tiles, a walk-in tool, or (account) the sign-in screen.
+  const [tool, setTool] = useState<Mode | "account" | null>(null);
   if (attract && !customerId) return <MotionConfig reducedMotion="user"><Attract onStart={() => setAttract(false)} /></MotionConfig>;
   return (
     <MotionConfig reducedMotion="user">
       <TopBar onSignOut={customerId ? () => router.push(pathname) : undefined} />
       <AnimatePresence mode="wait">
         <motion.div
-          key={customerId ?? "sign-in"}
+          key={customerId ?? tool ?? "home"}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -16 }}
@@ -41,10 +47,57 @@ export function NextMoveScreen({ customerId }: { customerId?: string }) {
         >
           {customerId
             ? <Flow id={customerId} onSignOut={() => router.push(pathname)} />
-            : <SignIn onSignIn={(id) => router.push(`${pathname}?id=${encodeURIComponent(id)}`)} />}
+            : kiosk && !tool ? <KioskHome onPick={setTool} />
+              : kiosk && tool !== "account" && tool ? <WalkIn key={tool} mode={tool} onBack={() => setTool(null)} />
+                : (
+                  <>
+                    {kiosk && (
+                      <button type="button" onClick={() => setTool(null)} className="mx-6 min-h-12 rounded-full border border-line px-6 font-semibold">
+                        ← {t("back")}
+                      </button>
+                    )}
+                    <SignIn onSignIn={(id) => router.push(`${pathname}?id=${encodeURIComponent(id)}`)} />
+                  </>
+                )}
         </motion.div>
       </AnimatePresence>
     </MotionConfig>
+  );
+}
+
+const TILES = [
+  ["account", "🔑", "tile_account", "tile_account_body"],
+  ["estimate", "💵", "walk_estimate", "tile_estimate_body"],
+  ["trade", "🔁", "walk_trade", "tile_trade_body"],
+  ["compare", "⚖️", "walk_compare", "tile_compare_body"],
+] as const;
+
+/** Kiosk home: what someone standing in the dealership came to do, with or without an account. */
+function KioskHome({ onPick }: { onPick: (m: Mode | "account") => void }) {
+  const { t } = useI18n();
+  return (
+    <main className="mx-auto max-w-6xl px-6 pb-16 pt-6">
+      <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">{t("kiosk_home_title")}</h1>
+      <p className="mt-2 text-lg text-muted">{t("kiosk_home_body")}</p>
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        {TILES.map(([mode, icon, title, body], i) => (
+          <motion.button key={mode} type="button" onClick={() => onPick(mode)}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease, delay: 0.06 * i }}
+            className="min-h-40 rounded-3xl border border-line bg-surface p-6 text-left transition hover:border-accent">
+            <span aria-hidden className="text-4xl">{icon}</span>
+            <span className="mt-3 block text-2xl font-semibold">{t(title)}</span>
+            <span className="mt-1 block text-muted">{t(body)}</span>
+          </motion.button>
+        ))}
+      </div>
+      <section aria-labelledby="talk-title" className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-fg p-6 text-bg">
+        <div>
+          <h2 id="talk-title" className="text-2xl font-semibold">{t("tile_talk")}</h2>
+          <p className="opacity-75">{t("tile_talk_body")}</p>
+        </div>
+        <TalkButton />
+      </section>
+    </main>
   );
 }
 
@@ -96,7 +149,10 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
     <main className="mx-auto max-w-6xl px-6 pb-16">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="text-sm font-medium text-muted">{t("hello", { name: c.first_name })}</p>
-        {kiosk && <ContinueOnPhone customerId={c.id} />}
+        <div className="flex flex-wrap gap-3">
+          {kiosk && <ContinueOnPhone path={`/app?id=${encodeURIComponent(c.id)}`} />}
+          <TalkButton customerId={c.id} />
+        </div>
       </div>
       <nav aria-label={t("steps")} className="mt-4">
         <ol className="flex gap-2 overflow-x-auto rounded-full bg-surface p-1">

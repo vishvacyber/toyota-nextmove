@@ -9,6 +9,7 @@ import { useI18n, type Key } from "@/lib/i18n";
 import type { HandoffChannel } from "@/lib/realtime";
 import { Hardship } from "@/components/hardship";
 import { Inspection } from "@/components/inspection";
+import { TalkButton } from "@/components/call";
 
 type Overrides = NonNullable<ScenarioRequest["overrides"]>;
 type ActionType = Recommendation["action"]["type"];
@@ -275,7 +276,6 @@ export function FollowUpAction({ customerId, channel, title, body, primary, reas
 
 function ActionCenter({ c, r, channel }: { c: Customer; r: Recommendation; channel: HandoffChannel }) {
   const { t, money } = useI18n();
-  const surface = useContext(KioskContext) ? "kiosk" : "app";
   const offers = useApi<Offer[]>("/offers");
   const primary = (type: ActionType) => r.action.type === type;
   const matching = offers.data?.filter((o) => o.status === "active" && o.target_situation === r.situation) ?? [];
@@ -283,8 +283,6 @@ function ActionCenter({ c, r, channel }: { c: Customer; r: Recommendation; chann
     o.incentive.type === "rate_reduction" ? t("offer_rate", { pct: o.incentive.value })
       : o.incentive.type === "fee_waiver" ? t("offer_fee_waiver")
         : <>{money(o.incentive.value)}</>;
-
-  const handoff = (reason: string) => requestHandoff(channel, { customer_id: c.id, reason, surface });
 
   return (
     <Card title={t("action_center")}>
@@ -341,16 +339,12 @@ function ActionCenter({ c, r, channel }: { c: Customer; r: Recommendation; chann
           )}
       </div>
       <div className="mt-6">
-        <Action
-          title={t("talk_to_person")}
-          body={t("talk_to_person_body")}
-          primary={primary("start_hardship")}
-          confirmText={t("confirm_talk")}
-          run={async () => {
-            await handoff(`Customer asked to talk to a person about: ${r.recommended.label}`);
-            return t("talk_requested");
-          }}
-        />
+        {/* A live voice call (Gemini Live) that shows up in the console, where a rep can take it over. */}
+        <article className={`rounded-2xl border p-5 ${primary("start_hardship") ? "border-accent" : "border-line"}`}>
+          <h3 className="text-lg font-semibold">{t("talk_to_person")}</h3>
+          <p className="mt-1 text-muted">{t("talk_to_person_body")}</p>
+          <TalkButton customerId={c.id} className="mt-4" />
+        </article>
       </div>
     </Card>
   );

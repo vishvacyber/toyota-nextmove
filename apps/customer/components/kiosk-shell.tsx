@@ -6,7 +6,7 @@ import { useI18n } from "@/lib/i18n";
 
 const IDLE_MS = 60_000;
 
-/** Full-screen kiosk wrapper: privacy blur on, and a 60s idle reset that signs the customer out and remounts the screen (re-blurring every number). */
+/** Full-screen kiosk wrapper: a 60s idle reset that signs the customer out and remounts the screen. */
 export function KioskShell({ children }: { children: ReactNode }) {
   const [session, setSession] = useState(0);
   const [notice, setNotice] = useState(false);
@@ -29,7 +29,8 @@ export function KioskShell({ children }: { children: ReactNode }) {
       timer = setTimeout(reset, IDLE_MS);
       setNotice(false);
     }
-    const events = ["pointerdown", "keydown", "touchstart", "wheel"] as const;
+    // kiosk-activity: dispatched by a live voice call, which has no taps.
+    const events = ["pointerdown", "keydown", "touchstart", "wheel", "kiosk-activity"] as const;
     events.forEach((e) => window.addEventListener(e, activity, { passive: true }));
     return () => {
       clearTimeout(timer);

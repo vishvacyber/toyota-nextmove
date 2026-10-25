@@ -736,6 +736,101 @@ class DeployResult(BaseModel):
     deployed_at: AwareDatetime | None = None
 
 
+class TradeInRequest(BaseModel):
+    model: Model
+    year: Annotated[int, Field(ge=2005, le=2027)]
+    odometer_miles: Annotated[int, Field(ge=0, le=400000)]
+    payoff: Annotated[
+        float, Field(description='What is still owed on it (0 if paid off)', ge=0.0)
+    ]
+
+
+class EstimateRequest(BaseModel):
+    models: Annotated[list[Model], Field(max_length=3, min_length=1)]
+    down_payment: Annotated[float | None, Field(ge=0.0, le=100000.0)] = 0
+    term_months: Annotated[int | None, Field(ge=24, le=84)] = 60
+    credit_tier: CreditTier | None = None
+    annual_miles: Annotated[int | None, Field(ge=1000, le=50000)] = 12000
+    trade_in: TradeInRequest | None = None
+
+
+class TradeInValue(BaseModel):
+    estimated_value: float
+    payoff: float
+    equity: Annotated[
+        float,
+        Field(
+            description="estimated_value − payoff (negative = owe more than it's worth)"
+        ),
+    ]
+    source: str
+    as_of: str
+
+
+class EstimateVehicle(BaseModel):
+    vehicle: Vehicle
+    msrp: float
+    msrp_source: Annotated[
+        str, Field(description='Where the price came from, with its as-of date')
+    ]
+    apr: float
+    loan_payment: float
+    lease_payment: float
+    lease_term_months: int
+    residual: float
+    true_cost: TrueCost
+    five_year_cost: Annotated[
+        float, Field(description='Down payment + loan payments + fuel')
+    ]
+
+
+class Estimate(BaseModel):
+    vehicles: list[EstimateVehicle]
+    trade_in: TradeInValue | None = None
+    assumptions: list[str]
+    generated_at: AwareDatetime
+
+
+class CallRole(StrEnum):
+    customer = 'customer'
+    agent = 'agent'
+    employee = 'employee'
+    system = 'system'
+
+
+class CallStatus(StrEnum):
+    ai = 'ai'
+    human = 'human'
+    ended = 'ended'
+
+
+class CallLine(BaseModel):
+    role: CallRole
+    text: str
+    at: AwareDatetime
+    guardian: GuardianVerdict | None = None
+
+
+class Call(BaseModel):
+    id: str
+    customer_id: str
+    surface: Surface
+    status: CallStatus
+    taken_by: str | None = None
+    started_at: AwareDatetime
+    ended_at: AwareDatetime | None = None
+    lines: list[CallLine]
+    trace_id: str | None = None
+
+
+class Takeover(BaseModel):
+    employee: str
+
+
+class CallMessage(BaseModel):
+    text: Annotated[str, Field(max_length=500, min_length=1)]
+
+
 class Customer(BaseModel):
     id: Annotated[str, Field(examples=['CUST-MARIA'])]
     first_name: str

@@ -6,19 +6,7 @@ import { api, isBusy } from "@nextmove/contracts/client";
 import { Card } from "@/components/cards";
 import { KioskContext } from "@/components/kiosk";
 import { useI18n } from "@/lib/i18n";
-
-// Minimal Web Speech types: TS's DOM lib lacks the webkit-prefixed constructor Chrome ships.
-type Recognition = {
-  lang: string; interimResults: boolean; maxAlternatives: number;
-  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
-  onend: (() => void) | null; onerror: (() => void) | null;
-  start(): void; abort(): void;
-};
-type RecognitionCtor = new () => Recognition;
-const recognitionCtor = () =>
-  typeof window === "undefined" ? undefined
-    : ((window as unknown as { SpeechRecognition?: RecognitionCtor; webkitSpeechRecognition?: RecognitionCtor }).SpeechRecognition
-      ?? (window as unknown as { webkitSpeechRecognition?: RecognitionCtor }).webkitSpeechRecognition);
+import { recognitionCtor, type Recognition } from "@/lib/speech";
 
 type Turn = { q: string; a?: AdvisorAnswer; error?: "busy" | "failed" };
 

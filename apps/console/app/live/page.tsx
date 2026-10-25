@@ -12,6 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { EMPLOYEE_ID } from "@/lib/employee";
 import { asOf, label } from "@/lib/format";
 import { useHandoffs } from "@/lib/handoffs";
+import { LiveCalls } from "@/components/live-calls";
 import { MockBadge } from "@/components/mock-provider";
 
 const ORDER: Record<Handoff["status"], number> = { waiting: 0, claimed: 1, resolved: 2 };
@@ -34,6 +35,7 @@ export default function LiveActivity() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-semibold">Live Activity</h1>
+      <LiveCalls />
       <div className="grid gap-3 xl:grid-cols-2">
         <Card size="sm">
           <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">

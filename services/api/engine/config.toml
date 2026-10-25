@@ -47,6 +47,13 @@ late = 50                  # charged once a payment is more than late_after_days
 late_after_days = 10
 due_date_change = 0
 
+[estimate]
+# Kiosk walk-in estimate (POST /estimate): no account, so these stand in for what a contract would say.
+credit_tier = "B"              # used when the customer doesn't pick one
+lease_term_months = 36
+lease_residual = 0.60          # share of MSRP left at lease end (synthetic)
+horizon_months = 60            # the "5-year cost" window
+
 [terms]
 buyout_months = 60
 upgrade_months = 60

@@ -1,6 +1,6 @@
 import { http, HttpResponse, delay } from "msw";
 import type {
-  AdvisorAnswer, AdvisorAsk, Alert, components, DealPacket, DealPacketCreate, DeployResult, Handoff, KpiSnapshot, Model, Offer, OfferSimulation, StudioAgent,
+  AdvisorAnswer, AdvisorAsk, Alert, Call, components, Estimate, EstimateRequest, DealPacket, DealPacketCreate, DeployResult, Handoff, KpiSnapshot, Model, Offer, OfferSimulation, StudioAgent,
 } from "../index";
 import * as f from "./fixtures";
 
@@ -169,6 +169,36 @@ export const handlers = [
   http.get(u("/market/:model"), ({ params }) => {
     const q = f.market[params.model as Model];
     return q ? HttpResponse.json(q) : notFound();
+  }),
+
+  // Walk-in estimate: the engine's numbers per model at fixed sample terms (the mock doesn't do finance math).
+  http.post(u("/estimate"), async ({ request }) => {
+    const body = (await request.json()) as EstimateRequest;
+    const t = body.trade_in;
+    const e: Estimate = {
+      vehicles: body.models.map((m) => f.estimateVehicles[m]),
+      trade_in: t && { estimated_value: 18500, payoff: t.payoff, equity: 18500 - t.payoff, source: "Sample data (mock)", as_of: f.AS_OF.slice(0, 10) },
+      assumptions: ["Sample numbers at $2,000 down, 60 months, good credit (mock mode)", "Estimate only: excludes sales tax, registration and credit approval"],
+      generated_at: now(),
+    };
+    return HttpResponse.json(e);
+  }),
+
+  // Voice calls run over a WebSocket on the real API; the mock only lists a past call.
+  http.get(u("/calls"), () => HttpResponse.json(f.calls)),
+  http.post(u("/calls/:id/takeover"), async ({ params, request }) => {
+    const c = f.calls.find((x) => x.id === params.id);
+    if (!c) return notFound();
+    const { employee } = (await request.json()) as { employee: string };
+    Object.assign(c, { status: "human", taken_by: employee } satisfies Partial<Call>);
+    return HttpResponse.json(c);
+  }),
+  http.post(u("/calls/:id/messages"), async ({ params, request }) => {
+    const c = f.calls.find((x) => x.id === params.id);
+    if (!c) return notFound();
+    const { text } = (await request.json()) as { text: string };
+    c.lines.push({ role: "employee", text, at: now() });
+    return HttpResponse.json(c);
   }),
 
   http.get(u("/studio/agents"), () => HttpResponse.json(f.studioAgents)),

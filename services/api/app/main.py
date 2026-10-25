@@ -4,11 +4,11 @@ import threading
 from contextlib import asynccontextmanager
 from typing import Annotated
 
-from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from agents import orchestrator, recommend, sdk, sentinel, studio, traces, vision
+from agents import live, orchestrator, recommend, sdk, sentinel, studio, traces, vision
 from agents.autonomy import AGENTS
 from app.models import (
     AdvisorAnswer,
@@ -20,6 +20,8 @@ from app.models import (
     Assumptions,
     AuditEntry,
     AutonomyLevel,
+    Call,
+    CallMessage,
     Customer,
     CustomerAction,
     CustomerActionType,
@@ -27,6 +29,8 @@ from app.models import (
     DealPacketCreate,
     Decision,
     DeployResult,
+    Estimate,
+    EstimateRequest,
     FairnessReport,
     Handoff,
     HandoffCreate,
@@ -52,9 +56,11 @@ from app.models import (
     Status4,
     StudioAgent,
     StudioAgentCreate,
+    Surface,
+    Takeover,
     TimingPlan,
 )
-from engine import scenarios, timing
+from engine import estimate, scenarios, timing
 from engine.scenarios import CFG
 from sim import simulate
 from sim.generator import customers_by_id
@@ -66,7 +72,7 @@ PERSONAS = ["CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"]
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     # Durable demo state comes back from Supabase first (handoffs, packets, offers, Studio, audit, AI explanations).
-    actions.hydrate(), studio.hydrate(), recommend.hydrate(), hydrate_reviews()
+    actions.hydrate(), studio.hydrate(), recommend.hydrate(), hydrate_reviews(), live.hydrate()
     # Sentinel's daily scan runs once per start, off the request path. Market Intel can spend SerpApi quota on
     # cache misses, so it runs only on purpose: python -m agents.market_intel
     threading.Thread(target=lambda: (sentinel.run(), simulate.kpis()), daemon=True).start()   # + warm the simulation
@@ -169,6 +175,11 @@ def run_scenarios(req: ScenarioRequest) -> ScenarioSet:
     return scenarios.run(req, customer)
 
 
+@app.post("/estimate", response_model=Estimate)
+def walk_in_estimate(req: EstimateRequest) -> Estimate:
+    return estimate.estimate(req)
+
+
 @app.get("/customers/{id}/timing", response_model=TimingPlan)
 def get_timing(id: str) -> TimingPlan:
     return timing.timing(_customer(id))
@@ -236,6 +247,42 @@ def update_handoff(id: str, body: HandoffUpdate) -> Handoff:
     h = actions.keep("handoffs", hs[i].model_copy(update=body.model_dump(exclude_none=True)))
     traces.broadcast("handoffs", "updated", h.model_dump(mode="json"))
     return h
+
+
+def _call(id: str) -> Call:
+    c = live.CALLS.get(id)
+    if c is None:
+        raise HTTPException(404, f"Unknown call {id}")
+    return c
+
+
+@app.get("/calls", response_model=list[Call])
+def list_calls() -> list[Call]:
+    return sorted(live.CALLS.values(), key=lambda c: c.started_at, reverse=True)
+
+
+@app.post("/calls/{id}/takeover", response_model=Call)
+async def take_over_call(id: str, body: Takeover) -> Call:
+    if body.employee in AGENTS:
+        raise HTTPException(409, "Only an employee can take over a call")
+    return await live.take_over(_call(id), body.employee)
+
+
+@app.post("/calls/{id}/messages", response_model=Call)
+async def send_call_message(id: str, body: CallMessage) -> Call:
+    c = _call(id)
+    if c.status != live.CallStatus.human:
+        raise HTTPException(409, "Take the call over before messaging the customer")
+    return await live.rep_says(c, body.text)
+
+
+@app.websocket("/voice/{customer_id}")
+async def voice(ws: WebSocket, customer_id: str, lang: str = "en", surface: Surface = Surface.kiosk) -> None:
+    """Live voice call (Gemini Live). Protocol in agents/live.py; not expressible in OpenAPI."""
+    if customer_id != live.GUEST and customer_id not in customers_by_id():
+        await ws.close(code=4404)
+        return
+    await live.session(ws, customer_id, "es" if lang == "es" else "en", surface)
 
 
 @app.get("/sessions", response_model=list[Session])
