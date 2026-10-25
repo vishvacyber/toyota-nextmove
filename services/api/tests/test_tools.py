@@ -7,6 +7,7 @@ from mcp import Client
 from app import models
 from app.main import app
 from engine import scenarios
+from engine.scenarios import CFG
 from serpapi import client
 from sim.generator import customers_by_id
 from tools import REGISTRY, ToolError, actions, call
@@ -46,11 +47,15 @@ def test_check_eligibility():
     assert out["eligible"] is False and out["reason"]
 
 
-@pytest.mark.parametrize("model", ["RAV4", "Camry", "Prius"])
+@pytest.mark.parametrize("model", ["RAV4", "Camry", "Prius", "Tacoma", "Highlander", "bZ"])
 def test_get_market_value_offline_from_snapshot(model):
     q = models.MarketQuote.model_validate(call("get_market_value", {"model": model}))
-    assert q.cached and q.source.startswith("SerpApi") and q.as_of and len(q.comps) >= 2
-    assert q.low <= q.estimated_value <= q.high and q.dealers and q.trend and q.reviews_summary
+    assert q.cached and q.as_of and q.low <= q.estimated_value <= q.high and q.reviews_summary
+    # the value's source leads: SerpApi comps when there are enough, else the depreciation table
+    table = len(q.comps) < CFG["market"]["min_comps"]
+    assert q.source.startswith(CFG["market"]["source"] if table else "SerpApi Google Search")
+    if model in ("RAV4", "Camry", "Prius"):   # persona models also have cached dealers
+        assert q.dealers and q.trend and len(q.comps) >= 2
     assert client.calls == 0
 
 
