@@ -44,3 +44,8 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Upgrade default target** is the same model's electrified trim (Prius → bZ).
 - **`keep` is listed only when requested**: for loans it equals the `do_nothing` baseline, and leases can't use it.
 - **An existing late fee is added to every option** (it's already owed), so no option looks cheaper than it is.
+
+## LLM access (before B3)
+- **Provider chain: Grok (xAI API) → Claude Agent SDK → pre-generated answers.** The user can't buy Claude API credits. Grok is primary because it's a plain key and deployable. The Claude Agent SDK on a separate Claude Pro account is the fallback when Grok fails or is rate-limited. Agents call one provider function; each provider implements the same tool-calling contract, and the same evals run against both.
+- **Claude fallback setup:** The API server uses that account's login via `CLAUDE_CONFIG_DIR=~/.claude-nextmove`, kept apart from the developer's own Claude login. One-time setup: `CLAUDE_CONFIG_DIR=~/.claude-nextmove claude`, then `/login` with the Pro account.
+- **Consequences:** the Claude fallback runs only where that login exists (the demo laptop); a deployed API has Grok plus the pre-generated answers. Pro has rolling usage limits, so pre-generated, Guardian-checked persona answers are the required fallback, not optional. The engine still computes every number; the Guardian check is unchanged.
