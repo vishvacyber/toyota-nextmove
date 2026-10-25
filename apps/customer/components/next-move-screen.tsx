@@ -9,6 +9,7 @@ import { AdvisorChat } from "@/components/advisor-chat";
 import { Alerts } from "@/components/alerts";
 import { DecideAct, HandoffBanner } from "@/components/decide-act";
 import { Private } from "@/components/private";
+import { Showroom } from "@/components/showroom";
 import { SignIn } from "@/components/sign-in";
 import { TopBar } from "@/components/top-bar";
 import { useI18n, type Key } from "@/lib/i18n";
@@ -46,6 +47,8 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
   const customer = useApi<Customer>(`/customers/${encodeURIComponent(id)}`);
   const rec = useApi<Recommendation>(`/customers/${encodeURIComponent(id)}/recommendation`);
   const [step, setStep] = useState(0);
+  // Trim key the showroom opens on; null = closed. The kiosk idle remount unmounts it (and its WebGL context).
+  const [showroom, setShowroom] = useState<string | null>(null);
   // Lives here, not in the act step, so status survives step changes; unmount (sign-out, kiosk reset) closes it.
   const handoffChannel = useHandoffChannel();
   const heading = useRef<HTMLHeadingElement>(null);
@@ -101,12 +104,14 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
           className="mt-6"
         >
           {step === 0 && <SituationStep c={c} r={r} />}
-          {step === 1 && <NextMoveStep r={r} onAct={() => setStep(3)} />}
+          {step === 1 && <NextMoveStep r={r} onAct={() => setStep(3)} onExplore={setShowroom} />}
           {step === 2 && <WhyStep r={r} />}
           {step === 3 && <DecideAct c={c} r={r} channel={handoffChannel} />}
           {step === 4 && <AdvisorChat customerId={c.id} />}
         </motion.div>
       </AnimatePresence>
+
+      {showroom && <Showroom c={c} r={r} initial={showroom} onClose={() => setShowroom(null)} />}
 
       <div className="mt-10 flex justify-between gap-4">
         {step > 0
@@ -187,7 +192,7 @@ function SituationStep({ c, r }: { c: Customer; r: Recommendation }) {
   );
 }
 
-function NextMoveStep({ r, onAct }: { r: Recommendation; onAct: () => void }) {
+function NextMoveStep({ r, onAct, onExplore }: { r: Recommendation; onAct: () => void; onExplore: (trim: string) => void }) {
   const { t } = useI18n();
   // Guardian rule: a blocked recommendation never reaches the customer.
   if (r.guardian.verdict === "block") return <p role="status" className="text-xl">{t("under_review")}</p>;
@@ -201,6 +206,11 @@ function NextMoveStep({ r, onAct }: { r: Recommendation; onAct: () => void }) {
               {i === 0 && (
                 <button type="button" onClick={onAct} className="mt-6 w-full rounded-full bg-accent px-6 py-3 font-semibold text-on-accent transition hover:brightness-110">
                   {r.action.label}
+                </button>
+              )}
+              {s.target_vehicle && (
+                <button type="button" onClick={() => onExplore(s.option)} className={`${i === 0 ? "mt-3" : "mt-6"} w-full rounded-full border border-line px-6 py-3 font-semibold`}>
+                  {t("explore_3d")}
                 </button>
               )}
             </ScenarioCard>

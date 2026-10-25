@@ -74,6 +74,17 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Customer app tests use `node --test`** like the console (`lib/box.test.ts`).
 - Dev server ran on 3120: 3100 was held by another lane.
 
+## Stage K4 (customer app)
+- **Model:** a stylized car built from primitives (boxes, cylinders, rounded boxes). There's no GLB, so nothing to download or license, and it explodes by construction. The UI shows no attribution because there's nothing to attribute.
+- **Entry:** any next-move card whose scenario has a `target_vehicle` gets "Explore in 3D" (James's Camry SE Hybrid upgrade). It opens a native modal `<dialog>` over the flow rather than a new route, so `/app` and `/kiosk` share it. Esc or Close returns focus to the button. The kiosk idle remount unmounts it, and R3F's unmount disposes the renderer and forces WebGL context loss.
+- **Price = the engine's scenario monthly payment.** The current car is priced by `keep` and each target vehicle by its scenario. A trim with no scenario says "Price not available". No trims are invented. Colors are cosmetic and labeled as not changing the estimate. Kiosk prices use `<Private>`.
+- **Hotspots are plain DOM buttons over the canvas**, projected from 3D anchors in `useFrame`. drei `<Html>` (a React root per hotspot) left one hotspot empty and threw "synchronously unmount a root" errors under React 19.
+- **Frame loop:** `always` only while auto-rotating, `demand` otherwise (renders only on change), and `never` when offscreen or the tab is hidden. DPR is capped at 1.5. Auto-rotate is off under `prefers-reduced-motion` and stops on first drag.
+- **Studio light** uses drei `Lightformer`s inside `<Environment>`, not a preset HDR, so it needs no network fetch.
+- **Cut line:** the exploded view is just the `explode` prop + `offset()` in `lib/showroom.ts`. Removing the slider leaves the parts at rest.
+- Measured: the 3D code is one lazy chunk of ~1.0 MB raw / ~274 KB gzip, loaded only when the showroom opens. It holds 120 fps (display refresh) during auto-rotate in Chrome on the dev laptop. `THREE.Clock` logs a deprecation warning from inside R3F 9.8 with three 0.186. It's harmless.
+- Dev server ran on 3104.
+
 ## Stage B1
 - **No Supabase yet.** The 1,200 synthetic customers are regenerated in memory on startup (deterministic, seed 42, ~0.3 s). `sim/seed_supabase.py` upserts them into a `customers (id, data jsonb)` table when keys exist; it hasn't been run.
 - **Config is TOML, not YAML** (`engine/config.toml`, `engine/eligibility.toml`): it's in the standard library (`tomllib`), so no new dependency, and it's just as readable.
