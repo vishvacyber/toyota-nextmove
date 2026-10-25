@@ -43,6 +43,7 @@ You are building **Toyota NextMove**, a proactive, agentic financial co-pilot fo
 - Each stage has a "Done when" check in `docs/SPEC.md`. Verify it before saying the stage is done.
 - Run lint, typecheck, and tests before finishing a stage. Fix failures.
 - Keep commits small, one per stage: `stage(C1): command center, queue, customer 360`.
+- Commits and PRs are authored by Vishva only: no `Co-Authored-By` trailer and no "Generated with Claude" line.
 - If something is ambiguous, pick the simplest option that satisfies the spec and note it in `docs/DECISIONS.md`.
 
 ## Look and feel
