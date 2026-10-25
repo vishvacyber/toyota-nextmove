@@ -4,7 +4,7 @@ employee approval · L4 money/credit = humans only, never an agent."""
 from app.models import AutonomyLevel, Status8
 from tools import REGISTRY
 
-AGENTS = {"orchestrator", "advisor", "sentinel", "hardship", "market_intel", "guardian"}
+AGENTS = {"orchestrator", "advisor", "sentinel", "hardship", "market_intel", "guardian", "inspector"}
 # Tools each SDK agent may call. Nothing L4 exists; deferral decisions go to handoff_to_human, called by code.
 AGENT_TOOLS = {
     "advisor": ["get_customer", "run_scenario", "check_eligibility", "get_market_value", "find_dealer", "get_recalls",

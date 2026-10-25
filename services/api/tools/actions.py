@@ -9,20 +9,27 @@ from pydantic import AwareDatetime, BaseModel, Field
 from app.models import (
     AuditEntry,
     AutonomyLevel,
+    Dealer,
+    DealPacket,
+    DealPacketCreate,
     Handoff,
     HandoffCreate,
     InspectionResult,
     Offer,
     OfferCreate,
-    PhotoAngle,
+    Overrides,
+    ScenarioRequest,
     Status4,
+    Status6,
     Status7,
 )
+from engine import scenarios
 from engine.scenarios import CFG
+from serpapi import client, market, queries
 from tools.customer import customer
-from tools.registry import tool
+from tools.registry import ToolError, tool
 
-STORE: dict[str, list] = {"appointments": [], "offers": [], "handoffs": [], "audit": [], "inspections": []}
+STORE: dict[str, list] = {"appointments": [], "offers": [], "handoffs": [], "audit": [], "inspections": [], "deal_packets": []}
 
 
 def new_id(prefix: str) -> str:
@@ -87,24 +94,43 @@ def log_decision(args: DecisionIn) -> AuditEntry:
     return entry
 
 
-class Photo(BaseModel):
-    angle: PhotoAngle
-    url: str | None = None
-
-
 class InspectionIn(BaseModel):
     customer_id: str
-    photos: list[Photo] = Field(min_length=1)
 
 
 @tool()
 def inspect_photos(args: InspectionIn) -> InspectionResult:
-    """Lease-end photo pre-inspection. MINIMAL until B4 (vision): flags no items and returns the standard wear
-    estimate from engine config, clearly labelled as such."""
+    """The customer's latest lease-end photo pre-inspection (items and estimated charges from the engine wear table).
+    Photos are taken in the app (POST /inspections); without one this returns the standard wear estimate."""
     customer(args.customer_id)
-    result = InspectionResult(
+    latest = next((r for r in reversed(STORE["inspections"]) if r.customer_id == args.customer_id), None)
+    return latest or InspectionResult(
         id=new_id("INS"), customer_id=args.customer_id, items=[], total_estimated_charge=CFG["fees"]["wear_estimate"],
         is_estimate=True, created_at=now(),
-        disclaimer="Photo analysis isn't available yet. This is the standard wear estimate, not a review of your photos.")
-    STORE["inspections"].append(result)
-    return result
+        disclaimer="No photo pre-inspection yet. This is the standard wear estimate; take photos in the app for a "
+                   "personal estimate.")
+
+
+def create_deal_packet(body: DealPacketCreate) -> DealPacket:
+    """Engine scenario + eligibility for one option, sent to a dealer from the cached SerpApi dealer search (never
+    spends quota). The customer pressing "Send" is the L3 consent, so it goes out as `sent`."""
+    c = customer(body.customer_id)
+    ss = scenarios.run(ScenarioRequest(customer_id=c.id, options=[body.option],
+                                       overrides=Overrides(target_model=body.target_model)), c)
+    s = ss.scenarios[0]
+    if not s.eligible:
+        raise ToolError(s.ineligible_reason or "Not eligible")
+    row = client.cached_only(*queries.dealers(c.region.value))
+    found = market.parse_dealers(row["response"], c.region.value) if row else []
+    pick = next((d for d in found if d["id"] == body.dealer_id), None) if body.dealer_id else (found or [None])[0]
+    if pick is None:
+        raise LookupError(f"Dealer {body.dealer_id} not found" if body.dealer_id and found
+                          else f"No dealer data cached for {c.region.value}")
+    packet = DealPacket(id=new_id("DLP"), customer_id=c.id, dealer=Dealer(**{k: v for k, v in pick.items() if k != "data_id"}),
+                        vehicle=c.vehicle, target_vehicle=s.target_vehicle, scenario=s,
+                        eligibility=scenarios.passed_rules(body.option, scenarios.facts(c)), status=Status6.sent,
+                        created_at=now())
+    STORE["deal_packets"].append(packet)
+    log_decision(DecisionIn(actor=c.id, action=f"send_deal_packet {packet.id} to {packet.dealer.name}",
+                            autonomy_level=AutonomyLevel.L3, customer_id=c.id, detail="Customer consented in the app"))
+    return packet

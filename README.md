@@ -60,6 +60,12 @@ cd services/api && SUPABASE_URL=... SUPABASE_SERVICE_KEY=... uv run python -m si
 - Endpoints: `POST /agents/advisor/ask`, `GET /customers/{id}/recommendation`, `GET /opportunities`, `GET /traces`, `GET /alerts`. Traces go to Supabase `traces` (`migrations/002_traces.sql`) and Realtime Broadcast channel `traces`, event `created`.
 - Live persona evals (spend subscription quota; pytest never calls the SDK): `pnpm --filter @nextmove/api evals:live` (add `--save` to refresh `fallback.json`, or pass `CUST-…` IDs to rerun some).
 
+## API: value features (B4)
+- `GET /customers/{id}/timing`: month-by-month equity, fees and net position, best month, and act now vs wait 3 months in $. `POST /scenarios` also accepts `overrides.months_from_now`.
+- `POST /inspections` (multipart `customer_id`, `photos[]`, `angles[]`): the vision model identifies wear items, and charges come from `[inspection.charges]` in `engine/config.toml`. Photos stay in memory. A canned Maria result is served if the SDK is down or slow.
+- `POST /deal-packets` / `GET /deal-packets`: engine scenario + eligibility, sent to a cached dealer (in memory).
+- `GET /opportunities`: `expected_value` and `retention_odds` come from `engine/nba.py` (weights in `[nba]`).
+
 ## Contract
 
 `packages/contracts/openapi.yaml` is the source of truth. After editing it, run `pnpm gen` to regenerate the TS types and the API's Pydantic models.

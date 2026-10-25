@@ -103,7 +103,72 @@ Highlander = "Highlander"
 Prius = "bZ"
 bZ = "bZ"
 
-[opportunity]
-# shortcut: flat placeholders per next-best action / situation until B4's NBA $ scoring replaces them.
-expected_value = { buyout = 1850, return = 600, upgrade = 2600, trade_in = 1900, refinance = 700, extend = 500, due_date_change = 920, keep = 250, do_nothing = 150 }
-retention_odds = { lease_end = 0.78, mileage_overage = 0.7, positive_equity = 0.71, rate_drop = 0.66, early_payoff = 0.55, payment_stress = 0.64, ev_switch = 0.68, life_event = 0.6 }
+[nba]
+# Next-best-action $ scoring (engine/nba.py). Deterministic, explainable, no protected attributes and no credit tier.
+# retention_odds = logistic(intercept[situation] + w_equity × equity/$10k + w_on_time × on-time share of payment history
+#                           + w_past_due × days past due/30 + w_action[option]), clamped to [min_odds, max_odds].
+min_odds = 0.05
+max_odds = 0.95
+intercept = { lease_end = 0.6, mileage_overage = 0.5, positive_equity = 0.4, rate_drop = 0.3, early_payoff = 0.0, payment_stress = 0.2, ev_switch = 0.3, life_event = 0.2, none = 0.0 }
+w_equity_per_10k = 0.35
+w_on_time = 0.8
+w_past_due_per_30_days = -0.9
+w_action = { buyout = 0.5, upgrade = 0.6, refinance = 0.5, trade_in = 0.3, extend = 0.3, due_date_change = 0.6, deferral = 0.4, return = -0.8, keep = 0.0, do_nothing = -0.4 }
+# expected_value = retention_odds × margin_rate × monthly_payment × horizon_months (TFS margin on the option's payments)
+#                + for a customer in payment stress: payoff × cure_lift[option] × loss_given_default (credit loss avoided).
+margin_rate = 0.06
+loss_given_default = 0.45
+cure_lift = { due_date_change = 0.25, extend = 0.2, deferral = 0.15 }
+no_payment_value = { return = 600, trade_in = 1900 }   # $ per retained customer when the option has no payment
+
+[inspection]
+# Photo pre-inspection (B4). The vision model only names area + severity; every charge comes from this table.
+timeout_s = 25
+max_photos = 6
+max_bytes = 5_000_000
+media_types = ["image/jpeg", "image/png", "image/webp"]
+positions = ["front", "rear", "left", "right", "front_left", "front_right", "rear_left", "rear_right", "center"]
+
+# Lease-end wear charges by area and severity ($, synthetic). Severity "none" is $0; minor wheel and interior
+# wear sit inside normal-wear standards, so they're $0 too.
+[inspection.charges]
+front_bumper = { minor = 150, moderate = 350, major = 700 }
+rear_bumper = { minor = 150, moderate = 350, major = 700 }
+hood = { minor = 125, moderate = 300, major = 650 }
+roof = { minor = 125, moderate = 300, major = 650 }
+door = { minor = 100, moderate = 250, major = 600 }
+fender = { minor = 100, moderate = 250, major = 550 }
+quarter_panel = { minor = 125, moderate = 300, major = 650 }
+liftgate = { minor = 100, moderate = 250, major = 550 }
+windshield = { minor = 0, moderate = 150, major = 450 }
+window = { minor = 0, moderate = 100, major = 300 }
+headlight = { minor = 0, moderate = 150, major = 400 }
+taillight = { minor = 0, moderate = 125, major = 300 }
+mirror = { minor = 50, moderate = 125, major = 300 }
+wheel = { minor = 0, moderate = 150, major = 300 }
+tire = { minor = 0, moderate = 175, major = 225 }
+seat = { minor = 0, moderate = 150, major = 400 }
+dashboard = { minor = 0, moderate = 150, major = 350 }
+carpet = { minor = 0, moderate = 100, major = 250 }
+
+# Shown when photo analysis is unavailable (SDK down, slow or rejected) for the demo lease persona.
+[[inspection.canned.CUST-MARIA]]
+angle = "front"
+area = "front_bumper"
+issue = "Scratch, about 3 in"
+severity = "minor"
+box = [0.42, 0.62, 0.18, 0.1]
+[[inspection.canned.CUST-MARIA]]
+angle = "left"
+area = "door"
+position = "rear_left"
+issue = "Dent"
+severity = "moderate"
+box = [0.55, 0.4, 0.12, 0.14]
+[[inspection.canned.CUST-MARIA]]
+angle = "wheels"
+area = "wheel"
+position = "front_right"
+issue = "Light curb rash"
+severity = "minor"
+box = [0.3, 0.3, 0.4, 0.4]

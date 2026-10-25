@@ -9,6 +9,7 @@ dependencies = [
     "httpx>=0.28.1",
     "mcp>=2.3.0",
     "claude-agent-sdk>=0.2.174",
+    "python-multipart>=0.0.20",   # FastAPI form uploads (POST /inspections)
 ]
 
 [dependency-groups]

@@ -21,8 +21,8 @@ from app.models import (
     ToolCall,
     Verdict,
 )
-from engine import scenarios
-from engine.scenarios import CFG, TODAY, usd
+from engine import nba, scenarios
+from engine.scenarios import TODAY, usd
 from sim.generator import customers_by_id
 from tools.actions import new_id
 
@@ -50,11 +50,12 @@ def scan() -> list[Opportunity]:
         if c.situation == Situation.none:
             continue
         rec = recommend.pick(c.situation, recommend.scenario_set(c))
+        nba_ = nba.score(c, rec)
         days = (c.contract.maturity_date - TODAY).days if c.contract.type.value == "lease" else None
         out.append(Opportunity(
             customer_id=c.id, customer_name=f"{c.first_name} {c.last_name}", model=c.vehicle.model, situation=c.situation,
-            next_best_action=rec.option, expected_value=CFG["opportunity"]["expected_value"].get(rec.option.value, 150),
-            retention_odds=CFG["opportunity"]["retention_odds"].get(c.situation.value, 0.5), days_to_maturity=days,
+            next_best_action=rec.option, expected_value=nba_["expected_value"],
+            retention_odds=nba_["retention_odds"], days_to_maturity=days,
             script=recommend.headline(c, rec), reason=reason(c, rec),
             priority=1 if c.situation in URGENT else 2 if rec.option.value != "do_nothing" else 3))
     personas = {"CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"}   # demo personas lead their priority band

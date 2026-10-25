@@ -57,6 +57,11 @@ def fuel(miles_per_year: float, mpg: float, ev: bool, gas_price: float, electric
     return gallons * gas_price / 12, gallons * co2_kg_per_gallon
 
 
+def add_months(d: date, months: int) -> date:
+    y, m = divmod(d.month - 1 + months, 12)
+    return date(d.year + y, m + 1, min(d.day, 28))
+
+
 def aligned_due_day(next_payday: date, pay_frequency: str) -> int:
     """Day of month just after a payday, kept within 1..28 so it exists every month."""
     step = {"weekly": 7, "biweekly": 14}.get(pay_frequency, 0)
