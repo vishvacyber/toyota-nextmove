@@ -201,3 +201,11 @@ def test_recommendation_assumptions_are_unique():
     for cid in ("CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"):
         a = recommend.recommendation(customers_by_id()[cid]).assumptions
         assert len(a) == len(set(a)), cid
+
+
+def test_first_question_starts_a_session(monkeypatch):
+    # Clients send session_id back only after the API returns one, so the API must start it.
+    monkeypatch.setattr(sdk, "run", fake_run(engine_text))
+    a = ask("CUST-JAMES", "Is now a good time to upgrade?")
+    assert a.session_id and a.session_id in orchestrator.SESSION_INFO
+    assert ask("CUST-JAMES", "And the payment?", session_id=a.session_id).session_id == a.session_id

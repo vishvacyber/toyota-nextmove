@@ -187,7 +187,7 @@ function Answer({ a }: { a: AdvisorAnswer }) {
           <p className="font-semibold text-muted">{t("numbers_used")}</p>
           <ul className="mt-1 space-y-1">
             {a.numbers_used.map((n) => (
-              <li key={`${n.label}-${n.source_tool}`} className="flex flex-wrap justify-between gap-x-4">
+              <li key={`${n.label}-${n.value}-${n.source_tool}`} className="flex flex-wrap justify-between gap-x-4">
                 <span>{n.label}</span>
                 <span className="tabular-nums"><span className="font-semibold"><Private>{num(n.value)}</Private></span> <span className="text-muted">· {n.source_tool}</span></span>
               </li>

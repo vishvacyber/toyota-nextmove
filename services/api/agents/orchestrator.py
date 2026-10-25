@@ -85,6 +85,8 @@ def template_answer(c: Customer) -> tuple[str, list[ToolCall]]:
 
 
 async def ask(req: AdvisorAsk) -> AdvisorAnswer:
+    if not req.session_id:   # first question starts a session; clients send it back on later turns
+        req = req.model_copy(update={"session_id": f"SES-{uuid.uuid4().hex[:10].upper()}"})
     c = customer(req.customer_id)
     started, t0 = datetime.now(UTC), time.monotonic()
     message, lang = traces.mask(req.message), (req.language.value if req.language else "en")
