@@ -8,17 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { asOf, label, pct, usd } from "@/lib/format";
-
-type Metric = keyof KpiSnapshot["baseline"];
-// lower: true means a drop is the good direction.
-const KPIS: { key: Metric; title: string; fmt: (n: number) => string; lower?: boolean }[] = [
-  { key: "retention_rate", title: "Retention", fmt: (n) => pct(n, 1) },
-  { key: "calls_per_100_customers", title: "Calls / 100 customers", fmt: String, lower: true },
-  { key: "delinquency_rate", title: "Delinquency", fmt: (n) => pct(n, 1), lower: true },
-  { key: "revenue", title: "Revenue", fmt: usd },
-  { key: "cost_to_serve", title: "Cost to serve", fmt: usd, lower: true },
-  { key: "avg_ltv", title: "Avg. lifetime value", fmt: usd },
-];
+import { KPIS } from "@/lib/kpis";
 
 const chartConfig = {
   baseline_retention: { label: "Baseline", color: "var(--chart-2)" },
