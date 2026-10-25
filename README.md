@@ -647,7 +647,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 | `SUPABASE_SERVICE_KEY` | API only | Cache and trace writes; never sent to a browser |
 | `SERPAPI_API_KEY` | API | Live SerpApi on cache misses |
 | `GEMINI_API_KEY` | API | Gemini, the primary AI ([aistudio.google.com/apikey](https://aistudio.google.com/apikey)) |
-| `GEMINI_MODEL` | API | Gemini model (default `gemini-2.5-flash`) |
+| `GEMINI_MODEL` | API | Gemini model (default `gemini-3.5-flash`) |
 | `CLAUDE_CONFIG_DIR` | API | Folder holding the Claude subscription login for the backup AI (absolute path) |
 | `NEXT_PUBLIC_API_URL` | frontends | API address (default `http://localhost:8000`) |
 | `NEXT_PUBLIC_API_MOCKING` | frontends | `disabled` (live), `enabled` (all mocks), or a comma list of path prefixes to keep mocked |

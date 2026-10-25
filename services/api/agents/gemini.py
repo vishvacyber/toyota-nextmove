@@ -17,12 +17,13 @@ from app.models import ToolCall
 from tools import REGISTRY, ToolError, call
 
 API = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+TIMEOUT_S = 25   # explanations take ~12-15 s; overload (503) fails instantly, so this only bounds a stuck call
 KEEP = {"type", "description", "properties", "required", "items", "enum", "format", "nullable", "minimum", "maximum",
         "minItems", "maxItems"}
 
 
 def model() -> str:
-    return os.environ.get("GEMINI_MODEL") or "gemini-2.5-flash"
+    return os.environ.get("GEMINI_MODEL") or "gemini-3.5-flash"   # checked live: fast tool calls; 2.5 is retired
 
 
 def available() -> bool:

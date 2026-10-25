@@ -15,7 +15,7 @@ async def run(system: str, prompt: str | list[dict], names: list[str], **kw) -> 
     """kw: timeout / max_turns, passed through unchanged to whichever provider answers."""
     if gemini.available():
         try:
-            return await gemini.run(system, prompt, names, **kw)
+            return await gemini.run(system, prompt, names, **{**kw, "timeout": min(kw.get("timeout", gemini.TIMEOUT_S), gemini.TIMEOUT_S)})
         except sdk.SdkUnavailable as e:
             log.warning("Gemini unavailable (%s); trying Claude", e)
     return await sdk.run(system, prompt, names, **kw)
