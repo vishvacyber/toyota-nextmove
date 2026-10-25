@@ -17,8 +17,6 @@
   "dependencies": {
     "@nextmove/contracts": "workspace:*",
     "@nextmove/tokens": "workspace:*",
-    "@react-three/drei": "^10.7.9",
-    "@react-three/fiber": "^9.8.2",
     "@supabase/supabase-js": "^2.118.0",
     "framer-motion": "^14.6.0",
     "msw": "^2.15.0",
@@ -26,7 +24,6 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "recharts": "3.8.0",
-    "three": "^0.186.1",
     "uqr": "^0.1.2"
   },
   "devDependencies": {
@@ -35,7 +32,6 @@
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@types/three": "^0.186.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.4.3",
     "tailwindcss": "^4.3.3",

@@ -59,6 +59,31 @@ def comp_value(model: str, year: int) -> dict | None:
             "as_of": row["fetched_at"][:10]}
 
 
+@cache   # shortcut: cached prices are read once per process; restart the API after re-seeding
+def real_msrp(model: str, trim: str, year: int, base: bool = False) -> dict | None:
+    """Real Toyota MSRP from the cached SerpApi search, or None. Cache only: never spends quota."""
+    row = client.cached_only(*queries.msrp(model, trim, year))
+    found = market.parse_msrp(row["response"], trim, base, model) if row else None
+    if not found:
+        return None
+    host = found["source_url"].split("/")[2] if "//" in found["source_url"] else "web"
+    return {**found, "source": f"{row['source']}, {host}", "as_of": row["fetched_at"][:10]}
+
+
+def new_price(model: str) -> tuple[float, str]:
+    """Price of the upgrade target (next model year), and where it came from."""
+    cat = CFG["catalog"][model]
+    m = real_msrp(model, cat.get("msrp_trim", cat["trim"]), TODAY.year + 1)
+    return (m["price"], f"MSRP from {m['source']}, as of {m['as_of']}") if m else \
+        (cat["price"], "list price from the NextMove catalog (synthetic)")
+
+
+def base_msrp(model: str) -> float:
+    """Today's new price of the model's base trim (depreciation base when there are no comps)."""
+    m = real_msrp(model, CFG["market"]["base_trim"][model], TODAY.year, base=True)
+    return m["price"] if m else CFG["market"]["msrp"][model]
+
+
 def market_value(v: Vehicle) -> float:
     """Comps median adjusted for miles vs a typical pace when cached comps exist; else the depreciation table.
     AHEAD months from now, it also loses that share of this year's drop on the retention curve."""
@@ -67,7 +92,7 @@ def market_value(v: Vehicle) -> float:
     if comp:
         value = comp["median"] - (v.odometer_miles - age * m["expected_miles_per_year"]) * m["per_mile_adjust"]
     else:
-        value = finance.market_value(m["msrp"][v.model], age, v.odometer_miles, m["retention"],
+        value = finance.market_value(base_msrp(v.model), age, v.odometer_miles, m["retention"],
                                      m["expected_miles_per_year"], m["per_mile_adjust"])
     if ahead := AHEAD.get():
         r = m["retention"]
@@ -342,13 +367,14 @@ def build_upgrade(c: Customer, o: Overrides) -> Scenario:
     cat, fee = CFG["catalog"][target], CFG["fees"]["dealer_doc"]
     e, down = equity(c), o.down_payment or 0
     n, apr = o.term_months or CFG["terms"]["upgrade_months"], o.apr if o.apr is not None else CFG["rates"]["new_vehicle"][c.credit_tier]
-    financed = max(cat["price"] + fee - e - down, 0)
+    price, price_source = new_price(target)
+    financed = max(price + fee - e - down, 0)
     pmt = finance.monthly_payment(financed, apr, n)
     vehicle = Vehicle(vin=f"SYNNEW{target.upper()}{cat['powertrain'].upper()}"[:17], model=target, year=TODAY.year + 1,
                       trim=cat["trim"], powertrain=cat["powertrain"], color="Supersonic Red", odometer_miles=12, mpg=cat["mpg"])
     tc = true_cost(target, cat["powertrain"], cat["mpg"], pmt, annual_miles(c, o))
     saved = current_true_cost(c, o, c.contract.monthly_payment).co2_kg_per_year - tc.co2_kg_per_year
-    notes = [f"{usd(e)} equity applied to a {usd(cat['price'])} {target} {cat['trim']}",
+    notes = [f"{usd(e)} equity applied to a {usd(price)} {target} {cat['trim']} ({price_source})",
              f"{usd(fee)} dealer fees, {usd(down)} down, {n} months at {apr:g}% APR",
              driving_note(c, o, cat["mpg"], cat["powertrain"]), market_note(c.vehicle), "Excludes sales tax and registration"]
     if saved > 0:

@@ -7,7 +7,7 @@ import time
 import uuid
 from datetime import UTC, datetime
 
-from agents import guardian, recommend, sdk, traces
+from agents import guardian, llm, recommend, sdk, traces
 from agents.autonomy import AGENT_TOOLS, gate
 from agents.prompts import PROMPTS
 from app.models import (
@@ -99,7 +99,7 @@ async def ask(req: AdvisorAsk) -> AdvisorAnswer:
         text, feedback = "", ""
         for attempt in range(2):   # one send-back on `revise`
             try:
-                run = await sdk.run(system, prompt(c, message, lang, session, feedback), AGENT_TOOLS[agent])
+                run = await llm.run(system, prompt(c, message, lang, session, feedback), AGENT_TOOLS[agent])
             except sdk.SdkUnavailable as e:
                 plan.append(f"SDK unavailable: {e}")
                 text = ""

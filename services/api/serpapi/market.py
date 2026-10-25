@@ -1,5 +1,6 @@
 """Parse cached SerpApi responses into contract shapes. Pure functions: no engine imports, no I/O."""
 
+import json
 import math
 import re
 import statistics
@@ -31,6 +32,38 @@ def parse_comps(resp: dict, model: str, year: int) -> list[dict]:
             seen.add(r["link"])
             out.append({"title": r.get("title", ""), "price": price, "miles": None, "source_url": r["link"]})
     return out
+
+
+PRICE = r"\$\s?(\d{2,3},?\d{3})(?!\d)"
+LIST_NEXT = re.compile(r"[.,;]?\s*\$\s?\d")
+STARTS_AT = re.compile(r"(?:msrp|starts? at|starting (?:msrp|price|at)|base price)[^$]{0,40}" + PRICE, re.IGNORECASE)
+
+
+def parse_msrp(resp: dict, trim: str, base: bool = False, model: str = "", low: int = 15_000,
+               high: int = 150_000) -> dict | None:
+    """The trim's MSRP from search snippets: a price stated right after the trim name wins (e.g. "Camry SE suggested
+    price: $32,618"); for a base trim, "MSRP starts at $29,700" also counts. toyota.com breaks ties. A cut-off
+    multi-trim price list never counts, since its first number may belong to another trim."""
+    by_trim = re.compile(rf"\b{re.escape(trim)}\b(?![- ]?(?:hybrid|plus|premium|nightshade))[^$\n]{{0,45}}" + PRICE, re.IGNORECASE)
+    best = None
+    other_model = re.compile(rf"grand[ -]?{re.escape(model)}", re.IGNORECASE) if model else None
+    for r in resp.get("organic_results", []):
+        text = " ".join([r.get("title", ""), r.get("snippet", ""), json.dumps(r.get("rich_snippet", {}))])
+        link = r.get("link", "")
+        if "inventory" in link or (other_model and other_model.search(link + " " + text)):
+            continue   # a dealer's specific car (options, markup) or a different model (Grand Highlander) isn't MSRP
+        for score, rx in ((3, by_trim), (2, STARTS_AT if base else None)):
+            m = rx.search(text) if rx else None
+            if m and LIST_NEXT.match(text, m.end()):
+                m = None   # "$36,425. $34,725": a cut-off list of several trims, not this trim's price
+            price = int(m.group(1).replace(",", "")) if m else 0
+            if low <= price <= high:
+                cand = (score + (0.5 if "toyota.com" in r.get("link", "") else 0),
+                        {"price": price, "source_url": r.get("link", ""), "title": r.get("title", "")})
+                if best is None or cand[0] > best[0]:
+                    best = cand
+                break
+    return best[1] if best else None
 
 
 def comp_summary(comps: list[dict]) -> dict:

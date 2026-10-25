@@ -51,7 +51,7 @@ def test_james_upgrade_lowers_monthly_cost():
     assert up.monthly_payment < keep.monthly_payment
     assert up.true_cost.total_monthly < keep.true_cost.total_monthly
     assert up.true_cost.co2_kg_per_year < keep.true_cost.co2_kg_per_year
-    financed = 33500 + 650 - up.equity
+    financed = scenarios.new_price("Camry")[0] + 650 - up.equity   # real MSRP from the cached SerpApi search
     assert up.monthly_payment == pytest.approx(finance.monthly_payment(financed, 5.9, 60), abs=0.01)
 
 

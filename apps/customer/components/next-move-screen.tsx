@@ -9,6 +9,7 @@ import { AdvisorChat } from "@/components/advisor-chat";
 import { Alerts } from "@/components/alerts";
 import { DecideAct, HandoffBanner } from "@/components/decide-act";
 import { Attract } from "@/components/attract";
+import { CarPhoto } from "@/components/car-photo";
 import { ContinueOnPhone } from "@/components/continue-on-phone";
 import { KioskContext } from "@/components/kiosk";
 import { Showroom } from "@/components/showroom";
@@ -173,6 +174,7 @@ function SituationStep({ c, r }: { c: Customer; r: Recommendation }) {
       </motion.section>
 
       <Card title={t("your_vehicle")}>
+        <div className="mb-4"><CarPhoto model={c.vehicle.model} className="aspect-[16/9]" /></div>
         <p className="text-2xl font-semibold">{c.vehicle.year} {c.vehicle.model} {c.vehicle.trim}</p>
         <dl className="mt-3">
           <Row label={t("odometer")}>{t("miles", { miles: num(c.vehicle.odometer_miles) })}</Row>
@@ -233,7 +235,7 @@ function NextMoveStep({ r, onAct, onExplore }: { r: Recommendation; onAct: () =>
               )}
               {s.target_vehicle && (
                 <button type="button" onClick={() => onExplore(s.option)} className={`${i === 0 ? "mt-3" : "mt-6"} w-full rounded-full border border-line px-6 py-3 font-semibold`}>
-                  {t("explore_3d")}
+                  {t("explore_showroom")}
                 </button>
               )}
             </ScenarioCard>

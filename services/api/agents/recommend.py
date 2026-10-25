@@ -11,7 +11,7 @@ import re
 import time
 from datetime import UTC, datetime
 
-from agents import guardian, sdk, traces
+from agents import guardian, llm, sdk, traces
 from agents.autonomy import AGENT_TOOLS
 from agents.prompts import PROMPTS
 from app.models import (
@@ -138,7 +138,7 @@ async def explain(c: Customer, ss: ScenarioSet, rec: Scenario, alts: list[Scenar
         result, calls, model, verdict = None, [], sdk.MODEL, None
         for attempt in range(2):   # one send-back on `revise`, like the Advisor
             try:
-                run = await sdk.run(system, prompt(c, rec, alts, feedback), AGENT_TOOLS["explainer"])
+                run = await llm.run(system, prompt(c, rec, alts, feedback), AGENT_TOOLS["explainer"])
             except sdk.SdkUnavailable as e:
                 plan.append(f"SDK unavailable: {e}")
                 break

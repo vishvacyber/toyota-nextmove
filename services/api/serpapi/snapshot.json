@@ -59,6 +59,167 @@
   },
   "source": "SerpApi Google Maps Reviews"
  },
+ "0ec9a64aaeff37f01684245bb9baef240902c329eb0e01ca4b51053e088a29ad": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:23.033169+00:00",
+  "key": "0ec9a64aaeff37f01684245bb9baef240902c329eb0e01ca4b51053e088a29ad",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2026 Toyota RAV4 LE MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.toyota.com/rav4/",
+     "snippet": "Starting MSRP $ 31,900 * LE $31,900 Base MSRP * 47/40 * 12.3-in. digital gauge cluster 10.5-in. 360L Plan 3-month trial subscription",
+     "title": "2026 Toyota RAV4 | Toyota.com"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/rav4/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 33350.0,
+        "rating": 4.5
+       },
+       "extensions": [
+        "4.5",
+        "$33,350.00",
+        "Review by Matt Degen"
+       ]
+      }
+     },
+     "snippet": "The cheapest 2026 Toyota RAV4 is the LE, with a starting sticker price of $33,350 and a Kelley Blue Book Fair Purchase Price of $33,400.",
+     "title": "2026 Toyota RAV4 Price, Reviews, Pictures & More"
+    },
+    {
+     "link": "https://www.reddit.com/r/rav4club/comments/1smlcs1/some_people_here_are_driving_2026_rav4s_how_is/",
+     "snippet": "Pricing details for the 2026 Toyota RAV4 \u2026 exactly MSRP and fees as stated on the general Toyota site. 35,500 OTD LE FWD Galil Gen 2 7.62x39 8. ...",
+     "title": "Some people here are driving 2026 RAV4s. How is the ..."
+    },
+    {
+     "link": "https://www.buyatoyota.com/home/vehicles/rav4/",
+     "snippet": "LE 2026 RAV4 LE $31,900 Base MSRP * 47 / 40 Est. mpg \u30fb $36,100 Base \u30fb $39,900 Base MSRP * 41 / 35 Est. mpg",
+     "title": "2026 Toyota RAV4 | BuyAToyota.com"
+    },
+    {
+     "link": "https://www.cars.com/research/toyota-rav4-2026/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 31900.0,
+        "rating": 4.0,
+        "reviews": 5
+       },
+       "extensions": [
+        "4.0(5)",
+        "$31,900.00"
+       ]
+      }
+     },
+     "snippet": "There's no official pricing information yet, but Toyota says it will start in the low $30,000 range. $31,250 (including destination) tag on the base, no-frills",
+     "title": "2026 Toyota RAV4 - Specs, Prices, MPG, Reviews & Photos"
+    },
+    {
+     "link": "https://www.toyota.com/rav4/features/",
+     "snippet": "Engine All-Wheel Drive $4330043/37mpg. Engine All-Wheel Drive $3990041/35mpg MPG/Other/Price. Price Base MSRP * ... More $43,300 $39,900 Exterior Interior. ...",
+     "title": "2026 Toyota RAV4 Specifications"
+    },
+    {
+     "link": "https://www.edmunds.com/car-news/2026-toyota-rav4-pricing.html",
+     "snippet": "RAV4 LE Hybrid: $33,350. The LE is the least expensive RAV4 for 2026 and comes standard with front-wheel drive. \u00b7 RAV4 Woodland Hybrid: $41,350.",
+     "title": "2026 Toyota RAV4 Pricing: Here's How Much Each Trim ..."
+    },
+    {
+     "link": "https://caredge.com/guides/toyota-rav4-markups-in-2026",
+     "snippet": "2026 Toyota RAV4 Invoice vs. MSRP by Trim ; LE, $28,800, $31,090 ; XLE, $30,200, $32,590 ; XLE Premium, $32,500, $35,090 ; Adventure, $34,000 ...",
+     "title": "Toyota RAV4 Markups in 2026: What Dealers Are ..."
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
+ "12ad4de31caabed6d9936cd46b9a34ee9d35c8da574840394110c01a01deea21": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:29.675178+00:00",
+  "key": "12ad4de31caabed6d9936cd46b9a34ee9d35c8da574840394110c01a01deea21",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2027 Toyota Prius XLE MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.toyota.com/vehicles/prius/2027",
+     "snippet": "2027 Prius Starting MSRP $28,755 * XLE XLE $32,200 Base MSRP * 54/46 MPG Est. $35,770 Base MSRP * 54/46 MPG Est. City/Hwy Rating Blue",
+     "title": "2027 Prius"
+    },
+    {
+     "link": "https://www.delaneytoyota.com/2027-prius/",
+     "snippet": "Trims \u00b7 LE \u00b7 $28,755 base msrp \u00b7 57/56 est. mpg \u00b7 XLE \u00b7 $32,200 base msrp \u00b7 52/52 est. mpg \u00b7 Nightshade \u00b7 $33,005 base msrp ...",
+     "title": "2027 Toyota Prius"
+    },
+    {
+     "link": "https://www.legacytoyotadallas.com/toyota-research/2027-toyota-prius-overview/",
+     "snippet": "Pricing starts at $30,050 TSRP and runs to $38,465 TSRP. XLE FWD $33,495 TSRP* XLE AWD $34,895 TSRP* The XLE is the value inflection point. XLE as its base \u2026 ...",
+     "title": "2027 Toyota Prius Specs & Pricing"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/prius/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 30050.0,
+        "rating": 4.1,
+        "reviews": 12
+       },
+       "extensions": [
+        "4.1(12)",
+        "$30,050.00"
+       ]
+      }
+     },
+     "snippet": "The 2027 Toyota Prius has a starting sticker price of $30,050, XLE $33,495 $32,500 Nightshade $34,300 $33,900",
+     "title": "2027 Toyota Prius Price, Reviews, Pictures & More"
+    },
+    {
+     "link": "https://www.toyota.com/vehicles/priuspluginhybrid/2027",
+     "rich_snippet": {
+      "bottom": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 33980.0
+       },
+       "extensions": [
+        "$33,980.00",
+        "Free delivery"
+       ]
+      }
+     },
+     "snippet": "2027 Prius Plug-in Hybrid Starting MSRP $33,980. MSRP * 52/128 MPG/MPGe \u30fb $37,230 Base MSRP * 47/114 MPG/MPGe $38,000 Base MSRP * 47/114 MPG/MPGe \u30fb $40,675 ...",
+     "title": "2027 Prius Plug-in Hybrid"
+    },
+    {
+     "link": "https://www.plazatoyota.com/2027-toyota-prius-whats-changing-release-date-and-pricing-for-nyc-drivers.htm",
+     "snippet": "New 2027 Toyota Prius XLE AWD All-Wheel Drive. $36,633$36,458 TSRP*. TSRP*: $36,458; Dealer Documentation Fee: $175: Advertised Price*: $36,633.",
+     "title": "2027 Prius & Prius Plug-in Hybrid: What Changed"
+    },
+    {
+     "link": "https://www.jdpower.com/cars/2027/toyota/prius/trim",
+     "snippet": "Select a vehicle trim below to get a valuation. 2027 Toyota Prius XLE Prices and Specs XLE XLE XLE AWD",
+     "title": "2027 Toyota Prius Trim Levels"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
  "1521510d86a4eb3396f8624b069cd1fe7fac597268510ee4b1cdd2dd3f4c6697": {
   "engine": "google",
   "fetched_at": "2026-10-25T02:57:37.589671+00:00",
@@ -214,6 +375,118 @@
    ]
   },
   "source": "SerpApi YouTube"
+ },
+ "1d31bc74ddff7f8082871b0e24bd1067f0ea3656efe90ff397ee014352629a88": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:21.760793+00:00",
+  "key": "1d31bc74ddff7f8082871b0e24bd1067f0ea3656efe90ff397ee014352629a88",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2026 Toyota Camry LE MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.toyota.com/vehicles/camry/2027",
+     "rich_snippet": {
+      "bottom": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 29700.0
+       },
+       "extensions": [
+        "$29,700.00",
+        "Free delivery"
+       ]
+      }
+     },
+     "snippet": "Camry Starting MSRP $29,700 * 51 Combined MPG for LE Trim -hybrid powertrain has a 51 combined EPA-estimated mpg rating on the LE trim.",
+     "title": "2027 Toyota Camry | Toyota.com"
+    },
+    {
+     "link": "https://www.reddit.com/r/Camry/comments/1t8ayxi/how_much_for_a_2026_camry_le/",
+     "snippet": "AWD with convenience package, heated seat. That\u2019s it. My Toyota dealer is quoting me \u201c38079\u201d OTD price with taxes and fees/accessories. Vehicle ...",
+     "title": "How much for a 2026 Camry LE?"
+    },
+    {
+     "link": "https://www.spitzertoyota.com/2026-camry/",
+     "snippet": "LE 2026 Camry LE $29,000 starting MSRP2 52/49 Est. Prices and colors may vary by model. Features 19 In Black Satin Wheels 19-In. 2026 Camry LE;",
+     "title": "2026 Camry"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/camry/2026/le/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 30495.0,
+        "rating": 4.8
+       },
+       "extensions": [
+        "4.8",
+        "$30,495.00",
+        "Review by Eric Brandt"
+       ]
+      }
+     },
+     "snippet": "A 2026 Toyota Camry LE has a 5-year cost-to-own of $46,645. expected to total $32,634.",
+     "title": "New 2026 Toyota Camry LE Prices"
+    },
+    {
+     "link": "https://www.toyotawoodbridge.com/toyota-camry-woodbridge-va.htm",
+     "snippet": "New 2026 Toyota Camry SE Sedan. $32,956$34,279 Total SRP \u00b7 2.5L 4-Cyl. Gas/Electric Hybrid Engine \u00b7 continuously variable automatic \u00b7 Heavy Metal Exterior \u00b7 Black ...",
+     "title": "New 2026 Toyota Camry"
+    },
+    {
+     "link": "https://www.edmunds.com/toyota/camry/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price_from": 30187.0,
+        "price_to": 36412.0,
+        "rating": 4.2
+       },
+       "extensions": [
+        "4.2",
+        "$30,187.00 to $36,412.00",
+        "Review by Cameron Rogers"
+       ]
+      }
+     },
+     "snippet": "LE. 2027 Toyota Camry LE suggested price: $30,187 \u00b7 for LE trim ; SE Most Popular. 2027 Toyota Camry SE suggested price: $32,618 \u00b7 for SE trim ; Nightshade. 2027 ...",
+     "title": "2027 Toyota Camry Prices, Reviews, and Pictures"
+    },
+    {
+     "link": "https://www.toyota.com/greaterny/deals-incentives/camry_lease_81c6821d-0a2e-4169-9171-54891ed838b0/?vehicles=camry",
+     "snippet": "Starting MSRP $29,6001 Get 4.99% APR for 48 months. MSRP $29,7001. Comes Standard $359/ mo 36mos $359due",
+     "title": "2026 Camry LE"
+    },
+    {
+     "link": "https://www.truecar.com/overview/toyota/camry/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price_from": 30895.0,
+        "price_to": 37295.0,
+        "rating": 4.3,
+        "reviews": 3778
+       },
+       "extensions": [
+        "4.3(3,778)",
+        "$30,895.00 to $37,295.00"
+       ]
+      }
+     },
+     "snippet": "The base model of the 2026 Toyota Camry has an TSRP of $30,895, but the average price paid is $29,074 based on 2,043 transactions from the past 4 weeks.",
+     "title": "2026 Toyota Camry Review | Pricing, Trims & Photos"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
  },
  "2ab8f3b704c0f1433f5546fed5c4c38e0e0b82928b6753f36e1de2227ab30819": {
   "engine": "google_maps",
@@ -539,6 +812,174 @@
   },
   "source": "SerpApi YouTube"
  },
+ "37bf836cd6f5aa2632ce6852527cb5a1878dbc1706d29e921199bc7ef5086ef4": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:27.627865+00:00",
+  "key": "37bf836cd6f5aa2632ce6852527cb5a1878dbc1706d29e921199bc7ef5086ef4",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2027 Toyota Highlander Hybrid XLE MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.nucartoyotanorthkingstown.com/2027-toyota-highlander-vs-grand-highlander/?srsltid=AYCX9vIr-8QZFAr_zjGy0q7tRGTc6GosU6YLAIeD3IDJ1DQAzZ5kYBS1",
+     "snippet": "2027 Highlander is a three-row battery-electric SUV with seating for up to seven. It will launch in XLE and Limited grades, up to 320 miles of ...",
+     "title": "2027 Toyota Highlander vs. Grand Highlander"
+    },
+    {
+     "link": "https://www.redrivertoyota.com/introducing-the-all-new-2027-toyota-highlander-a-bold-step-into-the-future-of-electric-suvs/",
+     "snippet": "Toyota plans to begin sales for the 2027 Highlander in late 2026, with pricing expected to start in the range depending on trim and options. Why ...",
+     "title": "Introducing the All-New 2027 Toyota Highlander: A Bold ..."
+    },
+    {
+     "link": "https://www.toyotacarson.com/inventory/new-2027-toyota-grand-highlander-hybrid-xle-all-wheel-drive-xle-hybrid-awd-5tdacab50vs48h154/",
+     "snippet": "New 2027 Toyota Grand Highlander Hybrid XLE XLE. Cloud for sale - only $53615. $37 Total Price4 $53,615",
+     "title": "New 2027 Toyota Grand Highlander Hybrid XLE AWD"
+    },
+    {
+     "link": "https://www.reddit.com/r/ToyotaHighlander/comments/1rs6qgr/2027_toyota_highlander_first_look/",
+     "snippet": "Highlander EV will compete with EV9 and Rivian. cost, charging access, battery longevity, and resale. Gas price will be going up. Market will ...",
+     "title": "2027 Toyota Highlander | First Look : r/ToyotaHighlander"
+    },
+    {
+     "link": "https://www.toyotaofseattle.com/blog/exploring-the-2027-toyota-highlander",
+     "snippet": "With a significant price drop of up to $6,200 compared to last year's model, this all-electric SUV now starts at just $38,465,",
+     "title": "Exploring the 2027 Toyota Highlander"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/highlander-hybrid/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 49115.0,
+        "rating": 4.6
+       },
+       "extensions": [
+        "4.6",
+        "$49,115.00",
+        "Review by Eric Brandt"
+       ]
+      }
+     },
+     "snippet": "Pricing starts at $49,115. The cheapest 2026 Toyota Highlander Hybrid is the XLE, with a starting sticker price of $49,115. Purchase Price of $49,100.",
+     "title": "2026 Toyota Highlander Hybrid Price, Reviews, Pictures & ..."
+    },
+    {
+     "link": "https://www.motortrend.com/cars/toyota/grand-highlander-hybrid/2027",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 47205.0,
+        "rating": 4.2,
+        "reviews": 1
+       },
+       "extensions": [
+        "4.2(1)",
+        "$47,205.00"
+       ]
+      }
+     },
+     "snippet": "Highlander Hybrid XLE FWD (Natl) $48,775 Grand Highlander Hybrid XLE AWD (Natl) $50,375",
+     "title": "2027 Toyota Grand Highlander Hybrid Review"
+    },
+    {
+     "link": "https://www.beachcitiestoyotawestminster.com/inventory/new-2027-toyota-grand-highlander-hybrid-xle-front-wheel-drive-xle-hybrid-fwd-5tdabaa57vs47d594/",
+     "snippet": "New 2027 Toyota Grand Highlander Hybrid XLE XLE HYBRID FWD Midnight Black Metallic for sale - only $50753. Visit Beach Cities Toyota ...",
+     "title": "2027 Toyota Grand Highlander Hybrid XLE"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
+ "4bfc89ece8f8b2d23fd3ffc790f04916aa257733b00cb2cc77a8f9cdbec7aabc": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:31.723609+00:00",
+  "key": "4bfc89ece8f8b2d23fd3ffc790f04916aa257733b00cb2cc77a8f9cdbec7aabc",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2027 Toyota bZ XLE MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.toyota.com/vehicles/bz/2027",
+     "snippet": "The 2027 Toyota bZ. XLE FWD Plus models. 2027 bZ Starting MSRP $34,980 \u30fb 314-Mile Range Rating on XLE FWD Plus \u30fb on XLE AWD,",
+     "title": "2027 Toyota bZ | Toyota.com"
+    },
+    {
+     "link": "https://www.edmunds.com/toyota/bz/2027/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 34980.0,
+        "rating": 4.5,
+        "reviews": 15
+       },
+       "extensions": [
+        "4.5(15)",
+        "$34,980.00"
+       ]
+      }
+     },
+     "snippet": "XLE - $36,575 MSRP, XLE Plus (Most Popular) - $39,575 MSRP, Limited ... The least-expensive 2027 Toyota bZ is the 2027 Toyota bZ XLE 4dr SUV (electric DD).",
+     "title": "2027 Toyota bZ Prices, Reviews, and Pictures"
+    },
+    {
+     "link": "https://www.facebook.com/electrekco/posts/the-2027-toyota-bz-starts-at-34980-and-begins-arriving-at-dealerships-in-septemb/1493440656154994/",
+     "snippet": "The 2027 Toyota bZ starts at $34,980 and begins arriving at dealerships in September. over 4.0 miles/kWh, Toyota bZ XLE FWD Plus, reaching an ...",
+     "title": "The 2027 Toyota bZ starts at $34980 and begins arriving ..."
+    },
+    {
+     "link": "https://www.caranddriver.com/toyota/bz",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 36575.0,
+        "rating": 3.8
+       },
+       "extensions": [
+        "3.8",
+        "$36,575.00",
+        "Review by Austin Parsons"
+       ]
+      }
+     },
+     "snippet": "The price of the 2027 Toyota bZ starts at $36,575 and goes up to $44,975 depending on the trim and options. The front-wheel-drive XLE model is the price leader ...",
+     "title": "2027 Toyota bZ Review, Pricing, and Specs"
+    },
+    {
+     "link": "https://www.toyota.com/bz/features/",
+     "snippet": "All XLE Electric Motor Front-Wheel Drive Plus $37980undefined/undefinedmpg. Price Base MSRP * ... More $37,980 $43,380 Est. MPGe rating (combined)",
+     "title": "2027 Toyota bZ Specifications"
+    },
+    {
+     "link": "https://www.toyotaofgladstone.com/blog/2027-toyota-bz-review-range-trims-and-value",
+     "snippet": "The XLE FWD starts at $34,980 and delivers up to 236 mi of EPA-estimated range, while the Limited FWD stretches to 299 mi at $43,380. Every trim includes Toyota ...",
+     "title": "2027 Toyota bZ Review: Range, Trims, and Value"
+    },
+    {
+     "link": "https://www.reddit.com/r/electricvehicles/comments/1vgd04q/toyota_announces_2027_bz_prices_start_at_35000/",
+     "snippet": "The 2027 Toyota bZ will begin arriving at dealerships in September, starting at $34980. 35k for the base XLE trim with 236 miles estimated. ...",
+     "title": "Toyota announces 2027 bZ prices start at $35000"
+    },
+    {
+     "link": "https://www.plazatoyota.com/2027-toyota-bz-whats-changing-release-date-and-pricing-for-nyc-drivers.htm",
+     "snippet": "The XLE FWD opens at $34,980 and the Limited AWD tops the range at $45,380, both before the $1,595 delivery fee. The bZ Woodland runs $45,380 to ...",
+     "title": "2027 Toyota bZ Trims & Range for NY"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
  "5e11a13fffe0c72e29c6b5a4e4eac8d832c85f12dc1c293270fc6298fd76927e": {
   "engine": "youtube",
   "fetched_at": "2026-10-25T04:47:19.504041+00:00",
@@ -863,6 +1304,175 @@
   },
   "source": "SerpApi Google Maps"
  },
+ "61a52e6a5eaa13882e964282e90a2469f3d37fa5464f202e88634d7e76ca0d44": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:25.848531+00:00",
+  "key": "61a52e6a5eaa13882e964282e90a2469f3d37fa5464f202e88634d7e76ca0d44",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2027 Toyota Tacoma TRD Sport i-FORCE MAX MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.plazatoyota.com/2027-toyota-tacoma-whats-changing-release-date-and-pricing-for-nyc-drivers.htm",
+     "snippet": "i-FORCE MAX hybrid: to 6,000-lb towing TRD Sport \u2026 $47,335 TRD Sport equipment, 2,400-watt outlets in cab and bed. Industry estimates put a ...",
+     "title": "2027 Toyota Tacoma Price, Trims & Towing"
+    },
+    {
+     "link": "https://www.caranddriver.com/toyota/tacoma",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 34470.0,
+        "rating": 4.5
+       },
+       "extensions": [
+        "4.5",
+        "$34,470.00",
+        "Review by Andrew Wendler"
+       ]
+      }
+     },
+     "snippet": "The TRD Sport and TRD Off-Road. PRICE Base/As Tested: $39,615/$40,925 ENGINE turbocharged and intercooled DOHC 24 combined",
+     "title": "2027 Toyota Tacoma Review, Pricing, and Specs"
+    },
+    {
+     "link": "https://www.nucartoyotanorthkingstown.com/inventory/new-2027-toyota-tacoma-i-force-max-trd-sport-i-force-max-4wd-4x4-double-cab-hv-3tylc5ln3vt46a615/?srsltid=AYCX9vLdAzsk2-O2Oe28EGXS04xWGbULrNUOvLv6iWOOSKnxUOT8m6HV",
+     "snippet": "New 2027 Toyota Tacoma i-FORCE MAX for sale - only $59089. 4X4 DOUBLE CAB. TRD Sport alloy wheels \u30fb 2.4L turbocharged inline-4 hybrid \u30fb call ...",
+     "title": "2027 Tacoma TRD Sport Double Cab 5-ft bed"
+    },
+    {
+     "link": "https://www.toyota.checkeredflag.com/inventory/new-2027-toyota-tacoma-i-force-max-trd-sport-i-force-max-4wd-4x4-double-cab-hv-3tylc5ln0vt45b693/",
+     "snippet": "New 2027 Toyota Tacoma i-FORCE MAX TRD Sport. DOUBLE CAB HV Black for sale - only $57279. Transmission: 8-Speed Automatic Transmission Engine: i-FORCE MAX 2.4L ...",
+     "title": "2027 Tacoma TRD Sport Double Cab 5-ft bed"
+    },
+    {
+     "link": "https://www.motortrend.com/cars/toyota/tacoma-hybrid/2027",
+     "snippet": "s i-Force Max powertrain, Tacoma 4WD TRD Sport Hybrid Double Cab 5' Bed AT (Natl) $49,600 Tacoma \u2026 $49,900 Tacoma",
+     "title": "2027 Toyota Tacoma Hybrid Review"
+    },
+    {
+     "link": "https://www.toyotaofnorthcanton.com/inventory/new-2027-toyota-tacoma-i-force-max-tacoma-trd-sport-4-wheel-drive-4x4-double-cab-hv-3tylc5ln2vt47c254/",
+     "snippet": "$69,008. Your Price: Locked \u00b7 2026 Toyota Tacoma i-FORCE MAX Tacoma TRD Pro. TSRP $69,365. Your Price: Locked. Get ...",
+     "title": "2027 Toyota Tacoma TRD Sport Double Cab 4-Wheel Drive"
+    },
+    {
+     "link": "https://www.toyotaofanaheim.com/inventory/new-2027-toyota-tacoma-i-force-max-trd-sport-i-force-max-4wd-4x4-double-cab-hv-3tylc5ln2vt46a346/",
+     "snippet": "New 2027 Toyota Tacoma i-FORCE MAX TRD Sport i-FORCE MAX 4X4 DOUBLE CAB HV ; TSRP $59,876 ; Doc Fee $85 ; Electronic Filing Fee $37 ; Total Price ...",
+     "title": "2027 Tacoma TRD Sport Double Cab 5-ft bed"
+    },
+    {
+     "link": "https://www.chicagotoyota.com/new/Toyota/2027-Toyota-Tacoma-i-FORCE-MAX-chicago-il-0ddce234ac18551004d3805d7358ac04.htm",
+     "snippet": "Contact dealer to confirm availability. Price details. Total SRP: $58,783; Dealer Savings: - ...",
+     "title": "2027 Toyota Tacoma i-FORCE MAX For Sale Chicago IL"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
+ "645cf392d61f37cec7017d3b8183b9ccfb6669dbe99ed5e805517cd62610ec5f": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:26.754331+00:00",
+  "key": "645cf392d61f37cec7017d3b8183b9ccfb6669dbe99ed5e805517cd62610ec5f",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2026 Toyota Highlander LE MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.toyota.com/highlander/",
+     "snippet": "Starting MSRP $ 46,270 * $48,340 Base MSRP. Limited $50,725 Base MSRP * 21/28 MPG Est. City/Hwy Rating * 12.3-in.",
+     "title": "2026 Toyota Highlander | Toyota.com"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/highlander/2026/limited/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 51820.0,
+        "rating": 4.5
+       },
+       "extensions": [
+        "4.5",
+        "$51,820.00",
+        "Review by Eric Brandt"
+       ]
+      }
+     },
+     "snippet": "See pricing for the New 2026 Toyota Highlander Limited. Price, MSRP, and dealer invoice price. Highlander Limited. 139.5 cu.ft. Price $51,820 $40,830",
+     "title": "New 2026 Toyota Highlander Limited Prices"
+    },
+    {
+     "link": "https://www.toyota.com/grandhighlander/",
+     "snippet": "LE $42,260 Base MSRP * 21/28 MPG Est. City/Hwy Rating * 18-in. 5-spoke silver-painted wheels. LE $45,610 Base MSRP",
+     "title": "2026 Toyota Grand Highlander | Toyota.com"
+    },
+    {
+     "link": "https://www.redrivertoyota.com/2026-grand-highlander/",
+     "snippet": "2026 LE 2026 LE $41,360 starting MSRP1 21/28 Est. $59,275 starting MSRP1 \u2026 2026 Grand Highlander LE FWD,",
+     "title": "2026 Grand Highlander"
+    },
+    {
+     "link": "https://www.caranddriver.com/toyota/highlander-2026",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 47865.0,
+        "rating": 3.8
+       },
+       "extensions": [
+        "3.8",
+        "$47,865.00",
+        "Review by Beth Nichols"
+       ]
+      }
+     },
+     "snippet": "The price of the 2026 Toyota Highlander starts at $47,865 and goes up to $55,520 depending on the trim and options.",
+     "title": "2026 Toyota Highlander Review, Pricing, and Specs"
+    },
+    {
+     "link": "https://www.hanovertoyota.com/2026-grand-highlander/",
+     "snippet": "2026 LE $41,360 starting MSRP1 21/28 Est. Heavy Metal3 Prices and colors may vary by model.4",
+     "title": "2026 Grand Highlander"
+    },
+    {
+     "link": "https://www.buyatoyota.com/home/vehicles/highlander/",
+     "snippet": "Highlander$46,270 Starting MSRP * 21/28 est. Highlander Limited $50,725 Base MSRP * 21 / 28 Est. mpg",
+     "title": "2026 Highlander"
+    },
+    {
+     "link": "https://www.truecar.com/overview/toyota/highlander/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price_from": 47865.0,
+        "price_to": 57270.0,
+        "rating": 4.4,
+        "reviews": 3861
+       },
+       "extensions": [
+        "4.4(3,861)",
+        "$47,865.00 to $57,270.00"
+       ]
+      }
+     },
+     "snippet": "The base model of the 2026 Toyota Highlander has an TSRP of $47,865, but the average price paid is $47,043 based on 188 transactions from the past 4 weeks.",
+     "title": "2026 Toyota Highlander Review | Pricing, Trims & Photos"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
  "6a96ca58ae94b01e1d2e06034d2fbd497c3f95552f27ebe12c928e055ee03843": {
   "engine": "youtube",
   "fetched_at": "2026-10-25T02:56:14.646798+00:00",
@@ -1154,6 +1764,105 @@
   },
   "source": "SerpApi Google Search"
  },
+ "9fd868fae6f1ca48cbdd83ea76adb9915850917bfe2d24acb868e82779eb3442": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:30.699223+00:00",
+  "key": "9fd868fae6f1ca48cbdd83ea76adb9915850917bfe2d24acb868e82779eb3442",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2026 Toyota bZ XLE MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.toyota.com/vehicles/bz/2027",
+     "snippet": "on XLE FWD Plus models. Starting MSRP $34,980 * 314-Mile Range Rating on XLE FWD Plus. With a 314-mile EPA-estimated range rating on XLE FWD Plus and a 288- ...",
+     "title": "2027 Toyota bZ | Toyota.com"
+    },
+    {
+     "link": "https://www.edmunds.com/toyota/bz/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 34900.0,
+        "rating": 3.4
+       },
+       "extensions": [
+        "3.4",
+        "$34,900.00",
+        "Review by Jared Gall"
+       ]
+      }
+     },
+     "snippet": "The 2026 Toyota bZ starts at $36350 MSRP. XLE - $36,495 MSRP. XLE - $36,495 MSRP miles. XLE Suggested price: $34,655 \u2026 starts at $34,900",
+     "title": "2026 Toyota bZ Prices, Reviews, and Pictures"
+    },
+    {
+     "link": "https://www.cargurus.com/Cars/l-Used-2026-Toyota-bZ-c34102",
+     "snippet": "The XLE AWD trim, with 45 listings and an MSRP of $39,900, highlights the growing interest in all-wheel-drive options among consumers.",
+     "title": "New & Used 2026 Toyota bZ for Sale Nationwide"
+    },
+    {
+     "link": "https://www.toyotawest.com/2026-bz/",
+     "snippet": "$1,595 for Small Pickup \u2026 $2,095 for Large Pickup/Large SUV (Tundra, Tundra HV, Sequoia). Base MSRP excludes manufacturer, -mile for 2026 bZ XLE AWD; 2026 bZ ...",
+     "title": "2026 BZ"
+    },
+    {
+     "link": "https://www.caranddriver.com/toyota/bz",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 36575.0,
+        "rating": 3.8
+       },
+       "extensions": [
+        "3.8",
+        "$36,575.00",
+        "Review by Austin Parsons"
+       ]
+      }
+     },
+     "snippet": "Specifications \u00b7 2026 Toyota bZ XLE Plus FWD Vehicle Type: front-motor, front-wheel-drive, 5-passenger, 4-door wagon \u00b7 PRICE Base/As Tested: $39,495/$40,778.",
+     "title": "2027 Toyota bZ Review, Pricing, and Specs"
+    },
+    {
+     "link": "https://www.toyotaoflakecity.com/2026-toyota-bz.html?srsltid=AYCX9vLWaw2ZLC5QjnXD5CVfr0uc151ztJuM3WKx-eCF6hHYaf74SNgl",
+     "snippet": "Starting at1 $ 34,900 MPG 314 \u2026 288-mile for 2026 bZ XLE AWD; 236-mile for 2026 bZ XLE FWD. MSRP is the lowest Base MSRP for the series of a model",
+     "title": "2026 Toyota bZ"
+    },
+    {
+     "link": "https://www.truecar.com/overview/toyota/bz/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price_from": 36495.0,
+        "price_to": 44895.0,
+        "rating": 5.0
+       },
+       "extensions": [
+        "5.0",
+        "$36,495.00 to $44,895.00",
+        "Review by TrueCar Staff"
+       ]
+      }
+     },
+     "snippet": "starting at $36495, Total Price XLE $559/mo. The base model of the 2026 Toyota bZ has an TSRP of $36,495, but the average price paid is $34,672. Toyota bZ XLE ...",
+     "title": "2026 Toyota bZ Review | Pricing, Trims & Photos"
+    },
+    {
+     "link": "https://www.youtube.com/watch?v=kwVC_DIgeKA&vl=en",
+     "snippet": "I talk about what it's like to live with the longest range 2026 Toyota bZ XLE, the front wheel drive model with the bigger battery.",
+     "title": "My Week with the 2026 Toyota bZ XLE"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
  "acec45fb461d39ab804d0c2224c34a5d66b96b2822509861ef24de9472049781": {
   "engine": "google",
   "fetched_at": "2026-10-25T02:57:44.908012+00:00",
@@ -1398,6 +2107,148 @@
      },
      "snippet": "With 4,354 currently listed for sale and an average price of $22,985, 33.3% of 2022 Toyota Camry listings on CarGurus are rated as good or great deals.",
      "title": "Used 2022 Toyota Camry for Sale near Ohio"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
+ "bb403b0453b19584b71013b59699f67bcf2217f5f39ecbf5eb834fa6da53a64d": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:23.932453+00:00",
+  "key": "bb403b0453b19584b71013b59699f67bcf2217f5f39ecbf5eb834fa6da53a64d",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2027 Toyota RAV4 XLE Hybrid MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.edmunds.com/toyota/rav4/2027/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 8.1
+       },
+       "extensions": [
+        "8.1/10",
+        "Review by Reese Counts"
+       ]
+      }
+     },
+     "snippet": "Estimated Price: Starting around $34,000 2027 Toyota RAV4 \u30fb the hybrid battery is covered for 10 years/150,000 miles. XLE Premium Hybrid 4dr ...",
+     "title": "2027 Toyota RAV4 Prices, Reviews, and Pictures"
+    },
+    {
+     "link": "https://www.caranddriver.com/toyota/rav4",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 34000.0,
+        "rating": 4.2
+       },
+       "extensions": [
+        "4.2",
+        "$34,000.00",
+        "Review by Drew Dorian"
+       ]
+      }
+     },
+     "snippet": "The EPA rates the RAV4 Hybrid to deliver 47 mpg city, 40 mpg highway, and 43 mpg combined in its most efficient, front-wheel-drive configuration. All-wheel- ...",
+     "title": "2027 Toyota RAV4 Review, Pricing, and Specs"
+    },
+    {
+     "link": "https://www.plazatoyota.com/2027-toyota-rav4-whats-changing-release-date-and-pricing-for-nyc-drivers.htm",
+     "snippet": "The 2026 hybrid opens at $31,900 before the $1,450 destination charge, and carryover years typically add one to two percent. When does the 2027 ...",
+     "title": "2027 Toyota RAV4 Trims, MPG & Pricing for NYC Drivers"
+    },
+    {
+     "link": "https://www.arlingtontoyota.com/2027-toyota-rav4-preview-sda/?srsltid=AYCX9vLRILpTrGtzcLwtGeBgGn3QtRSfK8dOcQLXfUUZhd6pkhxvPb-c",
+     "snippet": "As of August 2026, pricing starts at a little over $32,000 for Toyota RAV4 trim levels. Hybrid models use a 2.5-liter four-cylinder engine paired \u2026 offering up ...",
+     "title": "Hybrid Power Leads the 2027 Toyota RAV4 Lineup"
+    },
+    {
+     "link": "https://www.toyota.com/deals-incentives/rav4hybrid/",
+     "snippet": "From Toyota incentives like Cash Back, Low APR, and Toyota lease deals, get ready to save on your next RAV4 Hybrid. Find Toyota special offers now.",
+     "title": "Toyota RAV4 Hybrid Deals | New Toyota Incentives"
+    },
+    {
+     "link": "https://www.carsdirect.com/toyota/rav4/2027",
+     "snippet": "For reference, current RAV4 pricing starts at $33,495, including destination, and ranges up to $44,895. Toyota's year-over-year price hikes ...",
+     "title": "2027 Toyota RAV4 Preview: Specs, Price, Release Date"
+    },
+    {
+     "link": "https://www.reddit.com/r/rav4club/comments/1v1xp7z/when_will_the_2027_rav4_phev_debut_and_what/",
+     "snippet": "I recently looked at the new RAV4 PHEV Woodland and liked it overall, but I had a hard time justifying the price; especially since it would not be delivered ...",
+     "title": "When will the 2027 RAV4 PHEV debut, and what changes ..."
+    },
+    {
+     "link": "https://www.facebook.com/carsguide.australia/posts/the-2027-toyota-rav4-plug-in-hybrid-has-long-range-but-higher-pricing/1368542798740986/",
+     "snippet": "The author highlights that the new model is priced at $32,000, which is significantly lower than the previous year's $35,000+ base gas price.",
+     "title": "The 2027 Toyota RAV4 plug-in hybrid has long range but ..."
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
+ "bbdef0189a27fcdcdaea290bfe4e932e0ab9c08b8e3c1c4bdb0aa91c63c8a1f0": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:24.875682+00:00",
+  "key": "bbdef0189a27fcdcdaea290bfe4e932e0ab9c08b8e3c1c4bdb0aa91c63c8a1f0",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2026 Toyota Tacoma SR MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.toyota.com/tacoma/",
+     "snippet": "SR. $32,545 \u00b7 20/26 \u00b7 Available 6-speed Manual Transmission; Available in Double Cab with 5-ft. bed, or XtraCab with 6-ft. bed ; SR5. $36,635 \u00b7 21/26 \u00b7 Coil-spring ...",
+     "title": "2026 Tacoma"
+    },
+    {
+     "link": "https://www.battlefieldtoyota.com/new-tacomas.htm",
+     "snippet": "New 2026 Toyota Tacoma SR5 4-Wheel Drive. $45,183Selling Price$44,184 Total SRP \u00b7 VIN 3TMLB5JN0TM336523 \u00b7 Stock # T20223 \u00b7 Ice Cap Exterior \u00b7 Black fabric with ...",
+     "title": "New Tacomas"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/tacoma-double-cab/2026/sr5/",
+     "snippet": "Get KBB Fair Purchase Price, MSRP, and dealer invoice price for the 2026 Toyota Tacoma ... 2026 Toyota Tacoma Double Cab SR5 Cost to Own. $50,689. A 2026 Toyota ...",
+     "title": "New 2026 Toyota Tacoma Double Cab SR5 Prices"
+    },
+    {
+     "link": "https://www.kenganleytoyotaakron.com/toyota-tacoma-trim-levels",
+     "snippet": "SR5 \u00b7 Starting at $37,930 MSRP* \u00b7 Independent double-wishbone front suspension; leaf spring rear suspension \u00b7 Blind Spot Monitor (BSM) with Rear Cross-Traffic ...",
+     "title": "2026 Toyota Tacoma Trim Levels with Prices, Photos, & ..."
+    },
+    {
+     "link": "https://www.edmunds.com/toyota/tacoma/",
+     "snippet": "The 2026 Toyota Tacoma starts at $35950 MSRP, with buyers averaging $2300 off sticker. Compare trim prices from the SR to TRD Pro at $66495 on Edmunds.",
+     "title": "2026 Toyota Tacoma Prices, Reviews, and Pictures"
+    },
+    {
+     "link": "https://www.toyota.com/tacoma/features/",
+     "snippet": "Check out the 2026 Toyota Tacoma specifications on the official website ... Base MSRP * ... More. $39,835. $43,915. Est. Mileage Ratings. Est. mpg rating ...",
+     "title": "2026 Toyota Tacoma Specifications"
+    },
+    {
+     "link": "https://www.vistatoyotawy.com/toyota-model-research/tacoma/",
+     "snippet": "Toyota Tacoma Trims ; SR. Starting MSRP: $32,145. 20 city and 26 highway mpg ; SR5. Starting MSRP: $36,235. 21 city and 26 highway mpg ; TRD PreRunner. Starting ...",
+     "title": "New 2026 Toyota Tacoma Model Research"
+    },
+    {
+     "link": "https://www.reddit.com/r/ToyotaTacoma/comments/1sx4dxz/this_33000_2026_tacoma_advertised_on_their_site/",
+     "snippet": "This $33,000 2026 Tacoma advertised on their site is a dang unicorn. ... Found the closest to that this weekend in an SR Crew 2WD that only had 1 ...",
+     "title": "This $33000 2026 Tacoma advertised on their site is a ..."
+    },
+    {
+     "link": "https://autofinder.com/cars/toyota/tacoma/2026",
+     "snippet": "Compare Trims ; 4x2 SR 2dr XtraCab 6.1 ft LB \u00b7 $32,545 \u00b7 $30,511 ; 4x2 SR 4dr Double Cab 5.0 ft SB \u00b7 $34,205 \u00b7 $31,687 ; 4x4 SR 2dr XtraCab 6.1 ft LB \u00b7 $35,745 \u00b7 $33,511.",
+     "title": "2026 Toyota Tacoma"
     }
    ]
   },
@@ -1678,6 +2529,86 @@
    ]
   },
   "source": "SerpApi Google Maps"
+ },
+ "d775413c64972f025660af0863fb3c7b6d2cd34a761a2bf8ac37f43b5b6d7866": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:39:28.753881+00:00",
+  "key": "d775413c64972f025660af0863fb3c7b6d2cd34a761a2bf8ac37f43b5b6d7866",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2026 Toyota Prius LE MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.toyota.com/vehicles/prius/2027",
+     "snippet": "2027 Prius Starting MSRP $28,755 \u30fb 196 All-Wheel Drive \u30fb 55 Combined MPG on LE Trim * ENGINE 2.0L. LE $28,755 59/50 XLE $32,200 54/46 Nightshade ,770 54/46 \u00a9 ...",
+     "title": "2027 Prius"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/prius/2026/le/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 29745.0,
+        "rating": 4.8
+       },
+       "extensions": [
+        "4.8",
+        "$29,745.00",
+        "Review by Eric Brandt"
+       ]
+      }
+     },
+     "snippet": "See pricing for the New 2026 Toyota Prius LE. Get KBB Fair Purchase Price, MSRP, and dealer invoice price for the 2026 Toyota Prius LE.",
+     "title": "New 2026 Toyota Prius LE Prices"
+    },
+    {
+     "link": "https://www.blackstonetoyota.com/2026-prius/",
+     "snippet": "2026 LE 2026 LE $28,550 starting MSRP1 57/56 Est. for AWD models. MSRP is the lowest Base MSRP",
+     "title": "2026 Prius"
+    },
+    {
+     "link": "https://www.toyota.com/prius/2026/",
+     "snippet": "LE $28,550 Base MSRP * 57/56 MPG Est. City/Hwy Rating * Top-mount Multi-Information Display (MID) with indicators and 7-in. $31,995 Base MSRP",
+     "title": "2026 Prius"
+    },
+    {
+     "link": "https://www.toyotaofbourbonnais.com/research-prius-trims/",
+     "snippet": "... Toyota Prius LE is a strong base trim option. LE MSRP: Starting at $27,950. LE AWD MSRP: Starting at $29,350. LE MPG: Up to 57 city/56 highway. LE AWD MPG: Up ...",
+     "title": "2026 Toyota Prius Trim Levels | LE vs. XLE vs. Limited"
+    },
+    {
+     "link": "https://exploresetoyota.com/prius/",
+     "snippet": "The 2026 Toyota Prius delivers up to 57 MPG, advanced hybrid performance, all-wheel drive, Prius LE 2.0L 4-Cyl. 25,000 Miles Included with every new Toyota ...",
+     "title": "The 2026 Toyota Prius Hybrid"
+    },
+    {
+     "link": "https://www.edmunds.com/toyota/prius/2026/st-402060256/features-specs/",
+     "snippet": "LE 4dr Hatchback (2.0L 4cyl gas/electric hybrid CVT) - $28,550 (Most Popular) Total Seating 5 Cargo Capacity 23.8 cu.ft. Curb Weight 3,097 lbs. Edmunds ...",
+     "title": "2026 Toyota Prius LE Specs & Features"
+    },
+    {
+     "link": "https://www.youtube.com/watch?v=As-nnFAoGcc",
+     "snippet": "In this video I'll go for a test drive & completely review the NEW 2026 Toyota Prius! I'll test out acceleration, braking, steering feel, ...",
+     "title": "2026 Toyota Prius Review | 57 MPG's!!!"
+    },
+    {
+     "link": "https://www.capovalleytoyota.com/manufacturer-research/2026-toyota-prius-trims-pricing-mpg/",
+     "snippet": "2026 Prius Pricing ; LE, $28,550 ; XLE, $31,995 ; Nightshade Edition, $32,800 ; Limited, $35,565 ...",
+     "title": "2026 Toyota Prius Trims, Pricing & MPG Guide"
+    },
+    {
+     "link": "https://www.cars.com/shopping/toyota-prius-2026/",
+     "snippet": "... Supersonic Red 2026 Toyota Prius LE. Previous. Next. View all 47 photos. $29,377. $298. 2,144 mi. Est. $553/mo. Used 2026 Toyota Prius LE.",
+     "title": "New and Used 2026 Toyota Prius for Sale Near Me"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
  },
  "dabae18fc9024b92cebf6ba94a1ec1633c4c0e05d6a3772a2d8fbdc04030631d": {
   "engine": "google_maps_reviews",
@@ -3877,6 +4808,98 @@
    ]
   },
   "source": "SerpApi YouTube"
+ },
+ "ed66ec93d04f2e1bb1109b8cb5bd02858ee236904090ad88a9b5a3d47004980b": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T13:38:21.024181+00:00",
+  "key": "ed66ec93d04f2e1bb1109b8cb5bd02858ee236904090ad88a9b5a3d47004980b",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 10,
+   "q": "2027 Toyota Camry SE MSRP"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.caranddriver.com/toyota/camry",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 30995.0,
+        "rating": 4.5
+       },
+       "extensions": [
+        "4.5",
+        "$30,995.00",
+        "Review by Andrew Wendler"
+       ]
+      }
+     },
+     "snippet": "The price of the 2027 Toyota Camry starts at $30,995 and goes up to $37,395 depending on the trim and options. The SE trim is the value play in the Camry ...",
+     "title": "2027 Toyota Camry Review, Pricing, and Specs"
+    },
+    {
+     "link": "https://www.edmunds.com/toyota/camry/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price_from": 30187.0,
+        "price_to": 36412.0,
+        "rating": 4.2
+       },
+       "extensions": [
+        "4.2",
+        "$30,187.00 to $36,412.00",
+        "Review by Cameron Rogers"
+       ]
+      }
+     },
+     "snippet": "2027 Toyota Camry MSRP starts at $29700. 2027 Toyota Camry SE suggested price: $32,618 Compare dealer prices for SE trim Nightshade",
+     "title": "2027 Toyota Camry Prices, Reviews, and Pictures"
+    },
+    {
+     "link": "https://www.seminoletoyota.com/toyota-reviews/2027-camry.htm?srsltid=AYCX9vJJC-gQfqsh4kZp4pxNgNVkvQrT_tjvRuxURo78pbulb51pEt4Y",
+     "snippet": "The 2027 Toyota Camry comes in five trim levels: LE, SE, the SE trim offers a sports-car inspired look. Camry is a 2.5-liter four-cylinder hybrid engine.",
+     "title": "2027 Toyota Camry Model Review - Sanford, FL"
+    },
+    {
+     "link": "https://www.toyota.com/camry/features/",
+     "snippet": "Price ; Base MSRP \u00b7... More. $36,425. $34,725 ...",
+     "title": "2027 Toyota Camry Specifications"
+    },
+    {
+     "link": "https://www.toyotaofdallas.com/toyota-reviews/2027-camry.htm?srsltid=AYCX9vKBPo0yNRlZaQ2xAI2FmukqtnWnxOEWrXZAqBfvsIs4xBE6ODGo",
+     "snippet": "Sales : 844-866-5826. Outfitted with 18-inch black alloy wheels and a front mesh grille, the SE trim has a sporty exterior. Under the hood sits a 2.5-liter ...",
+     "title": "2027 Toyota Camry Price, Specs, Features & Review"
+    },
+    {
+     "link": "https://www.toyota.com/vehicles/camry/2027",
+     "rich_snippet": {
+      "bottom": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 29700.0
+       },
+       "extensions": [
+        "$29,700.00",
+        "Free delivery"
+       ]
+      }
+     },
+     "snippet": "2027 Camry Starting MSRP $29,700 * SE SE $32,200 Base MSRP * 18-in. multi-spoke black-finished alloy wheels Black sport",
+     "title": "2027 Toyota Camry | Toyota.com"
+    },
+    {
+     "link": "https://www.plazatoyota.com/2027-toyota-camry-what-changes-release-date-and-pricing-for-nyc-drivers.htm",
+     "snippet": "New 2027 Toyota Camry SE Front-Wheel Drive $35,161$34,986 TSRP* TSRP* $34,986 Dealer Documentation Fee $175 Advertised Price* $35,161",
+     "title": "2027 Toyota Camry Release Date & Trim Guide | New York"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
  },
  "efd19df5d64579324a978cbbf58a92d69755ed56db0a919e598700268102f4a2": {
   "engine": "google_news",

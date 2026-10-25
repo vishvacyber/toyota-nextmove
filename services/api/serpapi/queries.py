@@ -16,6 +16,11 @@ def comps(model: str, year: int, new: bool = False) -> tuple[str, dict]:
     return "google", {"q": q, "gl": "us", "hl": "en", "num": 20}
 
 
+def msrp(model: str, trim: str, year: int) -> tuple[str, dict]:
+    """Real Toyota sticker price (MSRP) for one model + trim; parsed by serpapi.market.parse_msrp."""
+    return "google", {"q": f"{year} Toyota {model} {trim} MSRP", "gl": "us", "hl": "en", "num": 10}
+
+
 def dealers(region: str) -> tuple[str, dict]:
     _, lat, lng = CITY[region]
     return "google_maps", {"q": "Toyota dealership", "ll": f"@{lat},{lng},11z", "type": "search", "hl": "en"}

@@ -14,10 +14,10 @@ You are building **Toyota NextMove**, a proactive, agentic financial co-pilot fo
 
 ## Stack
 - Console: Next.js (App Router) + TypeScript + shadcn/ui + Tailwind + TanStack Table + shadcn charts (Recharts) + Framer Motion.
-- Customer App: Next.js PWA + TypeScript + Tailwind + Framer Motion + GSAP; React Three Fiber + drei for 3D; Web Speech API for voice.
+- Customer App: Next.js PWA + TypeScript + Tailwind + Framer Motion; real CC-licensed Wikimedia Commons car photos (credited on screen); Web Speech API for voice.
 - API: Python 3.11+, FastAPI, Pydantic, pytest.
 - Data + realtime + auth: Supabase (Postgres, Realtime). Channels: `sessions`, `handoffs`, `traces`, `alerts`.
-- LLM: **Claude Agent SDK** (`claude-agent-sdk`, Python) on a separate Claude Pro login (`CLAUDE_CONFIG_DIR`), no API key. Tools come from the B2 registry as an in-process SDK MCP server. AI-native: every customer-facing explanation is written live by the model, Guardian-checked and cached (Supabase); there are no pre-written answers. When nothing checked is ready, the API answers 503 and the app retries. Default model is Haiku-class for speed (`NEXTMOVE_MODEL`). Guardian stays deterministic code run on every agent output.
+- LLM: **Gemini is primary** (`GEMINI_API_KEY`, REST, same tool registry); the **Claude Agent SDK** (`claude-agent-sdk`, Python) on a separate Claude Pro login (`CLAUDE_CONFIG_DIR`) is the backup, through `agents/llm.py`. Tools come from the B2 registry as an in-process SDK MCP server. AI-native: every customer-facing explanation is written live by the model, Guardian-checked and cached (Supabase); there are no pre-written answers. When nothing checked is ready, the API answers 503 and the app retries. Claude's default model is Haiku-class for speed (`NEXTMOVE_MODEL`); Gemini's is `GEMINI_MODEL`. Guardian stays deterministic code run on every agent output.
 - Mocks: MSW in both frontends, fed by `packages/contracts/mocks`.
 - Package manager: pnpm workspaces.
 
@@ -35,7 +35,7 @@ You are building **Toyota NextMove**, a proactive, agentic financial co-pilot fo
 
 ## Demo personas (must always work)
 - **Maria** — lease ends in 90 days, over on miles → buyout beats return; photo pre-inspection.
-- **James** — loan, positive equity → timing optimizer, hybrid upgrade, true cost + CO2, 3D showroom, deal packet.
+- **James** — loan, positive equity → timing optimizer, hybrid upgrade, true cost + CO2, showroom, deal packet.
 - **Priya** — missed payment after job change → hardship path, paycheck-aligned due date, human callback.
 
 ## How to work

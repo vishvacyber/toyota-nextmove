@@ -13,6 +13,15 @@ expected_miles_per_year = 12000
 per_mile_adjust = 0.10            # $ per mile above/below expected
 retention = [1.00, 0.90, 0.84, 0.80, 0.76, 0.71, 0.66, 0.61, 0.56, 0.52, 0.48]   # index = age in years
 
+# Real MSRPs come from SerpApi (cached, "YEAR Toyota MODEL TRIM MSRP"); these are the fallback when none is cached.
+[market.base_trim]               # trim searched for each model's new price (depreciation base)
+Camry = "LE"
+RAV4 = "LE"
+Tacoma = "SR"
+Highlander = "LE"
+Prius = "LE"
+bZ = "XLE"
+
 [market.msrp]
 Camry = 29500
 RAV4 = 34500
@@ -65,31 +74,37 @@ bZ = 160
 # New vehicles the upgrade option can target (keyed by model; the hybrid/EV trim of that model).
 [catalog.Camry]
 trim = "SE Hybrid"
+msrp_trim = "SE"                 # every Camry is a hybrid from 2025, so Toyota lists it as "SE"
 powertrain = "hybrid"
 price = 33500
 mpg = 51
 [catalog.RAV4]
 trim = "XLE Hybrid"
+msrp_trim = "XLE Hybrid"
 powertrain = "hybrid"
 price = 36800
 mpg = 41
 [catalog.Tacoma]
 trim = "TRD Sport i-FORCE MAX"
+msrp_trim = "TRD Sport i-FORCE MAX"
 powertrain = "hybrid"
 price = 46500
 mpg = 23
 [catalog.Highlander]
 trim = "XLE Hybrid"
+msrp_trim = "Hybrid XLE"
 powertrain = "hybrid"
 price = 47500
 mpg = 35
 [catalog.Prius]
 trim = "XLE"
+msrp_trim = "XLE"
 powertrain = "hybrid"
 price = 32500
 mpg = 57
 [catalog.bZ]
 trim = "XLE"
+msrp_trim = "XLE"
 powertrain = "ev"
 price = 37500
 mpg = 114                      # MPGe

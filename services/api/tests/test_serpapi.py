@@ -126,3 +126,16 @@ def test_engine_comp_lookups_are_one_supabase_query(env):
         assert len(calls) == 1 and fake.serpapi == []
     finally:
         client._db_engine_rows.cache_clear()
+
+
+def test_parse_msrp_prefers_the_trim_price_and_skips_dealer_inventory():
+    from serpapi.market import parse_msrp
+    resp = {"organic_results": [
+        {"link": "https://www.toyota.com/camry/features/", "snippet": "Price ; Base MSRP ·... More. $36,425. $34,725"},
+        {"link": "https://www.edmunds.com/toyota/camry/", "snippet": "MSRP starts at $29700. Camry SE suggested price: $32,618"},
+        {"link": "https://dealer.example/inventory/new-2027", "snippet": "Camry SE $39,995 in stock"},
+    ]}
+    assert parse_msrp(resp, "SE")["price"] == 32618                      # trim-specific beats a cut-off price list
+    assert parse_msrp(resp, "LE", base=True)["price"] == 29700            # "starts at", no comma
+    assert parse_msrp({"organic_results": [{"link": "https://www.toyota.com/grandhighlander/",
+                                            "snippet": "Grand Highlander LE MSRP $42,260"}]}, "LE", True, "Highlander") is None

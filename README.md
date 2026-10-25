@@ -45,11 +45,11 @@ NextMove watches each customer's situation, reaches out at the right moment, com
 | Persona | Situation | What NextMove shows (live engine output) |
 | --- | --- | --- |
 | **Maria** | Lease ends in 90 days, 9,800 miles over her allowance | **Buy it.** The buyout keeps **$6,467** of equity; returning it costs **$3,200** in fees. Photo pre-inspection estimates wear charges before the official inspection. |
-| **James** | Loan with positive equity, high fuel spend | **Upgrade to a Camry SE Hybrid.** Payment **$496 → $428/mo**, true monthly cost about **$845 → $685**, **1,718 kg less CO2/year**. Acting now is worth **$820** more than waiting 3 months. Explore it in 3D, then send a deal packet to the dealer. |
+| **James** | Loan with positive equity, high fuel spend | **Upgrade to a Camry SE Hybrid** (real **$32,200** MSRP from toyota.com via SerpApi). Payment **$496 → $403/mo**, true monthly cost **$847 → $660**, **1,718 kg less CO2/year**. Acting now is worth **$820** more than waiting 3 months. See it in the showroom, then send a deal packet to the dealer. |
 | **Priya** | Missed a payment after a job change | **Move the due date to the 17th** to match her biweekly payday. Deferral and extension are money decisions, so they go to a **human callback**, never an agent. |
 
 **Two surfaces, one brain:**
-- **Customer App:** phone mode and dealership kiosk mode, English and Spanish, voice, 3D showroom.
+- **Customer App:** phone mode and dealership kiosk mode, English and Spanish, voice, a showroom with real car photos.
 - **Employee Console:** portfolio, live activity, proof of value, responsible AI, Agent Studio.
 
 ## Track coverage
@@ -63,7 +63,7 @@ NextMove watches each customer's situation, reaches out at the right moment, com
 | Working prototype | Both surfaces on one live API, with realtime handoffs between them |
 | Synthetic data | 1,200 seeded customers; "Synthetic data" badge on every screen |
 | Responsible AI | Guardian, autonomy levels, fairness report, audit log with overrides, deploy gate |
-| Reimagine CX | Proactive alerts, voice EN/ES, dealership kiosk, photo pre-inspection, 3D showroom, AI-written explanations |
+| Reimagine CX | Proactive alerts, voice EN/ES, dealership kiosk, photo pre-inspection, showroom with real photos, AI-written explanations |
 | Reusable agent platform | Agent Studio: templates, tool registry, guardrails, traces, evals. A Recall Notifier deploys from a template in about 12 s |
 | Enterprise grade | Role switcher, secrets only in env files, prompt-injection deploy gate, PII masking |
 | Meaningful SerpApi use | Market value is the median of real cached comps (source + as-of on every number); dealers, recalls, trends and reviews drive real decisions |
@@ -83,7 +83,7 @@ flowchart LR
     R["30 contract endpoints"]
     ENG["Finance engine<br/>computes every number"]
     TOOLS["12 tools<br/>one registry + MCP server"]
-    AG["Agents<br/>Claude Agent SDK"]
+    AG["Agents<br/>Gemini → Claude backup"]
     GU["Guardian<br/>deterministic checks"]
     SIM["24-month simulation<br/>1,200 customers"]
   end
@@ -91,7 +91,7 @@ flowchart LR
   subgraph External
     SB[("Supabase<br/>Postgres cache + traces<br/>Realtime broadcast")]
     SERP["SerpApi<br/>comps · dealers · recalls<br/>trends · reviews"]
-    CL["Claude<br/>subscription login"]
+    CL["Gemini API (primary)<br/>Claude login (backup)"]
   end
 
   CA -- REST --> R
@@ -127,9 +127,9 @@ flowchart LR
 | Layer | Technology |
 | --- | --- |
 | Console | Next.js 16 (App Router), TypeScript, shadcn/ui, Tailwind 4, TanStack Table, Recharts, Framer Motion |
-| Customer App | Next.js 16 PWA, TypeScript, Tailwind 4, Framer Motion, React Three Fiber + drei, Web Speech API, `uqr` (on-device QR) |
+| Customer App | Next.js 16 PWA, TypeScript, Tailwind 4, Framer Motion, real Wikimedia Commons photos (CC-licensed, credited), Web Speech API, `uqr` (on-device QR) |
 | API | Python 3.12, FastAPI, Pydantic v2 (generated from the contract), pytest, ruff, uv |
-| AI | Claude Agent SDK (Python) on a subscription login, locked to our tool registry; MCP server for the tools |
+| AI | Gemini (primary, REST + function calling) and the Claude Agent SDK (backup, subscription login), both locked to our tool registry; MCP server for the tools |
 | Data and realtime | Supabase Postgres (SerpApi cache, traces) and Realtime Broadcast (`handoffs`, `traces`) |
 | Market data | SerpApi: Google Search, Google Maps, Maps Reviews, Google News, Google Trends, YouTube |
 | Contract and mocks | OpenAPI 3.1 → `openapi-typescript` types, `datamodel-codegen` Pydantic models, MSW handlers |
@@ -159,7 +159,7 @@ flowchart TD
   F6 --> X2["Send deal packet"]
   F6 --> X3["Book follow-up"]
   F6 --> X4["Talk to a person"]
-  D --> S["Explore in 3D"]
+  D --> S["See it in the showroom<br/>real photos"]
   C --> H["5. Ask NextMove<br/>chat + voice, EN/ES"]
 ```
 
@@ -173,7 +173,7 @@ sequenceDiagram
   participant C as Customer App
   participant API as FastAPI
   participant O as Orchestrator
-  participant A as Advisor (Claude Agent SDK)
+  participant A as Advisor (Gemini, Claude backup)
   participant T as Tools + Engine
   participant G as Guardian
   participant S as Supabase
@@ -299,7 +299,7 @@ Every tool decision and agent trace lands in the audit log (`GET /audit`). Emplo
 
 ### Deploy gate (Agent Studio)
 
-New agents deploy only if they pass: a tool-policy check, the three persona evals (Guardian on the committed answers), and six prompt-injection tests. The default gate makes no live model calls; `STUDIO_GATE_LIVE=1` adds the persona cases on the live model.
+New agents deploy only if they pass: a tool-policy check, the three persona evals (engine pick + Guardian on each persona's live AI explanation), and six prompt-injection tests. The default gate makes no live model calls; `STUDIO_GATE_LIVE=1` adds the persona cases on the live model.
 
 ---
 
@@ -451,7 +451,7 @@ Every number below lives in config, not code: [`services/api/engine/config.toml`
 | Vehicle | 2024 RAV4 XLE, gas, 41,200 mi | 2022 Camry SE, gas, 48,900 mi | 2023 Prius LE, hybrid, 31,500 mi |
 | Contract | Lease, $389/mo, 36 months, 33 paid | Loan, $496/mo at 5.9%, 72 months, 49 paid | Loan, $468/mo at 4.9%, 60 months, 43 paid |
 | Key facts | Residual $22,450 · 12,000 mi/yr allowance · $0.25/mi over · projected 45,800 mi | Payoff $10,760 · longer commute | Payoff $7,640 · 19 days past due · paid biweekly · new job |
-| Recommendation | Buyout: $444.07/mo, keeps $6,467 equity, $300 fee | Upgrade to Camry SE Hybrid: $428.31/mo, $650 fees | Due date to the 17th: $468/mo, no extra cost |
+| Recommendation | Buyout: $444.07/mo, keeps $6,467 equity, $300 fee | Upgrade to Camry SE Hybrid ($32,200 real MSRP): $403.24/mo, $650 fees | Due date to the 17th: $468/mo, no extra cost |
 | Alternatives | Return ($3,200 fees) · Trade in · Extend 6 mo · Upgrade to RAV4 XLE Hybrid | Refinance ($493.50/mo) · Trade in · Extend 12 mo ($335.39/mo) | Extend 12 mo ($279.89/mo) · Defer one payment (human decision) |
 | Act now vs wait 3 months | +$721 | +$820 | +$841 |
 
@@ -477,7 +477,8 @@ Every number below lives in config, not code: [`services/api/engine/config.toml`
 ### Market value
 
 - **With comps:** median of at least 3 cached SerpApi comps for the model-year, adjusted $0.10 per mile above or below 12,000 mi/year.
-- **Fallback:** MSRP × retention by age (1.00, 0.90, 0.84, 0.80, 0.76, 0.71, 0.66, 0.61, 0.56, 0.52, 0.48), same mileage adjustment.
+- **Fallback:** base-trim MSRP × retention by age (1.00, 0.90, 0.84, 0.80, 0.76, 0.71, 0.66, 0.61, 0.56, 0.52, 0.48), same mileage adjustment.
+- **Real MSRPs** come from SerpApi Google searches (toyota.com preferred), cached with source and date. The prices below are the configured fallbacks used when no MSRP is found.
 
 | Model | MSRP | Upgrade target | Price | MPG / MPGe |
 | --- | ---: | --- | ---: | ---: |
@@ -564,9 +565,9 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 | Agent | Runs | Does | How |
 | --- | --- | --- | --- |
 | Orchestrator | Every request | Routes, keeps session context, enforces autonomy, writes traces | Code |
-| Advisor | App, kiosk, voice | Answers questions from engine output | Claude Agent SDK |
-| Hardship | Payment stress | Proposes policy-limited options, escalates L4 to a human | Claude Agent SDK |
-| Inspector | Photo pre-inspection | Names wear items; charges come from the engine | Claude Agent SDK (vision) |
+| Advisor | App, kiosk, voice | Answers questions from engine output | Gemini → Claude |
+| Hardship | Payment stress | Proposes policy-limited options, escalates L4 to a human | Gemini → Claude |
+| Inspector | Photo pre-inspection | Names wear items; charges come from the engine | Gemini → Claude (vision) |
 | Sentinel | At startup / daily | Detects triggers, ranks the queue, drafts outreach (L2) | Code |
 | Market Intel | On demand | Refreshes SerpApi data into the cache | Code |
 | Guardian | Before any output | Numbers, tone, consent, disclosures, fairness, injection | Code |
@@ -595,7 +596,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 **Customer App** (`/app` phone, `/kiosk` dealership):
 - **Sign in:** customer ID, QR deep link or guest; demo persona buttons.
 - **1. My situation:** what we noticed, vehicle, lease or loan, key dates, alerts with consent controls.
-- **2. My next move:** recommended option and alternatives side by side; "Explore in 3D".
+- **2. My next move:** recommended option and alternatives side by side; "See it in the showroom".
 - **3. Why this:** explanation, why not the others, assumptions with sources.
 - **4. Decide + act:**
   - What-if sliders
@@ -606,7 +607,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
   - Action center
 - **5. Ask NextMove:** chat and voice in EN/ES, with the numbers used and a "checked" note.
 - **Kiosk extras:** attract loop, 60 s idle reset, QR to continue on a phone, 64 px touch targets.
-- **3D showroom:** 360° orbit, exploded view, feature hotspots, trim and color, "what reviewers say".
+- **Showroom:** a real photo of each trim's model (credited), what each part does, trims priced by the engine, "what reviewers say".
 
 **Employee Console** (14 pages):
 
@@ -645,7 +646,9 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | API + browsers | Realtime and project URL (publishable key only in the browser) |
 | `SUPABASE_SERVICE_KEY` | API only | Cache and trace writes; never sent to a browser |
 | `SERPAPI_API_KEY` | API | Live SerpApi on cache misses |
-| `CLAUDE_CONFIG_DIR` | API | Folder holding the Claude subscription login for the agents (absolute path) |
+| `GEMINI_API_KEY` | API | Gemini, the primary AI ([aistudio.google.com/apikey](https://aistudio.google.com/apikey)) |
+| `GEMINI_MODEL` | API | Gemini model (default `gemini-2.5-flash`) |
+| `CLAUDE_CONFIG_DIR` | API | Folder holding the Claude subscription login for the backup AI (absolute path) |
 | `NEXT_PUBLIC_API_URL` | frontends | API address (default `http://localhost:8000`) |
 | `NEXT_PUBLIC_API_MOCKING` | frontends | `disabled` (live), `enabled` (all mocks), or a comma list of path prefixes to keep mocked |
 | `NEXT_PUBLIC_PHONE_URL` | customer app | Public URL for the kiosk's continue-on-phone QR |
@@ -672,7 +675,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 ### Tests
 
-206 automated tests: 161 API (engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, AI explanations, contract coverage, simulation, persistence), 34 contract (every endpoint has a working mock), 6 console and 5 customer app.
+212 automated tests: 168 API (engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, Gemini provider, MSRP parsing, AI explanations, contract coverage, simulation, persistence), 34 contract (every endpoint has a working mock), 6 console and 4 customer app.
 
 ---
 
@@ -680,7 +683,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 ```
 apps/console          Next.js employee console (14 pages)
-apps/customer         Next.js PWA: /app phone, /kiosk dealership, 3D showroom
+apps/customer         Next.js PWA: /app phone, /kiosk dealership, photo showroom
 services/api          FastAPI
   ├─ app/             routes + generated Pydantic models
   ├─ engine/          finance formulas, scenarios, timing, NBA, config.toml, eligibility.toml
@@ -743,7 +746,7 @@ Every trade-off is recorded in [docs/DECISIONS.md](docs/DECISIONS.md). The produ
 ## Limits and honest notes
 
 - **Synthetic data only.** No real customers, accounts or credit decisions.
-- **The live agents run on the demo laptop**, using a Claude subscription login. The public Vercel copies run on mock data, so a few of their numbers differ slightly from the live engine.
+- **AI providers:** Gemini answers first (API key); the Claude subscription login on the demo laptop is the backup. The public Vercel copies run on mock data, so a few of their numbers differ slightly from the live engine.
 - **AI-native, with honest waiting.** Every explanation is written live and checked by the Guardian; nothing is pre-written. Answers use a fast Claude model, and explanations are cached, so a repeat view is instant. If the model is busy, the app says so and retries rather than showing anything unchecked.
 - **Self-service starts online.** "Start self-service" and the due-date change are recorded with TFS (audit log); a specialist or dealer completes them.
 - **Estimates, not quotes.** Insurance, wear charges and market values are estimates and are labelled as such.

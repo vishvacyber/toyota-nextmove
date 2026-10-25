@@ -1,12 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Customer, Recommendation } from "@nextmove/contracts";
-import { offset, trims } from "./showroom.ts";
-
-test("explode offset scales the part's vector", () => {
-  assert.deepEqual(offset("body", 0), [0, 0, 0]);
-  assert.deepEqual(offset("powertrain", 1), [1.5, 0.3, 0]);
-});
+import { trims } from "./showroom.ts";
 
 const car = { model: "Camry", trim: "SE" };
 const hybrid = { model: "Camry", trim: "SE Hybrid" };

@@ -3,7 +3,7 @@
 from pydantic import BaseModel, Field
 
 from app.models import Dealer, MarketQuote, Model, Recall, Region, Trend
-from engine import finance
+from engine import finance, scenarios
 from engine.scenarios import AS_OF, CFG, TODAY
 from serpapi import client, market
 from serpapi import queries as q
@@ -66,7 +66,7 @@ def quote(model: str, year: int | None = None, region: str | None = None) -> Mar
         value, low, high = s["median"], s["low"], s["high"]
     else:   # no comps: depreciation table at a typical mileage, with the configured band
         m, age = CFG["market"], max(TODAY.year - year, 0)
-        value = round(finance.market_value(m["msrp"][model], age, age * m["expected_miles_per_year"], m["retention"],
+        value = round(finance.market_value(scenarios.base_msrp(model), age, age * m["expected_miles_per_year"], m["retention"],
                                            m["expected_miles_per_year"], m["per_mile_adjust"]))
         low, high = round(value * (1 - m["band"])), round(value * (1 + m["band"]))
     trend = market.parse_trend(lk.get(q.trends()) or {}, model)

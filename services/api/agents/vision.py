@@ -12,7 +12,7 @@ import re
 import time
 from datetime import UTC, datetime
 
-from agents import sdk, traces
+from agents import llm, sdk, traces
 from app.models import (
     Action,
     AgentName,
@@ -128,7 +128,7 @@ async def inspect(customer_id: str, photos: list[tuple[str, str, bytes]]) -> Ins
     angles = [a for a, _, _ in photos]
     model, reason, raw, r = sdk.MODEL, None, "", None
     try:
-        run = await sdk.run(SYSTEM, blocks(photos), [], timeout=INS["timeout_s"], max_turns=1)
+        run = await llm.run(SYSTEM, blocks(photos), [], timeout=INS["timeout_s"], max_turns=1)
         model, raw = run.model, run.text
         r = result(customer_id, parse(run.text, angles))
     except (sdk.SdkUnavailable, Rejected) as e:

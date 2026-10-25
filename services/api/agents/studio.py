@@ -10,7 +10,7 @@ import asyncio
 import os
 from datetime import timedelta
 
-from agents import guardian, orchestrator, recommend, sdk, traces
+from agents import guardian, llm, orchestrator, recommend, sdk, traces
 from agents.autonomy import AGENT_TOOLS
 from agents.prompts import PROMPTS
 from app.models import (
@@ -109,7 +109,7 @@ async def live_eval(case: dict) -> EvalResult:
     feedback, notes = "", []
     for attempt in range(2):   # one send-back with the Guardian's reasons, as orchestrator.ask does
         try:
-            run = await sdk.run(PROMPTS[agent][1], orchestrator.prompt(c, q, "en", [], feedback), AGENT_TOOLS[agent])
+            run = await llm.run(PROMPTS[agent][1], orchestrator.prompt(c, q, "en", [], feedback), AGENT_TOOLS[agent])
         except sdk.SdkUnavailable as e:
             return EvalResult(case=name, passed=False, detail="; ".join([*notes, f"SDK unavailable: {e}"]))
         v, _ = guardian.check(orchestrator.finish(run.text, run.tool_calls), orchestrator.outputs(run.tool_calls), q)
