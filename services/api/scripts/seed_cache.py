@@ -7,9 +7,11 @@ The only bulk SerpApi caller. Cache hits cost nothing, so re-running is free; it
 
 import json
 
+from app.models import Model
 from engine.scenarios import TODAY
 from serpapi import client, market
 from serpapi import queries as q
+from tools.market import defaults
 
 
 def main() -> None:
@@ -28,6 +30,8 @@ def main() -> None:
         top = market.parse_dealers(get(q.dealers(region))["response"], region)
         if top:
             get(q.dealer_reviews(top[0]["data_id"]))
+    for m in [m.value for m in Model if m.value not in {v[0] for v in q.PERSONA_VEHICLES}]:
+        get(q.youtube(m, defaults(m)[0]))   # showroom "what reviewers say" for the non-persona models
     get(q.trends())
 
     synced = sum(client.db_put(row) for row in rows.values())

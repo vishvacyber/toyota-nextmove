@@ -59,65 +59,6 @@
   },
   "source": "SerpApi Google Maps Reviews"
  },
- "05ba84cf3e56d748f7fb5b9656b52b30141f3244c0c9432621963d33313ffa98": {
-  "engine": "youtube_video_transcript",
-  "fetched_at": "2026-10-25T02:56:25.792229+00:00",
-  "key": "05ba84cf3e56d748f7fb5b9656b52b30141f3244c0c9432621963d33313ffa98",
-  "params": {
-   "language_code": "en",
-   "v": "RWc0imT3O-k"
-  },
-  "response": {
-   "transcript": [
-    {
-     "snippet": "The 2027 Toyota Camry XSE all-wheel drive brings a sportier personality to Toyota's popular midsize sedan,"
-    },
-    {
-     "snippet": "combining aggressive styling, a refined interior, and an efficient hybrid powertrain. As one of the most premium"
-    },
-    {
-     "snippet": "models in the Camry lineup, the XSE offers a combination of performance,"
-    },
-    {
-     "snippet": "comfort, and technology designed for drivers who want something more exciting than a [music] traditional family sedan."
-    },
-    {
-     "snippet": "Under the hood, the 2027 Camry XS"
-    },
-    {
-     "snippet": "[music]"
-    },
-    {
-     "snippet": "All-Wheel Drive features a 2.5 L [music] 4 cylinder gasoline engine paired with Toyota's fifth generation hybrid system."
-    },
-    {
-     "snippet": "Together, [music] the gasoline engine and electric motors produce 232 [music] combined horsepower,"
-    },
-    {
-     "snippet": "giving the all-wheel drive model a slight [music] advantage over the 225 horsepower available in front-wheel drive versions."
-    },
-    {
-     "snippet": "Toyota's electronic ondemand [music] all-wheel drive system uses a dedicated"
-    },
-    {
-     "snippet": "electric motor [music] at the rear axle to distribute power when additional traction is needed. [music]"
-    },
-    {
-     "snippet": "Whether accelerating from a stop or driving on slippery pavement, the system automatically adjusts [music] power"
-    },
-    {
-     "snippet": "delivery to help maintain stability and control. An electronically [music] controlled continuously"
-    },
-    {
-     "snippet": "variable transmission provides smooth acceleration [music] while helping maximize fuel efficiency."
-    },
-    {
-     "snippet": "[music] The XSE also receives a sporttuned suspension with specially calibrated springs"
-    }
-   ]
-  },
-  "source": "SerpApi YouTube Transcript"
- },
  "1521510d86a4eb3396f8624b069cd1fe7fac597268510ee4b1cdd2dd3f4c6697": {
   "engine": "google",
   "fetched_at": "2026-10-25T02:57:37.589671+00:00",
@@ -274,68 +215,9 @@
   },
   "source": "SerpApi YouTube"
  },
- "1a59a41381a5d2ce8e1b0e987a548477b62a794b29c43eb80cdcd4ee27ad5c68": {
-  "engine": "youtube_video_transcript",
-  "fetched_at": "2026-10-25T02:56:05.878273+00:00",
-  "key": "1a59a41381a5d2ce8e1b0e987a548477b62a794b29c43eb80cdcd4ee27ad5c68",
-  "params": {
-   "language_code": "en",
-   "v": "TK3tfskBFtU"
-  },
-  "response": {
-   "transcript": [
-    {
-     "snippet": "the toyota camry is two years older than me it's 38 looking alright in every generation the camry has been consistent"
-    },
-    {
-     "snippet": "roomy comfortable low maintenance you always know what you're getting with the camry this generation has been out since"
-    },
-    {
-     "snippet": "2017 as a 2018 model year for 2022 there's very few changes it's mostly the same the camry is just a great"
-    },
-    {
-     "snippet": "american-made car that american automakers have forgotten how to make and don't you forget to subscribe to cargurus just like the camry we're going"
-    },
-    {
-     "snippet": "to be here for the long haul there are 13 ways to buy a camry this is the xle all-wheel drive with a"
-    },
-    {
-     "snippet": "4-cylinder this could have been a hybrid or v6 that leaves 10 more trims from the base le to the xse there's also a trd"
-    },
-    {
-     "snippet": "which we tested in california you can read about that on cargurus.com now on many camry trims you can order a black roof a flaming red interior throw"
-    },
-    {
-     "snippet": "quad exhaust tips and a spoiler out the back yeah you can let your hair down in the camry this camry painted in ruby flare pearl it's simpler it's happier to"
-    },
-    {
-     "snippet": "blend in and that's okay it's a pleasant looking car this particular one the xle doesn't really draw me in but it doesn't push me"
-    },
-    {
-     "snippet": "away either it's a little simpler than the xse models or the se nightshade that's a new trim on the hybrid model that darkens things up add some spiffier"
-    },
-    {
-     "snippet": "wheels you can add all those things to a camry but in general it's fine right led headlights led tail lights are optional"
-    },
-    {
-     "snippet": "this one has it now it's saying something when you can't recognize what camry you have it could be the uber drivers it could be the neighbors who"
-    },
-    {
-     "snippet": "knows because millions of people rely on this car they buy the camry for economy for easy driving at low cost i'm talking up to 39"
-    },
-    {
-     "snippet": "mpg highway without the hybrid most of these camry 4 cylinders are 28 to 32 combined and look at the hybrid remember"
-    },
-    {
-     "snippet": "this is a real car not a prius these numbers are insane for a big sedan"
-    }
-   ]
-  },
-  "source": "SerpApi YouTube Transcript"
- },
  "2ab8f3b704c0f1433f5546fed5c4c38e0e0b82928b6753f36e1de2227ab30819": {
   "engine": "google_maps",
-  "fetched_at": "2026-10-25T02:56:44.114640+00:00",
+  "fetched_at": "2026-10-25T02:56:44.11464+00:00",
   "key": "2ab8f3b704c0f1433f5546fed5c4c38e0e0b82928b6753f36e1de2227ab30819",
   "params": {
    "hl": "en",
@@ -657,9 +539,57 @@
   },
   "source": "SerpApi YouTube"
  },
+ "5e11a13fffe0c72e29c6b5a4e4eac8d832c85f12dc1c293270fc6298fd76927e": {
+  "engine": "youtube",
+  "fetched_at": "2026-10-25T04:47:19.504041+00:00",
+  "key": "5e11a13fffe0c72e29c6b5a4e4eac8d832c85f12dc1c293270fc6298fd76927e",
+  "params": {
+   "search_query": "2024 Toyota Highlander review"
+  },
+  "response": {
+   "video_results": [
+    {
+     "channel": {
+      "name": "Autotrader"
+     },
+     "link": "https://www.youtube.com/watch?v=B5U8Wr6sewM",
+     "title": "2024 Toyota Highlander \u2013 Which One to Buy?"
+    },
+    {
+     "channel": {
+      "name": "Car Confections"
+     },
+     "link": "https://www.youtube.com/watch?v=m9ez6i0J2Nk",
+     "title": "2024 Toyota Highlander Platinum -- Still a GREAT Choice Over Grand Highlander??"
+    },
+    {
+     "channel": {
+      "name": "TheStraightPipes"
+     },
+     "link": "https://www.youtube.com/watch?v=XoCXJZRwhkU",
+     "title": "Supra Styled SUV - 2024 Toyota Highlander Review"
+    },
+    {
+     "channel": {
+      "name": "The Car Care Nut"
+     },
+     "link": "https://www.youtube.com/watch?v=OYbi3iTk8Sc",
+     "title": "Should You Buy A 2024 Toyota Grand Highlander? Back To Basics Toyota"
+    },
+    {
+     "channel": {
+      "name": "Redline Reviews"
+     },
+     "link": "https://www.youtube.com/watch?v=jBSfZimH8Yg",
+     "title": "The 2024 Toyota Highlander XSE Is A More Sporty Turbocharged 3-Row Family Hauler"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube"
+ },
  "5e57b52e770349c6a07b1a3200c00a27811b60c40ed433c8d5bcc6a803ecf154": {
   "engine": "google_maps",
-  "fetched_at": "2026-10-25T02:56:26.404260+00:00",
+  "fetched_at": "2026-10-25T02:56:26.40426+00:00",
   "key": "5e57b52e770349c6a07b1a3200c00a27811b60c40ed433c8d5bcc6a803ecf154",
   "params": {
    "hl": "en",
@@ -1748,65 +1678,6 @@
    ]
   },
   "source": "SerpApi Google Maps"
- },
- "d7e7dc6f4b6ba0a17935400d9afb344e78313b28db5fcf109fd45abac5f5b24f": {
-  "engine": "youtube_video_transcript",
-  "fetched_at": "2026-10-25T02:56:41.990475+00:00",
-  "key": "d7e7dc6f4b6ba0a17935400d9afb344e78313b28db5fcf109fd45abac5f5b24f",
-  "params": {
-   "language_code": "en",
-   "v": "rl-QKRvZm-M"
-  },
-  "response": {
-   "transcript": [
-    {
-     "snippet": "okay listen the design team has done their work clearly the new Prius is beautiful here at marketing though we"
-    },
-    {
-     "snippet": "have a different job we're here to sprinkle the pixie dust of excitement and capture the youth how do we make the"
-    },
-    {
-     "snippet": "new Prius cool we've already had some great ideas hybrid reborn on the tailgate oh wonderful putting the P from"
-    },
-    {
-     "snippet": "Prius on the gas capap inspired what else do we got what else do we got uh come on come on uh come on"
-    },
-    {
-     "snippet": "uh Twitter's big at the moment yes yes my nephew uses it yep uh and he uses uh hashes oh hash browns hash brown no"
-    },
-    {
-     "snippet": "hashtags hashtags yes yes yes yeah hashtags what are those"
-    },
-    {
-     "snippet": "exactly uh luggage tag you you label the luggage hashtags a modern label so we"
-    },
-    {
-     "snippet": "label things okay okay okay all right so what do we label how do we how do we let them discover things how do we make"
-    },
-    {
-     "snippet": "these Easter eggs okay uh uh this okay yep y the seat belt yep you move out the"
-    },
-    {
-     "snippet": "way yep # Safety First oh my God written on the seat oh my God oh my"
-    },
-    {
-     "snippet": "God okay I love it I love it more more more you uh the the wireless charger yep"
-    },
-    {
-     "snippet": "you take the phone out you look down in there # wireless charger oh my God oh my"
-    },
-    {
-     "snippet": "that so come on more uh the glove box yes yes when it's closed yep nothing"
-    },
-    {
-     "snippet": "open it y # glovebox no no nope I can't"
-    },
-    {
-     "snippet": "[Music]"
-    }
-   ]
-  },
-  "source": "SerpApi YouTube Transcript"
  },
  "dabae18fc9024b92cebf6ba94a1ec1633c4c0e05d6a3772a2d8fbdc04030631d": {
   "engine": "google_maps_reviews",
@@ -3959,9 +3830,57 @@
   },
   "source": "SerpApi Google Trends"
  },
+ "e72d043459896fc9302860a5bf9cfd4dc420253cdd6780d1cc7ccf6a0915ac43": {
+  "engine": "youtube",
+  "fetched_at": "2026-10-25T05:51:19.274747+00:00",
+  "key": "e72d043459896fc9302860a5bf9cfd4dc420253cdd6780d1cc7ccf6a0915ac43",
+  "params": {
+   "search_query": "2024 Toyota bZ review"
+  },
+  "response": {
+   "video_results": [
+    {
+     "channel": {
+      "name": "Everyman Driver"
+     },
+     "link": "https://www.youtube.com/watch?v=FVzVxN23vBY",
+     "title": "2024 Toyota bZ4X - Toyota\u2019s Only Electric SUV on Everyman Driver"
+    },
+    {
+     "channel": {
+      "name": "Super Dario World"
+     },
+     "link": "https://www.youtube.com/watch?v=mKb5RxRS-pA",
+     "title": "Is Toyota's BZ4X the Worst EV in the Market?"
+    },
+    {
+     "channel": {
+      "name": "Auto Focus"
+     },
+     "link": "https://www.youtube.com/watch?v=ivr95t-cqe8",
+     "title": "Toyota BZ4X: They'd Rather Make Hybrids!"
+    },
+    {
+     "channel": {
+      "name": "E for Electric"
+     },
+     "link": "https://www.youtube.com/watch?v=-ImMwfe4Duw",
+     "title": "Toyota BZ4X: Biggest Pros & Cons in 2024 ( in 5 min! )"
+    },
+    {
+     "channel": {
+      "name": "Ask for Bryan"
+     },
+     "link": "https://www.youtube.com/watch?v=6LEnw2ASpTk",
+     "title": "I Bought a 2024 Toyota bZ4x... Here's my 100% Honest Review"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube"
+ },
  "efd19df5d64579324a978cbbf58a92d69755ed56db0a919e598700268102f4a2": {
   "engine": "google_news",
-  "fetched_at": "2026-10-25T02:56:11.072450+00:00",
+  "fetched_at": "2026-10-25T02:56:11.07245+00:00",
   "key": "efd19df5d64579324a978cbbf58a92d69755ed56db0a919e598700268102f4a2",
   "params": {
    "gl": "us",
@@ -4112,63 +4031,52 @@
   },
   "source": "SerpApi YouTube"
  },
- "f84ebd84e510d679256acffcb1116b5abbbfab71783f1a596065502ba34892c6": {
-  "engine": "youtube_video_transcript",
-  "fetched_at": "2026-10-25T02:55:47.903941+00:00",
-  "key": "f84ebd84e510d679256acffcb1116b5abbbfab71783f1a596065502ba34892c6",
+ "fc8bd650bcb7b9b5ad19cdca11647f658a795f5b673771447d822aa54122026e": {
+  "engine": "youtube",
+  "fetched_at": "2026-10-25T05:51:19.059695+00:00",
+  "key": "fc8bd650bcb7b9b5ad19cdca11647f658a795f5b673771447d822aa54122026e",
   "params": {
-   "language_code": "en",
-   "v": "LOwAE5aHvbs"
+   "search_query": "2024 Toyota Tacoma review"
   },
   "response": {
-   "transcript": [
+   "video_results": [
     {
-     "snippet": "[Music]"
+     "channel": {
+      "name": "Doug DeMuro"
+     },
+     "link": "https://www.youtube.com/watch?v=P5PvF0bjh3M",
+     "title": "2024 Toyota Tacoma Review: A Legend Finally Redesigned"
     },
     {
-     "snippet": "the RAV4 is crossover royalty it sits"
+     "channel": {
+      "name": "Consumer Reports"
+     },
+     "link": "https://www.youtube.com/watch?v=7e4rD8Qb-VU",
+     "title": "2024 Toyota Tacoma Review | Consumer Reports"
     },
     {
-     "snippet": "atop its competitors in sales and like a"
+     "channel": {
+      "name": "Motormouth"
+     },
+     "link": "https://www.youtube.com/watch?v=MgXZgk-OreY",
+     "title": "All-New 2024 Toyota Tacoma review // All the stuff you need to know!"
     },
     {
-     "snippet": "true king many would argue that its"
+     "channel": {
+      "name": "Motormouth"
+     },
+     "link": "https://www.youtube.com/watch?v=rpS1HoA1R4g",
+     "title": "2024 Toyota Tacoma Chief Engineer on new engine reliability and more..."
     },
     {
-     "snippet": "bloodline is the biggest reason behind"
-    },
-    {
-     "snippet": "its success today we'll drive a new and"
-    },
-    {
-     "snippet": "used one and evaluate its attributes to"
-    },
-    {
-     "snippet": "answer the big question does the RAV4"
-    },
-    {
-     "snippet": "deserve its Crown I would put my money"
-    },
-    {
-     "snippet": "on 2024 being the last year of this"
-    },
-    {
-     "snippet": "generation despite that the RAV4 remains"
-    },
-    {
-     "snippet": "of highly competitive vehicle for a"
-    },
-    {
-     "snippet": "variety of reasons one big"
-    },
-    {
-     "snippet": "differentiating factor is the"
-    },
-    {
-     "snippet": "versatility this is packaged well so the"
+     "channel": {
+      "name": "Mark Tsai"
+     },
+     "link": "https://www.youtube.com/watch?v=NJTWfofU62I",
+     "title": "What Nobody Tells You About the New Tacoma - Long Term Review of the 2024 Toyota Tacoma "
     }
    ]
   },
-  "source": "SerpApi YouTube Transcript"
+  "source": "SerpApi YouTube"
  }
 }

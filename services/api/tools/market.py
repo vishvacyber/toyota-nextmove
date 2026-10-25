@@ -60,7 +60,8 @@ def quote(model: str, year: int | None = None, region: str | None = None) -> Mar
     year, region, lk = year or y, region or r, Lookups()
     resp = lk.get(q.comps(model, year, new=year > TODAY.year))
     comps = market.parse_comps(resp, model, year) if resp else []
-    if len(comps) >= CFG["market"]["min_comps"]:
+    table = len(comps) < CFG["market"]["min_comps"]
+    if not table:
         s = market.comp_summary(comps)
         value, low, high = s["median"], s["low"], s["high"]
     else:   # no comps: depreciation table at a typical mileage, with the configured band
@@ -75,7 +76,10 @@ def quote(model: str, year: int | None = None, region: str | None = None) -> Mar
     return MarketQuote(model=model, year=year, estimated_value=value, low=low, high=high, comps=comps,
                        trend=Trend(**trend) if trend else None, recalls=[Recall(**x) for x in recalls],
                        reviews_summary=reviews,
-                       dealers=found, source=lk.source, as_of=lk.as_of, cached=lk.cached)
+                       dealers=found, as_of=lk.as_of, cached=lk.cached,
+                       # the value's own source first: a table value must not read as SerpApi-sourced
+                       source=", ".join(dict.fromkeys([CFG["market"]["source"], *lk.source.split(", ")])) if table
+                       else lk.source)
 
 
 @tool()
