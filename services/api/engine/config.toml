@@ -7,7 +7,7 @@ as_of = "2026-10-24T09:00:00Z"   # fixed "today" so results never drift between 
 # Value = median of cached SerpApi comps for the model-year (when at least min_comps) − (miles over expected × per_mile_adjust).
 # Fallback without comps: msrp × retention[age] − (miles over expected × per_mile_adjust).
 source = "NextMove depreciation table (synthetic)"
-min_comps = 2
+min_comps = 3
 band = 0.06                       # ± range shown on GET /market when there are no comps
 expected_miles_per_year = 12000
 per_mile_adjust = 0.10            # $ per mile above/below expected
@@ -102,3 +102,8 @@ Tacoma = "Tacoma"
 Highlander = "Highlander"
 Prius = "bZ"
 bZ = "bZ"
+
+[opportunity]
+# shortcut: flat placeholders per next-best action / situation until B4's NBA $ scoring replaces them.
+expected_value = { buyout = 1850, return = 600, upgrade = 2600, trade_in = 1900, refinance = 700, extend = 500, due_date_change = 920, keep = 250, do_nothing = 150 }
+retention_odds = { lease_end = 0.78, mileage_overage = 0.7, positive_equity = 0.71, rate_drop = 0.66, early_payoff = 0.55, payment_stress = 0.64, ev_switch = 0.68, life_event = 0.6 }

@@ -8,6 +8,7 @@
     "test": "uv run pytest -q",
     "dev:live": "uv run --env-file ../../.env.local uvicorn app.main:app --reload --port 8000",
     "seed:cache": "uv run --env-file ../../.env.local python -m scripts.seed_cache",
-    "mcp": "uv run --env-file ../../.env.local python -m tools.mcp_server"
+    "mcp": "uv run --env-file ../../.env.local python -m tools.mcp_server",
+    "evals:live": "uv run --env-file ../../.env.local python -m evals.live"
   }
 }

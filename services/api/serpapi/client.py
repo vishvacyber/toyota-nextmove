@@ -131,7 +131,21 @@ def search(engine: str, params: dict, force: bool = False) -> dict:
     return {**row, "cached": False}
 
 
+@cache   # shortcut: one query per process for every cached row of an engine; restart after re-seeding
+def _db_engine_rows(engine: str) -> dict:
+    db = _supabase()
+    if db is None:
+        return {}
+    try:
+        res = httpx.get(db[0], params={"engine": f"eq.{engine}", "select": "*"}, headers=db[1], timeout=5)
+        res.raise_for_status()
+        return {r["key"]: r for r in res.json()}
+    except (httpx.HTTPError, ValueError):
+        return {}   # Supabase unreachable: the snapshot answers
+
+
 def cached_only(engine: str, params: dict) -> dict | None:
-    """Cache lookup that never spends quota (used on hot paths like the engine)."""
+    """Cache lookup that never spends quota (used on hot paths like the engine): one Supabase query per engine,
+    then the committed snapshot."""
     key = cache_key(engine, params)
-    return _db_get(key) or _snapshot().get(key)
+    return _db_engine_rows(engine).get(key) or _snapshot().get(key)
