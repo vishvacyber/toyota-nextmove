@@ -74,8 +74,12 @@ def now() -> datetime:
     return datetime.now(UTC)
 
 
-def tts_model() -> str:
-    return os.environ.get("GEMINI_TTS_MODEL") or "gemini-3.8-flash-tts"   # checked live: ~3.5 s, 24 kHz mono
+def tts_models() -> list[str]:
+    """Tried in order: each TTS model has its own daily quota (10 requests on the free tier), so one running out
+    doesn't silence the rep. GEMINI_TTS_MODEL can be one model or a comma list."""
+    env = os.environ.get("GEMINI_TTS_MODEL")
+    return [m.strip() for m in env.split(",")] if env else \
+        ["gemini-3.8-flash-tts", "gemini-3.8-flash-lite-tts", "gemini-3.1-flash-tts-preview", "gemini-2.5-flash-preview-tts"]
 
 
 def voice(name: str) -> dict:
@@ -212,22 +216,24 @@ async def identify(c: Call, ws: WebSocket, args: dict) -> dict:
 
 
 async def speak(text: str) -> bytes | None:
-    """A rep's typed message as natural speech (Gemini TTS): PCM16 24 kHz like the agent's audio, or None on failure."""
-    try:
-        async with httpx.AsyncClient(timeout=15) as client:
-            res = await client.post(TTS_URL.format(model=tts_model()), headers={"x-goog-api-key": os.environ["GEMINI_API_KEY"]},
-                                    json={"contents": [{"parts": [{"text": f"Say warmly and naturally: {text}"}]}],
-                                          "generationConfig": {"responseModalities": ["AUDIO"], "speechConfig": voice(REP_VOICE)}})
-            res.raise_for_status()
-            part = res.json()["candidates"][0]["content"]["parts"][0]["inlineData"]
-        data = base64.b64decode(part["data"])
-        if "wav" in part["mimeType"]:
-            with wave.open(io.BytesIO(data)) as w:
-                data = w.readframes(w.getnframes())
-        return data
-    except (KeyError, IndexError, ValueError, httpx.HTTPError, wave.Error) as e:
-        log.warning("rep voice unavailable: %s", type(e).__name__)
-        return None
+    """A rep's typed message as natural speech (Gemini TTS): PCM16 24 kHz like the agent's audio, or None when every
+    TTS model fails (the kiosk then uses the browser voice)."""
+    for tts in tts_models():
+        try:
+            async with httpx.AsyncClient(timeout=15) as client:
+                res = await client.post(TTS_URL.format(model=tts), headers={"x-goog-api-key": os.environ["GEMINI_API_KEY"]},
+                                        json={"contents": [{"parts": [{"text": f"Say warmly and naturally: {text}"}]}],
+                                              "generationConfig": {"responseModalities": ["AUDIO"], "speechConfig": voice(REP_VOICE)}})
+                res.raise_for_status()
+                part = res.json()["candidates"][0]["content"]["parts"][0]["inlineData"]
+            data = base64.b64decode(part["data"])
+            if "wav" in part["mimeType"]:
+                with wave.open(io.BytesIO(data)) as w:
+                    data = w.readframes(w.getnframes())
+            return data
+        except (KeyError, IndexError, ValueError, httpx.HTTPError, wave.Error) as e:
+            log.warning("rep voice: %s unavailable (%s)", tts, type(e).__name__)
+    return None
 
 
 async def run_ai(c: Call, ws: WebSocket, lang: str, calls: list[ToolCall], upstream: asyncio.Queue) -> None:

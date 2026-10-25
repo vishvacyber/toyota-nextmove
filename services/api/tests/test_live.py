@@ -232,3 +232,21 @@ def test_spoken_phone_number_is_masked_even_when_split(gemini):
         ws.send_json({"type": "hangup"})
     caller = next(x for x in c["lines"] if x["role"] == "customer")
     assert "4567" not in caller["text"] and "[phone]" in caller["text"]
+
+
+def test_rep_voice_falls_back_to_the_next_tts_model(monkeypatch):
+    import base64 as b64
+
+    import httpx
+    monkeypatch.setenv("GEMINI_API_KEY", "test")
+    monkeypatch.setenv("GEMINI_TTS_MODEL", "first, second")
+    tried = []
+
+    async def post(self, url, **kw):
+        tried.append(url.split("/models/")[1].split(":")[0])
+        if len(tried) == 1:
+            return httpx.Response(429, request=httpx.Request("POST", url))
+        return httpx.Response(200, request=httpx.Request("POST", url), json={"candidates": [{"content": {"parts": [
+            {"inlineData": {"mimeType": "audio/l16; rate=24000", "data": b64.b64encode(b"\x01\x00").decode()}}]}}]})
+    monkeypatch.setattr(httpx.AsyncClient, "post", post)
+    assert asyncio.run(live.speak("Hi")) == b"\x01\x00" and tried == ["first", "second"]

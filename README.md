@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | **Dealership kiosk** | **[ToyotaNXT.tech](https://toyotanxt.tech)** | [toyota-nextmove-customer.vercel.app/kiosk](https://toyota-nextmove-customer.vercel.app/kiosk) |
 | **Customer phone app** | **[app.ToyotaNXT.tech](https://app.toyotanxt.tech)** | [toyota-nextmove-customer.vercel.app/app](https://toyota-nextmove-customer.vercel.app/app?id=CUST-SAMEERA2026) |
-| Employee Console | | [toyota-nextmove-console.vercel.app](https://toyota-nextmove-console.vercel.app) |
+| **TFS employee console** | **[console.ToyotaNXT.tech](https://console.toyotanxt.tech)** | [toyota-nextmove-console.vercel.app](https://toyota-nextmove-console.vercel.app) |
 
 The hosted copies run on recorded sample data, so they need no setup. The live engine, AI agents, voice calls and realtime run from the demo laptop (see [Run it](#run-it)).
 

@@ -81,6 +81,9 @@ function CallScreen({ customerId, onClose }: { customerId?: string; onClose: (id
     const keepAwake = setInterval(() => window.dispatchEvent(new Event("kiosk-activity")), 15_000);
     return () => {
       clearInterval(keepAwake);
+      // Detach first: a socket closed while still connecting (React dev mounts effects twice) fires onerror, which
+      // would otherwise mark the next, working call as failed.
+      sock.onopen = sock.onmessage = sock.onerror = sock.onclose = null;
       if (sock.readyState === WebSocket.OPEN) sock.send(JSON.stringify({ type: "hangup" }));
       sock.close();
       ws.current = null;
