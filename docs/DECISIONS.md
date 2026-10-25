@@ -21,6 +21,17 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Queue filters** are situation, priority and a text search over name, ID, model and reason; the `/customers` page uses the API's `?q=` search.
 - **Console strings are English-only for now**; console i18n comes with a later C stage.
 
+## Stage C2 (console)
+- **"Internal value" on NextMove Review is `Opportunity.expected_value`** (plus `retention_odds`) from `/opportunities`. The contract has no internal-margin field, so no contract change.
+- **A reason is required for approve and override.** The contract only requires it on override; the stage prompt asks for a reason on every review, and it makes the audit trail complete.
+- **The reviewer, claimer and alert actor is a fixed demo employee, `EMP-ADVISOR-1`** (`lib/employee.ts`, matches the audit fixtures). The header role switcher stays cosmetic.
+- **Handoffs cross apps over Supabase Realtime Broadcast**: channel `handoffs`, event `created` (new contract `Handoff`) and `updated` (after claim/resolve), no tables. The inbox seeds from `GET /handoffs`, then upserts every event by id. The console subscribes with `broadcast.self: true` so the tab that sends an event updates the same way as every other tab.
+- **Claim of a handoff from another browser falls back to a local claim on 404.** MSW stores live per browser, so a handoff broadcast by the customer app isn't in the console's mock store. Remove the fallback once the real API holds handoffs.
+- **Realtime offline** (no keys, or the channel errors/closes): the inbox still works from the mock list and shows "Realtime offline · mock list only".
+- **Env wiring:** `next.config.ts` loads the repo-root `.env.local` with `loadEnvConfig(root, …, forceReload=true)` (Next has already cached its own app-folder load, so without `forceReload` the call is a no-op) and maps only `SUPABASE_URL` / `SUPABASE_ANON_KEY` to `NEXT_PUBLIC_*`. The service key never reaches the browser.
+- **Dev-only "Simulate customer handoff"** button on Live Activity broadcasts a `created` event, to prove the inbox before K2 lands.
+- **Console unit tests use `node --test`** (Node 24 runs TypeScript directly), so no test runner was added.
+
 ## Stage K1 (customer app)
 - **Signed-in customer lives in `?id=CUST-…`** on `/app` and `/kiosk`. That URL is also the QR deep link, so there's no auth state to store. Sign-out (and the kiosk's 60s idle reset) goes back to the bare path, which shows sign-in. IDs are upper-cased, and `CUST-` is added if it's missing.
 - **No camera QR scanning** in K1: the phone's own camera opens the deep link. `BarcodeDetector` isn't available on desktop Safari or Firefox, so it would need a fallback anyway.
