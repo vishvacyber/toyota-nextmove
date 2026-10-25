@@ -1,7 +1,7 @@
 """Action tools. Autonomy (CLAUDE.md rule 3): drafts are L2; anything customer-facing is L3 and waits for consent.
 shortcut: state lives in memory per process; B3 persists it to Supabase with the traces."""
 
-import itertools
+import uuid
 from datetime import UTC, datetime
 
 from pydantic import AwareDatetime, BaseModel, Field
@@ -23,11 +23,11 @@ from tools.customer import customer
 from tools.registry import tool
 
 STORE: dict[str, list] = {"appointments": [], "offers": [], "handoffs": [], "audit": [], "inspections": []}
-_ids = itertools.count(1)
 
 
 def new_id(prefix: str) -> str:
-    return f"{prefix}-{next(_ids):04d}"
+    # Random, not a counter: ids persist in Supabase, so they must stay unique across API restarts.
+    return f"{prefix}-{uuid.uuid4().hex[:10].upper()}"
 
 
 def now() -> datetime:

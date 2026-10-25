@@ -130,3 +130,8 @@ def test_market_endpoint(model):
     body = res.json()
     assert body["source"] and body["as_of"] and body["cached"] is True
     assert TestClient(app).get("/market/Corolla").status_code == 422
+
+
+def test_new_id_is_unique_across_restarts():
+    # A per-process counter restarted at 0001 and collided with traces already in Supabase.
+    assert len({actions.new_id("TR") for _ in range(1000)}) == 1000
