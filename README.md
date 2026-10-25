@@ -74,3 +74,9 @@ packages/contracts  openapi.yaml, generated types, MSW mocks
 packages/tokens     design tokens + synthetic-data badge
 docs/               SPEC, BUILD_PLAN, DECISIONS
 ```
+##Team
+Vishwaa Shah
+Vishva Patel
+Sameeraa K
+Hung
+
