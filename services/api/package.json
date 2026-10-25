@@ -6,7 +6,6 @@
     "gen": "uvx --from datamodel-code-generator datamodel-codegen --input ../../packages/contracts/openapi.yaml --input-file-type openapi --output app/models.py --output-model-type pydantic_v2.BaseModel --use-annotated --field-constraints --target-python-version 3.11 --disable-timestamp",
     "lint": "uv run ruff check .",
     "test": "uv run pytest -q",
-    "dev:live": "uv run --env-file ../../.env.local uvicorn app.main:app --reload --port 8000",
     "seed:cache": "uv run --env-file ../../.env.local python -m scripts.seed_cache",
     "mcp": "uv run --env-file ../../.env.local python -m tools.mcp_server",
     "evals:live": "uv run --env-file ../../.env.local python -m evals.live"

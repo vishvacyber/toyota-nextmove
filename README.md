@@ -1,96 +1,102 @@
 # Toyota NextMove
 
-A proactive, agentic financial co-pilot for Toyota Financial Services customers (HackTX).
-It answers one question: "Given my situation today, what's the smartest next move for me and my Toyota?"
+**A proactive, agentic financial co-pilot for Toyota Financial Services customers.** Built at HackTX.
 
-- Customer App (phone + kiosk) and Employee Console, backed by one FastAPI decision engine.
-- The engine computes every number; the LLM only explains. A Guardian agent checks outputs before customers see them.
-- Synthetic data only.
+> "Given my situation today, what's the smartest next move for me and my Toyota?"
 
-Product spec: [docs/SPEC.md](docs/SPEC.md) · Build plan: [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md) · Build rules: [CLAUDE.md](CLAUDE.md) · Stage prompts: [PROMPTS.md](PROMPTS.md)
+## The problem
 
-## Run
+TFS customers decide too late: a lease ends, miles run over, a payment slips, and the right option is gone. The options are confusing, every question becomes a call, and payment stress is caught after the damage is done.
+
+## What NextMove does
+
+It watches each customer's situation, reaches out at the right moment, compares every eligible option with exact numbers, and guides them to **one clear next step**. Employees see the whole portfolio, the profit impact, and every AI decision.
+
+| Persona | Situation | What NextMove shows (real engine output) |
+| --- | --- | --- |
+| **Maria** | Lease ends in 90 days, 9,800 miles over | Buyout keeps **$6,467** of equity vs **$3,200** in return fees. Photo pre-inspection estimates wear charges before the official inspection. |
+| **James** | Loan with positive equity, high fuel spend | Hybrid upgrade: payment **$496 → $428/mo**, true monthly cost about **$845 → $685**, **1,718 kg less CO2/year**. Acting now is worth **$820** more than waiting 3 months. Explore it in 3D, then send a deal packet to the dealer. |
+| **Priya** | Missed payment after a job change | Due date moved to the **17th** to match her payday. Deferral and extension are money decisions, so they go to a **human callback**, never an agent. |
+
+**Two surfaces, one brain:** a Customer App (phone + dealership kiosk, English and Spanish, voice) and an Employee Console (portfolio, live activity, proof of value, responsible AI, Agent Studio).
+
+## Architecture
+
+```
+Customer App (Next.js PWA)  ─┐                         ┌─ Supabase (Postgres cache, Realtime: handoffs, traces)
+  /app phone · /kiosk        ├─►  FastAPI  ────────────┤
+Employee Console (Next.js)  ─┘     │                    └─ SerpApi (comps, dealers, recalls, trends, reviews) → cached
+                                   ├─ Deterministic finance engine  ← computes EVERY number
+                                   ├─ 12 tools (one registry, exposed as an MCP server)
+                                   ├─ Agents on the Claude Agent SDK: Advisor, Hardship, vision inspection
+                                   │    + Orchestrator, Sentinel, Market Intel (code)
+                                   ├─ Guardian: blocks any number not found in tool output
+                                   └─ 24-month simulation over 1,200 synthetic customers
+```
+
+**Trust by design:**
+- **The LLM never computes money.** The engine computes every payment, fee and equity figure; the model only explains them. The Guardian checks every answer against the tool outputs and blocks or rewrites anything that doesn't match.
+- **Autonomy levels.** Reads run automatically; drafts are visible in the console; customer-facing actions need the customer's tap or an employee's approval; money and credit decisions are never made by an agent.
+- **Responsible AI.** No protected attributes anywhere. A fairness report by region and credit tier, a full audit log with overrides, and a deploy gate that runs evals and prompt-injection tests before any new agent goes live.
+- **Synthetic data only**, labelled on every screen. Customer IDs, not names, go to the model.
+
+## Track coverage
+
+| Requirement | How |
+| --- | --- |
+| Personalize · Simplify · Guide | Customer 360 → engine options with assumptions and "why not" → one recommended action |
+| Value | Proof dashboard: 24-month baseline vs NextMove over 1,200 customers; retention **54.4% → 68.6%** at 60% adoption, live sliders |
+| Working prototype | Both surfaces on one live API, realtime handoffs between them |
+| Responsible AI | Guardian, autonomy levels, fairness report, audit + overrides, deploy gate |
+| Reimagine CX | Proactive alerts, voice EN/ES, kiosk with privacy blur, photo pre-inspection, 3D showroom |
+| Reusable agent platform | Agent Studio: templates, tool registry, guardrails, traces, evals. A Recall Notifier deploys from a template in ~12 s |
+| Meaningful SerpApi use | Market value = median of cached comps (source + as-of on every number); dealers, recalls, trends and reviews drive real decisions |
+
+## Run it
 
 Needs Node 20+, pnpm 10, and [uv](https://docs.astral.sh/uv/) (installs Python 3.12 itself).
 
 ```bash
 pnpm install
-cp .env.example .env.local      # fill in keys when the API needs them
+cp .env.example .env.local      # add Supabase + SerpApi keys and CLAUDE_CONFIG_DIR
 pnpm dev                        # customer :3000, console :3001, API :8000
 ```
 
 | URL | What |
 | --- | --- |
-| http://localhost:3000/app | Customer App, phone mode |
-| http://localhost:3000/kiosk | Customer App, kiosk mode |
+| http://localhost:3000/kiosk | Kiosk: tap the attract screen, pick a demo customer |
+| http://localhost:3000/app?id=CUST-JAMES | Phone app, signed in as James |
 | http://localhost:3001 | Employee Console |
-| http://localhost:8000/health | API health check |
 
-Frontends run on MSW mocks by default (`NEXT_PUBLIC_API_MOCKING=enabled`).
+The agents run on a Claude subscription login: run `claude` once with `CLAUDE_CONFIG_DIR` set and `/login`. Without it, the app serves pre-written, Guardian-checked answers for the three personas. `NEXTMOVE_OFFLINE=1` keeps SerpApi off and serves the committed cache. `NEXT_PUBLIC_API_MOCKING=enabled` runs both frontends on mock data with no API at all.
 
-## Checks
+**Demo script (3 min):** Maria at the kiosk: photo estimate, buyout beats return, start buyout. James: comps show equity, timing says don't wait, hybrid lowers total cost, explore in 3D, send deal packet. Priya: due date to payday, human callback. Console: ask NextMove a question to see the live session and trace, the queue with $ values, the Proof sliders, the fairness report, and deploy a Recall Notifier.
 
-```bash
-pnpm typecheck && pnpm lint && pnpm test
-```
+---
 
-## API: data + engine
+## Developer reference
 
-- `services/api/engine/`: `finance.py` (pure formulas), `scenarios.py` (option builders), `config.toml` (rates, fees, depreciation table, driving costs), `eligibility.toml` (readable rules).
-- `services/api/sim/generator.py`: 1,200 deterministic synthetic customers (seed 42), including `CUST-MARIA`, `CUST-JAMES`, `CUST-PRIYA`. Regenerated in memory when the API starts.
-- `POST /scenarios` with `{"customer_id": "CUST-JAMES"}` returns every eligible option plus the `do_nothing` baseline.
-
-Seed Supabase (one-shot, optional; create the `customers` table first, SQL is in the script's docstring):
-
-```bash
-cd services/api && SUPABASE_URL=... SUPABASE_SERVICE_KEY=... uv run python -m sim.seed_supabase
-```
-
-## API: tools + SerpApi (B2)
-
-- `services/api/tools/`: the 12 SPEC §4 tools in one registry (`registry.py`): JSON schema from each Pydantic input, `openai_tools()` for Grok, and an MCP server (`mcp_server.py`) for Claude. Run one alone: `uv run python -m tools` (list) or `uv run python -m tools get_market_value '{"model":"RAV4"}'`.
-- `services/api/serpapi/`: cached SerpApi lookups. Order: Supabase `serpapi_cache` → committed `snapshot.json` → live (only on a miss, max 10 per process, never when `NEXTMOVE_OFFLINE=1`). Market value in every scenario comes from cached comps (source + as-of in the assumptions), with the depreciation table as fallback.
-- `GET /market/{model}?year=` returns a `MarketQuote`.
-- `pnpm dev` runs from the snapshot (works offline). `pnpm --filter @nextmove/api dev:live` loads `.env.local` to use Supabase and live SerpApi.
-- Cache table: `services/api/migrations/001_serpapi_cache.sql`. Re-seed the 3 personas (cache hits are free): `pnpm --filter @nextmove/api seed:cache`.
-
-## API: agents (B3)
-- `services/api/agents/`: Advisor and Hardship run on the Claude Agent SDK with the separate subscription login (`CLAUDE_CONFIG_DIR` in `.env.local`). The SDK is locked down: no built-in tools, no settings files, only the B2 tool registry (mounted in-process as an SDK MCP server). Orchestrator, Sentinel, Market Intel and Guardian are plain code.
-- Guardian (`guardian.py`) checks every agent answer: every number must appear in that run's tool output, plus tone, consent, disclosures, fairness and prompt injection. A failed answer gets one send-back; after that, a pre-generated answer (`fallback.json`) or an engine template is served, marked in the trace.
-- Endpoints: `POST /agents/advisor/ask`, `GET /customers/{id}/recommendation`, `GET /opportunities`, `GET /traces`, `GET /alerts`. Traces go to Supabase `traces` (`migrations/002_traces.sql`) and Realtime Broadcast channel `traces`, event `created`.
-- Live persona evals (spend subscription quota; pytest never calls the SDK): `pnpm --filter @nextmove/api evals:live` (add `--save` to refresh `fallback.json`, or pass `CUST-…` IDs to rerun some).
-
-## API: value features (B4)
-- `GET /customers/{id}/timing`: month-by-month equity, fees and net position, best month, and act now vs wait 3 months in $. `POST /scenarios` also accepts `overrides.months_from_now`.
-- `POST /inspections` (multipart `customer_id`, `photos[]`, `angles[]`): the vision model identifies wear items, and charges come from `[inspection.charges]` in `engine/config.toml`. Photos stay in memory. A canned Maria result is served if the SDK is down or slow.
-- `POST /deal-packets` / `GET /deal-packets`: engine scenario + eligibility, sent to a cached dealer (in memory).
-- `GET /opportunities`: `expected_value` and `retention_odds` come from `engine/nba.py` (weights in `[nba]`).
-
-## API: proof + trust (B5)
-- Also filled in from the contract: `GET /customers?q=`, `GET /customers/{id}`, `GET/POST /handoffs`, `PATCH /handoffs/{id}` (broadcasts `created`/`updated` on `handoffs`), `GET /sessions`, `POST /customers/{id}/recommendation/review`. `tests/test_contract_routes.py` fails if a contract operation has no route.
-- `GET /kpis?adoption_rate=&outreach_lead_days=&hardship_uptake=`: 24-month baseline vs NextMove over all 1,200 customers (`sim/simulate.py`, coefficients in `[simulation]`). Deterministic, ~2 ms per call.
-- `GET /fairness`: recommendation and offer rates by region and credit tier, flagged past `simulation.fairness_threshold`.
-- `GET /audit`: `log_decision` entries (deal packets, alert approvals, Studio deploys) plus one entry per agent trace.
-- `GET/POST /offers`, `POST /offers/{id}/simulate`: the offer and its `variant_of` A/B variants, scored with NBA odds and margins. `rule` is parsed (`days_to_maturity <= 90 AND powertrain = gas`) and limits the audience.
-- `GET/POST /studio/agents`, `POST /studio/agents/{id}/deploy`: the deploy gate runs a tool-policy check, the persona evals (committed fallbacks + Guardian) and prompt-injection tests. It makes no SDK calls unless `STUDIO_GATE_LIVE=1`, which adds the 3 persona cases on the live model. A failed gate leaves the agent `failed`.
-
-## Contract
-
-`packages/contracts/openapi.yaml` is the source of truth. After editing it, run `pnpm gen` to regenerate the TS types and the API's Pydantic models.
-
-## Layout
+**Checks:** `pnpm typecheck && pnpm lint && pnpm test`. **Contract:** `packages/contracts/openapi.yaml` is the source of truth (29 operations; a test fails if the API is missing one). After editing it, `pnpm gen` regenerates the TS types and Pydantic models.
 
 ```
 apps/console        Next.js + shadcn employee console
 apps/customer       Next.js PWA: /app (phone), /kiosk (kiosk)
-services/api        FastAPI: engine, agents, tools, SerpApi, simulation
+services/api        FastAPI: engine, tools, agents, SerpApi, simulation
 packages/contracts  openapi.yaml, generated types, MSW mocks
 packages/tokens     design tokens + synthetic-data badge
 docs/               SPEC, BUILD_PLAN, DECISIONS
 ```
-##Team
-Vishwaa Shah
-Vishva Patel
-Sameeraa K
-Hung
 
+- **Engine** (`services/api/engine/`): `finance.py` formulas, `scenarios.py` option builders, `timing.py`, `nba.py`; rates, fees, eligibility and NBA weights in `config.toml` / `eligibility.toml`. 1,200 seeded customers from `sim/generator.py`.
+- **Tools** (`services/api/tools/`): the 12 tools in one registry. Run one alone: `uv run python -m tools get_market_value '{"model":"RAV4"}'`. MCP server: `pnpm --filter @nextmove/api mcp`.
+- **SerpApi cache** (`services/api/serpapi/`): Supabase `serpapi_cache` → committed `snapshot.json` → live only on a miss. Re-seed the personas: `pnpm --filter @nextmove/api seed:cache`.
+- **Agents** (`services/api/agents/`): the SDK is locked down (no built-in tools or settings, only the tool registry). Live persona evals: `pnpm --filter @nextmove/api evals:live`. Traces go to Supabase `traces` and Realtime channel `traces`.
+- **Supabase tables:** `services/api/migrations/` (run once in the SQL editor). Handoffs, deal packets, offers and Studio agents are kept in memory for the demo.
+- **Decisions and trade-offs:** [docs/DECISIONS.md](docs/DECISIONS.md). Product spec: [docs/SPEC.md](docs/SPEC.md).
+
+## Team
+
+- Vishwaa Shah
+- Vishva Patel
+- Sameeraa K
+- Hung
