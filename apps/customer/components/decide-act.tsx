@@ -85,7 +85,7 @@ function WhatIf({ c, r, overrides, onChange, set, error }: {
       </div>
       {set && (
         <p className="mt-4 text-sm text-muted">
-          {set.assumptions.join(" · ")} · {t("calculated_at", { at: asOf(set.as_of, locale) })}
+          <Private>{set.assumptions.join(" · ")}</Private> · {t("calculated_at", { at: asOf(set.as_of, locale) })}
         </p>
       )}
     </Card>
@@ -319,7 +319,7 @@ function ActionCenter({ c, r, channel }: { c: Customer; r: Recommendation; chann
             <Action
               key={o.id}
               title={t("act_claim")}
-              body={<>{o.name} · {incentive(o)}</>}
+              body={<><Private>{o.name}</Private> · {incentive(o)}</>}
               primary={primary("claim_offer")}
               confirmText={t("confirm_claim")}
               run={async () => t("offer_claimed")}

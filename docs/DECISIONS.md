@@ -206,3 +206,10 @@ Simplest option that satisfies the spec, per CLAUDE.md.
   - A test handoff for CUST-00001 was created, claimed by `EMP-B5-CHECK` and resolved on port 8105. Supabase accepted the `created` and both `updated` broadcasts (`traces.broadcast` returned True, no warnings).
   - The live deploy gate (`STUDIO_GATE_LIVE=1`) passed all 13 checks in 6.5 s with 3 SDK calls. James passed on the first draft, with no send-back.
 
+## K5 (customer: attract loop, QR continue, real API)
+- **Fully live:** the customer app runs with `NEXT_PUBLIC_API_MOCKING=disabled` against the merged API, which now serves every contract operation. The shared MSW path (`enabled`, or a prefix list) still works offline.
+- **Attract loop:** this is the kiosk's no-customer screen. It reuses the lazy K4 `ShowroomCanvas` with auto-rotation and paint cycling every 4 s, and shows a still car under reduced motion. The whole screen is one button. The idle reset remounts the screen, so it lands back here. A `/kiosk?id=` deep link skips it, and sign-out goes to sign-in, not back to the attract loop.
+- **QR continue-on-phone:** the QR is encoded on the device with `uqr` (no dependencies) and drawn as an SVG path, so the customer id never goes to a QR service. It uses the kiosk's own origin (`location.origin`). A real kiosk needs an origin that phones can reach.
+- **Showroom reviews per model year:** the showroom passes the trim's year (`GET /market/{model}?year=`, already in the contract), so James's 2027 Camry SE Hybrid shows 2027 reviews, not reviews of his 2022 Camry. Both years are in the committed SerpApi snapshot.
+- **Privacy blur additions:** recommendation headline, ineligible reason, scenario assumptions, alert title and offer name. All of them can quote dollar amounts.
+- **Live spend in K5 testing:** 4 vision calls and 2 Advisor calls (Spanish and English, about 15 s each, both Guardian pass).

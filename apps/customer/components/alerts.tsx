@@ -33,7 +33,7 @@ export function Alerts({ customerId }: { customerId: string }) {
       <ul className="space-y-4">
         {shown.map((a) => (
           <li key={a.id} className="rounded-2xl border border-line bg-bg p-5">
-            <p className="text-lg font-semibold">{a.title}</p>
+            <p className="text-lg font-semibold"><Private>{a.title}</Private></p>
             <p className="mt-1 text-muted"><Private>{a.body}</Private></p>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
               <label className="flex cursor-pointer items-center gap-3">

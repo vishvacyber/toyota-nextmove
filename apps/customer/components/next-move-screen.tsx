@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import type { Customer, Recommendation } from "@nextmove/contracts";
@@ -8,7 +8,9 @@ import { Card, Row, ScenarioCard } from "@/components/cards";
 import { AdvisorChat } from "@/components/advisor-chat";
 import { Alerts } from "@/components/alerts";
 import { DecideAct, HandoffBanner } from "@/components/decide-act";
-import { Private } from "@/components/private";
+import { Attract } from "@/components/attract";
+import { ContinueOnPhone } from "@/components/continue-on-phone";
+import { Private, PrivacyContext } from "@/components/private";
 import { Showroom } from "@/components/showroom";
 import { SignIn } from "@/components/sign-in";
 import { TopBar } from "@/components/top-bar";
@@ -22,6 +24,9 @@ const ease = [0.22, 1, 0.36, 1] as const;
 export function NextMoveScreen({ customerId }: { customerId?: string }) {
   const router = useRouter();
   const pathname = usePathname();
+  // Kiosk opens on the attract loop; the idle reset remounts this screen, which brings it back.
+  const [attract, setAttract] = useState(useContext(PrivacyContext));
+  if (attract && !customerId) return <MotionConfig reducedMotion="user"><Attract onStart={() => setAttract(false)} /></MotionConfig>;
   return (
     <MotionConfig reducedMotion="user">
       <TopBar onSignOut={customerId ? () => router.push(pathname) : undefined} />
@@ -44,6 +49,7 @@ export function NextMoveScreen({ customerId }: { customerId?: string }) {
 
 function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
   const { t } = useI18n();
+  const kiosk = useContext(PrivacyContext);
   const customer = useApi<Customer>(`/customers/${encodeURIComponent(id)}`);
   const rec = useApi<Recommendation>(`/customers/${encodeURIComponent(id)}/recommendation`);
   const [step, setStep] = useState(0);
@@ -73,7 +79,10 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
 
   return (
     <main className="mx-auto max-w-6xl px-6 pb-16">
-      <p className="text-sm font-medium text-muted">{t("hello", { name: c.first_name })}</p>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="text-sm font-medium text-muted">{t("hello", { name: c.first_name })}</p>
+        {kiosk && <ContinueOnPhone customerId={c.id} />}
+      </div>
       <nav aria-label={t("steps")} className="mt-4">
         <ol className="flex gap-2 overflow-x-auto rounded-full bg-surface p-1">
           {STEPS.map((k, i) => (
@@ -198,7 +207,7 @@ function NextMoveStep({ r, onAct, onExplore }: { r: Recommendation; onAct: () =>
   if (r.guardian.verdict === "block") return <p role="status" className="text-xl">{t("under_review")}</p>;
   return (
     <div>
-      <p className="text-2xl font-semibold leading-snug sm:text-3xl">{r.headline}</p>
+      <p className="text-2xl font-semibold leading-snug sm:text-3xl"><Private>{r.headline}</Private></p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[r.recommended, ...r.alternatives].map((s, i) => (
           <motion.div key={s.option} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease, delay: 0.08 * i }}>

@@ -35,7 +35,7 @@ export function Showroom({ c, r, initial, onClose }: { c: Customer; r: Recommend
   const [explode, setExplode] = useState(0);
   const [autoRotate, setAutoRotate] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const [selected, setSelected] = useState<Part>();
-  const market = useApi<MarketQuote>(`/market/${encodeURIComponent(trim.vehicle.model)}`);
+  const market = useApi<MarketQuote>(`/market/${encodeURIComponent(trim.vehicle.model)}?year=${trim.vehicle.year}`);
   const dialog = useRef<HTMLDialogElement>(null);
   // Captured on first render, before the dialog takes focus, so closing returns focus to "Explore in 3D".
   const [opener] = useState(() => document.activeElement as HTMLElement | null);

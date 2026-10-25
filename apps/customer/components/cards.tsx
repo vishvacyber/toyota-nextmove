@@ -37,7 +37,7 @@ export function ScenarioCard({ s, recommended, children }: { s: Scenario; recomm
         <Row label={t("equity")}><Private>{money(s.equity)}</Private></Row>
         <Row label={t("fees")}><Private>{money(s.fees)}</Private></Row>
       </dl>
-      {!s.eligible && s.ineligible_reason && <p className="mt-3 text-sm text-muted">{s.ineligible_reason}</p>}
+      {!s.eligible && s.ineligible_reason && <p className="mt-3 text-sm text-muted"><Private>{s.ineligible_reason}</Private></p>}
       <div className="mt-auto">{children}</div>
     </article>
   );

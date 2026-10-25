@@ -107,7 +107,7 @@ export function AdvisorChat({ customerId }: { customerId: string }) {
           <li key={k} className="space-y-3">
             <p className="ml-auto w-fit max-w-[85%] rounded-2xl bg-fg px-4 py-3 text-bg">{turn.q}</p>
             {turn.error && <p role="alert" className="text-accent">{t("error")}</p>}
-            {!turn.a && !turn.error && <p className="text-muted">{t("thinking")}</p>}
+            {!turn.a && !turn.error && <p role="status" className="animate-pulse text-muted">{t("thinking")} <span className="block text-sm">{t("slow_advisor")}</span></p>}
             {turn.a && <Answer a={turn.a} />}
           </li>
         ))}
