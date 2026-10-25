@@ -31,6 +31,16 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Kiosk blur covers every dollar figure**, including the why text, why-not reasons and assumptions (each one is its own tap). APR and miles stay visible.
 - **A Guardian `block` verdict hides the recommendation** and shows "a specialist is reviewing".
 
+## Stage K2 (customer app)
+- **"Decide + act" is a 4th step** after Why this, on both `/app` and `/kiosk`. The recommended card's button jumps to it.
+- **What-if sliders** (down payment, term, miles/year) send only the overrides the customer moved, debounced 300 ms, to `POST /scenarios`. The mock returns fixed numbers until K5.
+- **True cost + CO2** shows every scenario in the what-if result that has `true_cost`; no differences are computed client-side.
+- **Claim offer and start self-service have no contract endpoint**, so for now they're confirm-then-acknowledge in the UI (no contract change). Offers are `GET /offers` filtered to `active` + the customer's situation; James has none.
+- **Book follow-up = `POST /handoffs` with `callback_at`** (one of the next three weekdays at 10:00), broadcast like a talk request so it reaches the console queue.
+- **Handoff realtime:** Supabase Broadcast on `handoffs`; we send `created` (full `Handoff`), listen for `updated` by id. The channel lives in `Flow`, so sign-out and the kiosk idle remount close it. No Supabase env or a failed subscribe → the handoff is still created and the banner says live updates are offline.
+- **Env:** `next.config.ts` loads the repo-root env with `forceReload` (Next caches the app folder's env first) and maps only `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- **Kiosk blur on the timing chart and true-cost columns is one tap per block**, labels included, rather than one tap per number.
+
 ## Stage B1
 - **No Supabase yet.** The 1,200 synthetic customers are regenerated in memory on startup (deterministic, seed 42, ~0.3 s). `sim/seed_supabase.py` upserts them into a `customers (id, data jsonb)` table when keys exist; it hasn't been run.
 - **Config is TOML, not YAML** (`engine/config.toml`, `engine/eligibility.toml`): it's in the standard library (`tomllib`), so no new dependency, and it's just as readable.

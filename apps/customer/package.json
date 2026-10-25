@@ -16,13 +16,16 @@
   "dependencies": {
     "@nextmove/contracts": "workspace:*",
     "@nextmove/tokens": "workspace:*",
+    "@supabase/supabase-js": "^2.118.0",
     "framer-motion": "^14.6.0",
     "msw": "^2.15.0",
     "next": "^16.4.3",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "recharts": "3.8.0"
   },
   "devDependencies": {
+    "@next/env": "16.4.3",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
