@@ -6,6 +6,7 @@ Every number comes from engine.finance and config.toml. Eligibility comes from e
 import operator
 import tomllib
 from datetime import datetime
+from functools import cache
 from pathlib import Path
 
 from app.models import (
@@ -21,6 +22,7 @@ from app.models import (
     Vehicle,
 )
 from engine import finance
+from serpapi import client, market, queries
 
 HERE = Path(__file__).parent
 CFG = tomllib.loads((HERE / "config.toml").read_text())
@@ -40,15 +42,35 @@ def ordinal(n: int) -> str:
 
 # ---------- facts about a customer ----------
 
+@cache   # shortcut: cached comps are read once per process; restart the API after re-seeding
+def comp_value(model: str, year: int) -> dict | None:
+    """Median of cached SerpApi comps for a model-year, or None with too few. Cache only: never spends quota."""
+    row = client.cached_only(*queries.comps(model, year, new=year > TODAY.year))
+    comps = market.parse_comps(row["response"], model, year) if row else []
+    if len(comps) < CFG["market"]["min_comps"]:
+        return None
+    return {**market.comp_summary(comps), "comps": comps, "source": f"median of {len(comps)} {row['source']} comps",
+            "as_of": row["fetched_at"][:10]}
+
+
 def market_value(v: Vehicle) -> float:
-    m = CFG["market"]
-    return round(finance.market_value(m["msrp"][v.model], TODAY.year - v.year, v.odometer_miles, m["retention"],
+    """Comps median adjusted for miles vs a typical pace when cached comps exist; else the depreciation table."""
+    m, age = CFG["market"], TODAY.year - v.year
+    comp = comp_value(v.model, v.year)
+    if comp:
+        return round(comp["median"] - (v.odometer_miles - age * m["expected_miles_per_year"]) * m["per_mile_adjust"])
+    return round(finance.market_value(m["msrp"][v.model], age, v.odometer_miles, m["retention"],
                                       m["expected_miles_per_year"], m["per_mile_adjust"]))
 
 
+def market_source(v: Vehicle) -> tuple[str, str]:
+    comp = comp_value(v.model, v.year)
+    return (comp["source"], comp["as_of"]) if comp else (CFG["market"]["source"], TODAY.isoformat())
+
+
 def market_note(v: Vehicle) -> str:
-    return f"Market value {usd(market_value(v))} for a {v.year} {v.model} at {v.odometer_miles:,} mi " \
-           f"({CFG['market']['source']}, as of {TODAY.isoformat()})"
+    source, as_of = market_source(v)
+    return f"Market value {usd(market_value(v))} for a {v.year} {v.model} at {v.odometer_miles:,} mi ({source}, as of {as_of})"
 
 
 def remaining_months(c: Customer) -> int:

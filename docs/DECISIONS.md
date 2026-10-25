@@ -45,6 +45,19 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **`keep` is listed only when requested**: for loans it equals the `do_nothing` baseline, and leases can't use it.
 - **An existing late fee is added to every option** (it's already owed), so no option looks cheaper than it is.
 
+## Stage B2
+- **One registry, two providers.** Each tool is a Python function taking one Pydantic input model. Its JSON schema feeds Grok (`openai_tools()`) and MCP (`tools/mcp_server.py`, low-level `mcp` Server over stdio). B3 can mount the same registry in the Claude Agent SDK in-process.
+- **Market value comes from SerpApi comps.** A comp is a model-year market price taken from Google results: a listing site's average, a resale value, or an MSRP. The engine uses the median (needs ≥ 2), adjusted $0.10/mile against a 12k/yr pace, and falls back to the depreciation table otherwise. Persona results: Maria's equity is $6,467 (was $4,810), James's $11,942 (was $11,570), Priya's $20,949. Prius has only 2 comps. The engine reads the cache only and never calls live.
+- **`GET /market` estimated_value is the model-year median** (typical miles); scenarios use the customer's mileage-adjusted value, so the two differ by the mileage adjustment.
+- **Cache order:** Supabase → committed `serpapi/snapshot.json` → live. Live calls happen only on a miss, are capped at 10 per process, and are off with `NEXTMOVE_OFFLINE=1`. After a Supabase failure the cache skips Supabase for 60 s, so offline requests don't stall. Responses are slimmed before caching: no request metadata, no reviewer names, transcripts cut to 15 lines.
+- **Recalls are Google News headlines** that name the model, not an NHTSA VIN lookup; the tool output says so.
+- **Reviews summary is a quoted ~25-word excerpt** of the top YouTube review's transcript, not generated text.
+- **Dealers:** each region has one synthetic home city (Austin, Los Angeles, Chicago, Boston). Results come from Google Maps "Toyota dealership" searches, keep dealers with 100+ reviews, and sort best rated first. Distance is measured from that city.
+- **Action tools keep state in memory** (appointments, offer drafts, handoffs, audit) until B3 persists them. `book_appointment` is L3 and always `pending_approval`. `create_offer_draft` is L2 and always `draft`.
+- **Minimal until B4:** `inspect_photos` returns no items and the config wear estimate, with a disclaimer saying photos weren't analysed. `get_timing` moves equity only with projected miles and the loan balance, and its summary is labelled "Preliminary".
+- **`get_customer` masks name, email and phone** (rule 6).
+- **SerpApi spend:** 30 live calls. 22 rows are seeded, 4 calls were redone after the first RAV4 comps query returned unrelated results, 3 were duplicates spent before the cache table existed, and 1 went on a verification.
+
 ## LLM access (before B3)
 - **Provider chain: Grok (xAI API) → Claude Agent SDK → pre-generated answers.** The user can't buy Claude API credits. Grok is primary because it's a plain key and deployable. The Claude Agent SDK on a separate Claude Pro account is the fallback when Grok fails or is rate-limited. Agents call one provider function; each provider implements the same tool-calling contract, and the same evals run against both.
 - **Claude fallback setup:** The API server uses that account's login via `CLAUDE_CONFIG_DIR=~/.claude-nextmove`, kept apart from the developer's own Claude login. One-time setup: `CLAUDE_CONFIG_DIR=~/.claude-nextmove claude`, then `/login` with the Pro account.

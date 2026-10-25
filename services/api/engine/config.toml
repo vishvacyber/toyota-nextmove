@@ -4,8 +4,11 @@
 as_of = "2026-10-24T09:00:00Z"   # fixed "today" so results never drift between runs
 
 [market]
-# Stand-in for SerpApi comps until B2. Value = msrp × retention[age] − (miles over expected × per_mile_adjust).
-source = "NextMove depreciation table (synthetic, pre-SerpApi)"
+# Value = median of cached SerpApi comps for the model-year (when at least min_comps) − (miles over expected × per_mile_adjust).
+# Fallback without comps: msrp × retention[age] − (miles over expected × per_mile_adjust).
+source = "NextMove depreciation table (synthetic)"
+min_comps = 2
+band = 0.06                       # ± range shown on GET /market when there are no comps
 expected_miles_per_year = 12000
 per_mile_adjust = 0.10            # $ per mile above/below expected
 retention = [1.00, 0.90, 0.84, 0.80, 0.76, 0.71, 0.66, 0.61, 0.56, 0.52, 0.48]   # index = age in years
