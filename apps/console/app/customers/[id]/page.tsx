@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import type { Customer, Opportunity, Recommendation, Scenario } from "@nextmove/contracts";
+import type { Customer, Opportunity, Recommendation } from "@nextmove/contracts";
 import { useApi } from "@nextmove/contracts/client";
+import { ScenarioTable } from "@/components/scenario-table";
 import { ApiState } from "@/components/state";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { asOf, label, pct, usd } from "@/lib/format";
 
 // shortcut: risk bands are display thresholds on the API's risk_score, move them to the engine if they ever drive actions.
@@ -165,35 +165,5 @@ export default function Customer360() {
         </Card>
       </div>
     </div>
-  );
-}
-
-function ScenarioTable({ recommended, others }: { recommended: Scenario; others: Scenario[] }) {
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Option</TableHead>
-          <TableHead className="text-right">Monthly</TableHead>
-          <TableHead className="text-right">Total cost</TableHead>
-          <TableHead className="text-right">Equity</TableHead>
-          <TableHead className="text-right">Fees</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {[recommended, ...others].map((s) => (
-          <TableRow key={s.option} className={s === recommended ? "bg-primary/10" : undefined}>
-            <TableCell>
-              {s.label} {s === recommended && <Badge className="ml-1">Recommended</Badge>}
-              {!s.eligible && <span className="block text-xs text-muted-foreground">{s.ineligible_reason}</span>}
-            </TableCell>
-            <TableCell className="text-right tabular-nums">{usd(s.monthly_payment)}</TableCell>
-            <TableCell className="text-right tabular-nums">{usd(s.total_cost)}</TableCell>
-            <TableCell className="text-right tabular-nums">{usd(s.equity)}</TableCell>
-            <TableCell className="text-right tabular-nums">{usd(s.fees)}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
   );
 }
