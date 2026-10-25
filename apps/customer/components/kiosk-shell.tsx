@@ -19,6 +19,8 @@ export function KioskShell({ children }: { children: ReactNode }) {
       router.replace("/kiosk");
       setSession((s) => s + 1);
       setLang("en");
+      // Speech is global and outlives the remount; the remount itself stops the camera and drops photos.
+      if ("speechSynthesis" in window) speechSynthesis.cancel();
       setNotice(true);
       window.scrollTo(0, 0);
     }

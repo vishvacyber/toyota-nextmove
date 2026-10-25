@@ -1,12 +1,14 @@
 "use client";
 import { useContext, useEffect, useState, type ReactNode } from "react";
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { Customer, DealPacket, Handoff, Offer, Recommendation, ScenarioRequest, ScenarioSet, TimingPlan } from "@nextmove/contracts";
+import type { components, Customer, DealPacket, Handoff, Offer, Recommendation, ScenarioRequest, ScenarioSet, TimingPlan } from "@nextmove/contracts";
 import { api, useApi } from "@nextmove/contracts/client";
 import { Card, ScenarioCard } from "@/components/cards";
 import { Private, PrivacyContext } from "@/components/private";
 import { useI18n, type Key } from "@/lib/i18n";
 import type { HandoffChannel } from "@/lib/realtime";
+import { Hardship } from "@/components/hardship";
+import { Inspection } from "@/components/inspection";
 
 type Overrides = NonNullable<ScenarioRequest["overrides"]>;
 type ActionType = Recommendation["action"]["type"];
@@ -34,6 +36,8 @@ export function DecideAct({ c, r, channel }: { c: Customer; r: Recommendation; c
   if (r.guardian.verdict === "block") return <p role="status" className="text-xl">{t("under_review")}</p>;
   return (
     <div className="grid gap-6">
+      {r.situation === "payment_stress" && <Hardship c={c} r={r} channel={channel} />}
+      {c.contract.type === "lease" && <Inspection customerId={c.id} />}
       <WhatIf c={c} r={r} overrides={overrides} onChange={setOverrides} set={set} error={error} />
       <Timing id={c.id} />
       {set && <TrueCost set={set} />}
@@ -165,7 +169,7 @@ function TrueCost({ set }: { set: ScenarioSet }) {
 
 // ---------- actions (L3: each needs the customer's tap and a confirmation) ----------
 
-function Action({ title, body, primary, confirmText, run, children }: {
+export function Action({ title, body, primary, confirmText, run, children }: {
   title: string; body?: ReactNode; primary?: boolean; confirmText: string; run: () => Promise<ReactNode>; children?: ReactNode;
 }) {
   const { t } = useI18n();
@@ -223,25 +227,60 @@ function followUpSlots(from = new Date()) {
   return slots;
 }
 
-function ActionCenter({ c, r, channel }: { c: Customer; r: Recommendation; channel: HandoffChannel }) {
-  const { t, money, locale } = useI18n();
+/** POST a handoff and broadcast `created` so the console queue sees it (K2). */
+export async function requestHandoff(channel: HandoffChannel, body: components["schemas"]["HandoffCreate"]) {
+  const h = await api<Handoff>("/handoffs", { method: "POST", body: JSON.stringify(body) });
+  channel.announce(h);
+  return h;
+}
+
+/** Callback at a picked slot: a handoff with `callback_at`. */
+export function FollowUpAction({ customerId, channel, title, body, primary, reason }: {
+  customerId: string; channel: HandoffChannel; title: string; body: string; primary?: boolean; reason: string;
+}) {
+  const { t, locale } = useI18n();
   const surface = useContext(PrivacyContext) ? "kiosk" : "app";
-  const offers = useApi<Offer[]>("/offers");
   const [slots] = useState(() => followUpSlots());
   const [slot, setSlot] = useState(0);
-  const primary = (type: ActionType) => r.action.type === type;
   const when = (d: Date) => d.toLocaleString(locale, { weekday: "long", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  return (
+    <Action
+      title={title}
+      body={body}
+      primary={primary}
+      confirmText={t("confirm_book", { when: when(slots[slot]) })}
+      run={async () => {
+        await requestHandoff(channel, { customer_id: customerId, reason, surface, callback_at: slots[slot].toISOString() });
+        return t("booked", { when: when(slots[slot]) });
+      }}
+    >
+      <fieldset className="mb-3">
+        <legend className="text-sm text-muted">{t("pick_time")}</legend>
+        <div className="mt-2 grid gap-2">
+          {slots.map((d, i) => (
+            <label key={d.toISOString()} className="flex cursor-pointer items-center gap-3 rounded-lg border border-line px-3 py-2">
+              <input type="radio" name={`slot-${title}`} checked={slot === i} onChange={() => setSlot(i)} className="accent-accent" />
+              {when(d)}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    </Action>
+  );
+}
+
+function ActionCenter({ c, r, channel }: { c: Customer; r: Recommendation; channel: HandoffChannel }) {
+  const { t, money } = useI18n();
+  const surface = useContext(PrivacyContext) ? "kiosk" : "app";
+  const offers = useApi<Offer[]>("/offers");
+  const primary = (type: ActionType) => r.action.type === type;
   const matching = offers.data?.filter((o) => o.status === "active" && o.target_situation === r.situation) ?? [];
   const incentive = (o: Offer) =>
     o.incentive.type === "rate_reduction" ? t("offer_rate", { pct: o.incentive.value })
       : o.incentive.type === "fee_waiver" ? t("offer_fee_waiver")
         : <Private>{money(o.incentive.value)}</Private>;
 
-  async function handoff(reason: string, callback_at?: string) {
-    const h = await api<Handoff>("/handoffs", { method: "POST", body: JSON.stringify({ customer_id: c.id, reason, surface, callback_at }) });
-    channel.announce(h);
-    return h;
-  }
+  const handoff = (reason: string) => requestHandoff(channel, { customer_id: c.id, reason, surface });
 
   return (
     <Card title={t("action_center")}>
@@ -260,28 +299,14 @@ function ActionCenter({ c, r, channel }: { c: Customer; r: Recommendation; chann
             return <>{t("packet_sent", { dealer: p.dealer.name })} <span className="block text-sm font-normal text-muted">{t("reference", { id: p.id })}</span></>;
           }}
         />
-        <Action
+        <FollowUpAction
+          customerId={c.id}
+          channel={channel}
           title={t("act_book")}
           body={t("act_book_body")}
           primary={primary("book_appointment") || primary("request_callback")}
-          confirmText={t("confirm_book", { when: when(slots[slot]) })}
-          run={async () => {
-            await handoff(`Follow-up booked: ${r.recommended.label}`, slots[slot].toISOString());
-            return t("booked", { when: when(slots[slot]) });
-          }}
-        >
-          <fieldset className="mb-3">
-            <legend className="text-sm text-muted">{t("pick_time")}</legend>
-            <div className="mt-2 grid gap-2">
-              {slots.map((d, i) => (
-                <label key={d.toISOString()} className="flex cursor-pointer items-center gap-3 rounded-lg border border-line px-3 py-2">
-                  <input type="radio" name="slot" checked={slot === i} onChange={() => setSlot(i)} className="accent-accent" />
-                  {when(d)}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-        </Action>
+          reason={`Follow-up booked: ${r.recommended.label}`}
+        />
         <Action
           title={t("act_self_service")}
           body={t("act_self_service_body", { option: r.recommended.label })}

@@ -52,6 +52,19 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Env:** `next.config.ts` loads the repo-root env with `forceReload` (Next caches the app folder's env first) and maps only `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 - **Kiosk blur on the timing chart and true-cost columns is one tap per block**, labels included, rather than one tap per number.
 
+## Stage K3 (customer app)
+- **Placement:** the alerts inbox is in step 1 (Situation), and step 4 (Decide + act) opens with the hardship card for `payment_stress` and the photo pre-inspection for leases. Advisor chat is a new step 5, "Ask NextMove". All of it is shared by `/app` and `/kiosk`.
+- **Customers see only `sent` / `approved` alerts.** L3 drafts awaiting employee approval never reach them. In the mocks Maria's alert is still `pending_approval`, so James is the persona with a visible alert. Consent and dismiss are `PATCH /alerts/{id}` with the customer ID as `actor`.
+- **Accepting the due-date change is UI-only** (confirm-then-acknowledge, like K2's self-service): the contract has no endpoint for it. The callback handoff reason records whether it was accepted.
+- **Extension is treated like deferral (L4):** it changes credit terms, so neither has an accept button. Both go to a specialist through "Request a callback" (K2's follow-up booking: `POST /handoffs` with `callback_at`, broadcast `created`).
+- **`numbers_used` values are shown with `num()`, not `money()`:** the contract value has no unit, so the frontend guesses no `$`. They're blurred in the kiosk anyway.
+- **The Advisor answer is revealed client-side**, word by word (the API returns JSON). A hidden `aria-live` node announces the full answer once.
+- **Voice:** recognition via `SpeechRecognition ?? webkitSpeechRecognition`, and speech via `speechSynthesis`, both in `en-US`/`es-US` following the app language. "Read answers aloud" is off by default, so kiosk numbers aren't spoken unprompted. While speaking, a caption bar shows the spoken text. With no recognition API, the mic is hidden and a note says to type.
+- **Photos stay in memory only:** blobs are sent once in the multipart upload, then dropped. The object URLs used for the marked-up preview are revoked on unmount. The kiosk idle remount stops the camera and drops the photos, and the reset also cancels `speechSynthesis` (it's global).
+- **The mock inspection returns fixed Maria items whatever the photos** (B4 brings vision). Items whose angle has no photo are still listed without a picture.
+- **Customer app tests use `node --test`** like the console (`lib/box.test.ts`).
+- Dev server ran on 3120: 3100 was held by another lane.
+
 ## Stage B1
 - **No Supabase yet.** The 1,200 synthetic customers are regenerated in memory on startup (deterministic, seed 42, ~0.3 s). `sim/seed_supabase.py` upserts them into a `customers (id, data jsonb)` table when keys exist; it hasn't been run.
 - **Config is TOML, not YAML** (`engine/config.toml`, `engine/eligibility.toml`): it's in the standard library (`tomllib`), so no new dependency, and it's just as readable.
