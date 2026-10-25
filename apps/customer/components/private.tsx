@@ -11,7 +11,7 @@ export function Private({ children }: { children: ReactNode }) {
   const { t } = useI18n();
   if (!blurOn || shown) return <>{children}</>;
   return (
-    <button type="button" onClick={() => setShown(true)} aria-label={t("tap_to_reveal")} title={t("tap_to_reveal")} className="rounded-md">
+    <button type="button" onClick={() => setShown(true)} aria-label={t("tap_to_reveal")} title={t("tap_to_reveal")} className="rounded-md text-left">
       <span aria-hidden className="select-none blur-md">{children}</span>
     </button>
   );
