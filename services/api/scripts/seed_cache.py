@@ -24,9 +24,7 @@ def main() -> None:
     for model, year, region in q.PERSONA_VEHICLES:
         get(q.comps(model, year, new=year > TODAY.year))
         get(q.recalls(model))
-        video = market.top_video(get(q.youtube(model, year))["response"])
-        if video:
-            get(q.transcript(video["id"]))
+        get(q.youtube(model, year))   # review titles + channels; transcripts are no longer used
         top = market.parse_dealers(get(q.dealers(region))["response"], region)
         if top:
             get(q.dealer_reviews(top[0]["data_id"]))

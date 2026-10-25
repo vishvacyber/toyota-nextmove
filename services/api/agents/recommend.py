@@ -22,6 +22,7 @@ from engine import scenarios
 from engine.scenarios import AS_OF, usd
 
 O = OptionType
+REVIEWS: dict[str, Review] = {}   # customer_id → latest employee review (NextMove Review), in memory
 PREFER = {   # first eligible option wins
     Situation.lease_end: [O.buyout, O.return_], Situation.mileage_overage: [O.buyout, O.return_],
     Situation.positive_equity: [O.upgrade, O.trade_in, O.refinance], Situation.ev_switch: [O.upgrade],
@@ -91,4 +92,4 @@ def recommendation(c: Customer) -> Recommendation:
         baseline=baseline, why=why, why_not=[WhyNotItem(option=s.option, reason=why_not(s)) for s in alts],
         assumptions=[*rec.assumptions, *ss.assumptions],
         action=NextAction(type=type_, label=label, autonomy_level=AutonomyLevel.L3),
-        guardian=verdict, review=Review(status=Status3.pending), generated_at=AS_OF, trace_id=trace_id)
+        guardian=verdict, review=REVIEWS.get(c.id, Review(status=Status3.pending)), generated_at=AS_OF, trace_id=trace_id)

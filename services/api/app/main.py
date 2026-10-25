@@ -2,10 +2,10 @@ import threading
 from contextlib import asynccontextmanager
 from typing import Annotated
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from agents import orchestrator, recommend, sentinel, traces, vision
+from agents import orchestrator, recommend, sentinel, studio, traces, vision
 from agents.autonomy import AGENTS
 from app.models import (
     AdvisorAnswer,
@@ -14,21 +14,43 @@ from app.models import (
     Alert,
     AlertStatus,
     AlertUpdate,
+    Assumptions,
+    AuditEntry,
+    AutonomyLevel,
+    Customer,
     DealPacket,
     DealPacketCreate,
+    Decision,
+    DeployResult,
+    FairnessReport,
+    Handoff,
+    HandoffCreate,
+    HandoffUpdate,
     Health,
     InspectionResult,
+    KpiSnapshot,
     MarketQuote,
     Model,
+    Offer,
+    OfferCreate,
+    OfferSimulation,
     Opportunity,
     PhotoAngle,
     Recommendation,
+    RecommendationReview,
+    Review,
     ScenarioRequest,
     ScenarioSet,
+    Session,
+    Status3,
+    Status4,
+    StudioAgent,
+    StudioAgentCreate,
     TimingPlan,
 )
 from engine import scenarios, timing
 from engine.scenarios import CFG
+from sim import simulate
 from sim.generator import customers_by_id
 from tools import ToolError, actions, market
 
@@ -37,7 +59,7 @@ from tools import ToolError, actions, market
 async def lifespan(_: FastAPI):
     # Sentinel's daily scan runs once per start, off the request path. Market Intel can spend SerpApi quota on
     # cache misses, so it runs only on purpose: python -m agents.market_intel
-    threading.Thread(target=sentinel.run, daemon=True).start()
+    threading.Thread(target=lambda: (sentinel.run(), simulate.kpis()), daemon=True).start()   # + warm the simulation
     yield
 
 
@@ -61,6 +83,38 @@ def _customer(customer_id: str):
 @app.get("/health", response_model=Health)
 def health() -> Health:
     return Health(status="ok", version=app.version)
+
+
+@app.get("/customers", response_model=list[Customer])
+def list_customers(q: str | None = None) -> list[Customer]:
+    """Search by id or name (case-insensitive substring). Synthetic customers only."""
+    q = (q or "").strip().lower()
+    return [c for c in customers_by_id().values()
+            if not q or q in c.id.lower() or q in f"{c.first_name} {c.last_name}".lower()]
+
+
+@app.get("/customers/{id}", response_model=Customer)
+def get_customer(id: str) -> Customer:
+    return _customer(id)
+
+
+@app.post("/customers/{id}/recommendation/review", response_model=AuditEntry)
+def review_recommendation(id: str, body: RecommendationReview) -> AuditEntry:
+    c = _customer(id)
+    if body.reviewer in AGENTS:
+        raise HTTPException(409, "A review needs an employee; an agent can't review its own recommendation")
+    override = body.decision == Decision.override
+    if override and not (body.reason or "").strip():
+        raise HTTPException(422, "An override needs a reason")
+    rec = recommend.recommendation(c)
+    detail = f"Engine recommended {rec.recommended.option.value}" + \
+        (f"; employee chose {body.override_option.value}" if override and body.override_option else "")
+    entry = actions.log_decision(actions.DecisionIn(
+        actor=body.reviewer, action=f"{body.decision.value}_recommendation", autonomy_level=AutonomyLevel.L3,
+        customer_id=c.id, detail=detail, override_reason=body.reason if override else None, trace_id=rec.trace_id))
+    recommend.REVIEWS[c.id] = Review(status=Status3.overridden if override else Status3.approved, by=body.reviewer,
+                                     reason=body.reason)
+    return entry
 
 
 @app.post("/scenarios", response_model=ScenarioSet)
@@ -117,6 +171,37 @@ def create_deal_packet(body: DealPacketCreate) -> DealPacket:
         raise HTTPException(404, str(e)) from e
 
 
+@app.get("/handoffs", response_model=list[Handoff])
+def list_handoffs() -> list[Handoff]:
+    return list(reversed(actions.STORE["handoffs"]))
+
+
+@app.post("/handoffs", response_model=Handoff, status_code=201)
+def create_handoff(body: HandoffCreate) -> Handoff:
+    _customer(body.customer_id)
+    h = actions.handoff_to_human(body)
+    traces.broadcast("handoffs", "created", h.model_dump(mode="json"))
+    return h
+
+
+@app.patch("/handoffs/{id}", response_model=Handoff)
+def update_handoff(id: str, body: HandoffUpdate) -> Handoff:
+    hs = actions.STORE["handoffs"]
+    i = next((i for i, h in enumerate(hs) if h.id == id), None)
+    if i is None:
+        raise HTTPException(404, f"Unknown handoff {id}")
+    if body.status == Status4.claimed and not (body.claimed_by or hs[i].claimed_by):
+        raise HTTPException(422, "Claiming a handoff needs claimed_by")
+    hs[i] = hs[i].model_copy(update=body.model_dump(exclude_none=True))
+    traces.broadcast("handoffs", "updated", hs[i].model_dump(mode="json"))
+    return hs[i]
+
+
+@app.get("/sessions", response_model=list[Session])
+def list_sessions() -> list[Session]:
+    return sorted(orchestrator.SESSION_INFO.values(), key=lambda s: s.started_at, reverse=True)
+
+
 @app.get("/market/{model}", response_model=MarketQuote)
 def get_market(model: Model, year: int | None = None) -> MarketQuote:
     return market.quote(model.value, year)
@@ -159,4 +244,80 @@ def update_alert(id: str, body: AlertUpdate) -> Alert:
         raise HTTPException(409, f"An {a.autonomy_level.value} alert can be sent only after it is approved")
     a = a.model_copy(update=body.model_dump(exclude_none=True, exclude={"actor"}))
     sentinel.ALERTS[id] = a
+    if body.status:
+        actions.log_decision(actions.DecisionIn(
+            actor=body.actor or a.customer_id, action=f"alert_{body.status.value} {a.id}", autonomy_level=a.autonomy_level,
+            customer_id=a.customer_id, detail="Customer consent" if body.consent else None, trace_id=a.trace_id))
     return a
+
+
+@app.get("/kpis", response_model=KpiSnapshot)
+def get_kpis(adoption_rate: Annotated[float | None, Query(ge=0, le=1)] = None,
+             outreach_lead_days: Annotated[int | None, Query(ge=0, le=365)] = None,
+             hardship_uptake: Annotated[float | None, Query(ge=0, le=1)] = None) -> KpiSnapshot:
+    d = simulate.defaults()
+    return simulate.kpis(Assumptions(
+        adoption_rate=d.adoption_rate if adoption_rate is None else adoption_rate,
+        outreach_lead_days=d.outreach_lead_days if outreach_lead_days is None else outreach_lead_days,
+        hardship_uptake=d.hardship_uptake if hardship_uptake is None else hardship_uptake))
+
+
+@app.get("/fairness", response_model=FairnessReport)
+def get_fairness() -> FairnessReport:
+    return simulate.fairness(actions.STORE["offers"])
+
+
+@app.get("/audit", response_model=list[AuditEntry])
+def list_audit() -> list[AuditEntry]:
+    """Decisions the tools logged (log_decision) plus one entry per agent trace."""
+    from_traces = [AuditEntry(id=f"AUD-{t.id}", at=t.started_at, actor=t.agent.root, action=t.action.type,
+                              customer_id=t.customer_id, autonomy_level=t.action.autonomy_level, trace_id=t.id,
+                              detail=f"{t.action.status.value.replace('_', ' ')}; Guardian {t.guardian.verdict.value}")
+                   for t in traces.list_traces()]
+    return sorted([*actions.STORE["audit"], *from_traces], key=lambda e: e.at, reverse=True)
+
+
+def _offer(id: str) -> Offer:
+    o = next((o for o in actions.STORE["offers"] if o.id == id), None)
+    if o is None:
+        raise HTTPException(404, f"Unknown offer {id}")
+    return o
+
+
+@app.get("/offers", response_model=list[Offer])
+def list_offers() -> list[Offer]:
+    return list(reversed(actions.STORE["offers"]))
+
+
+@app.post("/offers", response_model=Offer, status_code=201)
+def create_offer(body: OfferCreate) -> Offer:
+    if body.variant_of:
+        _offer(body.variant_of)
+    try:
+        simulate.parse_rule(body.rule)
+    except ValueError as e:
+        raise HTTPException(422, str(e)) from e
+    return actions.create_offer_draft(body)
+
+
+@app.post("/offers/{id}/simulate", response_model=OfferSimulation)
+def simulate_offer(id: str) -> OfferSimulation:
+    o = _offer(id)
+    return simulate.simulate_offer(o, [v for v in actions.STORE["offers"] if v.variant_of == o.id])
+
+
+@app.get("/studio/agents", response_model=list[StudioAgent])
+def list_studio_agents() -> list[StudioAgent]:
+    return studio.list_agents()
+
+
+@app.post("/studio/agents", response_model=StudioAgent, status_code=201)
+def create_studio_agent(body: StudioAgentCreate) -> StudioAgent:
+    return studio.create(body)
+
+
+@app.post("/studio/agents/{id}/deploy", response_model=DeployResult)
+async def deploy_studio_agent(id: str) -> DeployResult:
+    if id not in studio.AGENTS:
+        raise HTTPException(404, f"Unknown agent {id}")
+    return await studio.deploy(id)

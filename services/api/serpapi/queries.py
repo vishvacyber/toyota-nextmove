@@ -38,5 +38,3 @@ def youtube(model: str, year: int) -> tuple[str, dict]:
     return "youtube", {"search_query": f"{year} Toyota {model} review"}
 
 
-def transcript(video_id: str) -> tuple[str, dict]:
-    return "youtube_video_transcript", {"v": video_id, "language_code": "en"}

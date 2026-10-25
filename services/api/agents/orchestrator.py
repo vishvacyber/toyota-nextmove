@@ -19,6 +19,7 @@ from app.models import (
     Customer,
     HandoffCreate,
     NumbersUsedItem,
+    Session,
     Situation,
     Surface,
     ToolCall,
@@ -37,6 +38,7 @@ SAFE_REPLY = {
 REVIEWING = {"en": "A TFS specialist is reviewing your question and will follow up.",
              "es": "Un especialista de TFS está revisando tu pregunta y te contactará."}
 SESSIONS: dict[str, list[str]] = {}   # session_id → last turns (masked), for context and the handoff summary
+SESSION_INFO: dict[str, Session] = {}   # session_id → contract Session for GET /sessions (in memory)
 
 
 def trace_id() -> str:
@@ -148,6 +150,11 @@ async def ask(req: AdvisorAsk) -> AdvisorAnswer:
                             tool_calls=calls, guardian=verdict, action=action, model=model, prompt_version=version))
     if req.session_id:
         session[:] = [*session, f"Customer: {message}", f"NextMove: {text}"][-6:]
+        prev = SESSION_INFO.get(req.session_id)
+        SESSION_INFO[req.session_id] = Session(
+            id=req.session_id, customer_id=c.id, surface=req.surface or (prev.surface if prev else Surface.app),
+            started_at=prev.started_at if prev else started, current_screen="advisor", language=req.language,
+            last_trace_id=tid)
     return AdvisorAnswer(
         answer=text, guardian=verdict, trace_id=tid, session_id=req.session_id,
         numbers_used=[NumbersUsedItem(label=m.label, value=m.value, source_tool=m.source_tool) for m in matches]

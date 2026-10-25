@@ -3,6 +3,7 @@
 import math
 import re
 import statistics
+import unicodedata
 
 from serpapi.queries import CITY
 
@@ -37,20 +38,28 @@ def comp_summary(comps: list[dict]) -> dict:
     return {"median": statistics.median(prices), "low": min(prices), "high": max(prices), "n": len(prices)}
 
 
-def top_video(resp: dict) -> dict | None:
+def videos(resp: dict, n: int = 3) -> list[dict]:
+    out = []
     for v in resp.get("video_results", []):
-        m = re.search(r"v=([\w-]{11})", v.get("link", ""))
-        if m:
-            return {"id": m.group(1), "title": v.get("title", ""), "channel": (v.get("channel") or {}).get("name") or "",
-                    "link": v["link"]}
-    return None
+        if re.search(r"v=([\w-]{11})", v.get("link", "")) and len(out) < n:
+            out.append({"title": v.get("title", ""), "channel": (v.get("channel") or {}).get("name") or "", "link": v["link"]})
+    return out
 
 
-def review_excerpt(video: dict, transcript: dict, words: int = 25) -> str:
-    """A short quoted excerpt of the reviewer's own words: quoted text, not a generated summary."""
-    text = " ".join(t["snippet"] for t in transcript.get("transcript", []) if not t.get("snippet", "").startswith("["))
-    excerpt = " ".join(text.split()[:words])
-    return f'{video["channel"]} on YouTube, "{video["title"]}": "{excerpt}…"'
+def clean_title(title: str) -> str:
+    """Readable video title: no emoji or symbols, single spaces, no trailing separators."""
+    text = "".join(ch for ch in title if unicodedata.category(ch) not in ("So", "Sk", "Cf", "Co", "Cs"))   # drop emoji
+    return re.sub(r"\s+", " ", text).strip(" |-–:!")
+
+
+def review_summary(resp: dict) -> str | None:
+    """What reviewers say, from the cached YouTube search: the top review titles and their channels (their own
+    words, not a generated summary)."""
+    vids = [v for v in videos(resp) if clean_title(v["title"])]
+    if not vids:
+        return None
+    return "Top YouTube reviews: " + "; ".join(
+        f'"{clean_title(v["title"])}"' + (f' ({v["channel"]})' if v["channel"] else "") for v in vids) + "."
 
 
 def _miles_between(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
