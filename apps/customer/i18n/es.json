@@ -245,5 +245,12 @@
   "hs_chassis": "Chasis y ruedas",
   "hs_chassis_body": "El bastidor, la suspensión y las ruedas que soportan todo lo demás.",
   "hs_interior": "Interior",
-  "hs_interior_body": "Asientos para cinco y los controles del conductor."
+  "hs_interior_body": "Asientos para cinco y los controles del conductor.",
+  "attract_tap": "Toca para ver tu siguiente paso",
+  "attract_sub": "¿Termina tu arrendamiento? ¿Problemas con un pago? ¿Listo para cambiar? Obtén una respuesta clara en un minuto.",
+  "continue_phone": "Continúa en tu teléfono",
+  "continue_phone_body": "Escanea con la cámara de tu teléfono para seguir justo aquí. La sesión en este quiosco se reiniciará sola.",
+  "qr_alt": "Código QR que abre NextMove en tu teléfono",
+  "slow_advisor": "Obteniendo una respuesta en vivo. Puede tardar hasta 20 segundos.",
+  "slow_inspection": "Revisión de fotos en vivo. Tarda unos 10 segundos."
 }

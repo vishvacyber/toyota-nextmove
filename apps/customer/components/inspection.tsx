@@ -203,6 +203,7 @@ export function Inspection({ customerId }: { customerId: string }) {
         >
           {phase === "busy" ? t("analyzing") : t("get_estimate")}
         </button>
+        {phase === "busy" && <p className="animate-pulse text-sm text-muted">{t("slow_inspection")}</p>}
         {phase === "error" && <p role="alert" className="text-accent">{t("error")}</p>}
       </div>
     </Card>

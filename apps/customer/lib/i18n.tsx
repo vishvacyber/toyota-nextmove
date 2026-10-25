@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import en from "@/i18n/en.json";
 import es from "@/i18n/es.json";
 
@@ -11,6 +11,8 @@ const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void }>({ lang: "e
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>("en");
+  // Screen readers pick their voice from <html lang>.
+  useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   return <Ctx.Provider value={{ lang, setLang }}>{children}</Ctx.Provider>;
 }
 

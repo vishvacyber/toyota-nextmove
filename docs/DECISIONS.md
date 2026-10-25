@@ -211,3 +211,11 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Exact-path mocks (console only):** the console runs its own MSW provider (`apps/console/components/mock-provider.tsx`) with the shared `NEXT_PUBLIC_API_MOCKING` syntax plus a trailing `$` for an exact path (`lib/mocking.ts`), e.g. `/customers$` mocks the list without the live `/customers/{id}/recommendation`. Sections served by mocks show a **"Mock data"** badge (`MockBadge`); with mocking disabled the badge never renders.
 - **Approvals** lists `draft` and `pending_approval` alerts: the real Sentinel leaves its L2 outreach as `draft`, and both need a person before reaching a customer.
 - Toasts and the Cmd+K menu are small in-house components (no `sonner` / `cmdk` dependency).
+
+## K5 (customer: attract loop, QR continue, real API)
+- **Fully live:** the customer app runs with `NEXT_PUBLIC_API_MOCKING=disabled` against the merged API, which now serves every contract operation. The shared MSW path (`enabled`, or a prefix list) still works offline.
+- **Attract loop:** this is the kiosk's no-customer screen. It reuses the lazy K4 `ShowroomCanvas` with auto-rotation and paint cycling every 4 s, and shows a still car under reduced motion. The whole screen is one button. The idle reset remounts the screen, so it lands back here. A `/kiosk?id=` deep link skips it, and sign-out goes to sign-in, not back to the attract loop.
+- **QR continue-on-phone:** the QR is encoded on the device with `uqr` (no dependencies) and drawn as an SVG path, so the customer id never goes to a QR service. It uses the kiosk's own origin (`location.origin`). A real kiosk needs an origin that phones can reach.
+- **Showroom reviews per model year:** the showroom passes the trim's year (`GET /market/{model}?year=`, already in the contract), so James's 2027 Camry SE Hybrid shows 2027 reviews, not reviews of his 2022 Camry. Both years are in the committed SerpApi snapshot.
+- **Privacy blur additions:** recommendation headline, ineligible reason, scenario assumptions, alert title and offer name. All of them can quote dollar amounts.
+- **Live spend in K5 testing:** 4 vision calls and 2 Advisor calls (Spanish and English, about 15 s each, both Guardian pass).

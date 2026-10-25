@@ -26,7 +26,8 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "recharts": "3.8.0",
-    "three": "^0.186.1"
+    "three": "^0.186.1",
+    "uqr": "^0.1.2"
   },
   "devDependencies": {
     "@next/env": "16.4.3",

@@ -245,5 +245,12 @@
   "hs_chassis": "Chassis and wheels",
   "hs_chassis_body": "The frame, suspension and wheels that carry everything else.",
   "hs_interior": "Interior",
-  "hs_interior_body": "Seats for five and the driver's controls."
+  "hs_interior_body": "Seats for five and the driver's controls.",
+  "attract_tap": "Tap to see your next move",
+  "attract_sub": "Lease ending? Payment trouble? Ready to upgrade? Get a clear answer in a minute.",
+  "continue_phone": "Continue on your phone",
+  "continue_phone_body": "Scan with your phone camera to pick up right here. Your session on this kiosk will reset on its own.",
+  "qr_alt": "QR code that opens NextMove on your phone",
+  "slow_advisor": "Getting a live answer. This can take up to 20 seconds.",
+  "slow_inspection": "Live photo check. This takes about 10 seconds."
 }
