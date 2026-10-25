@@ -1,4 +1,4 @@
-/* NextMove design tokens, after toyota.com: Toyota red as the single accent, black and white otherwise, 8px corners. */
+/* NXT design tokens, after toyota.com: Toyota red as the single accent, black and white otherwise, 8px corners. */
 :root {
   --nm-red: #eb0a1e;
   --nm-red-strong: #c00012;

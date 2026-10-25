@@ -77,7 +77,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Employee approves or overrides a recommendation (NextMove Review). */
+        /** @description Employee approves or overrides a recommendation (NXT Review). */
         post: operations["reviewRecommendation"];
         delete?: never;
         options?: never;
@@ -384,7 +384,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Baseline vs NextMove over the synthetic portfolio. Query params override simulation assumptions. */
+        /** @description Baseline vs NXT over the synthetic portfolio. Query params override simulation assumptions. */
         get: operations["getKpis"];
         put?: never;
         post?: never;

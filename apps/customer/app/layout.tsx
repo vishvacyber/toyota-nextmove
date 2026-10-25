@@ -3,7 +3,7 @@ import { MockProvider } from "@nextmove/contracts/mocks/provider";
 import { I18nProvider } from "@/lib/i18n";
 import "./globals.css";
 
-export const metadata: Metadata = { title: "Toyota NextMove", description: "Toyota Financial Services: your smartest next move" };
+export const metadata: Metadata = { title: "Toyota NXT", description: "Toyota Financial Services: your smartest next move" };
 export const viewport: Viewport = { themeColor: "#eb0a1e" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

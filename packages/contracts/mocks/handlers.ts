@@ -149,7 +149,7 @@ export const handlers = [
       outreach_lead_days: Number(sp.get("outreach_lead_days") ?? f.kpiBase.assumptions.outreach_lead_days),
       hardship_uptake: Number(sp.get("hardship_uptake") ?? f.kpiBase.assumptions.hardship_uptake),
     };
-    // shortcut: mock scales NextMove deltas linearly with adoption; B5 simulation replaces this.
+    // shortcut: mock scales NXT deltas linearly with adoption; B5 simulation replaces this.
     const k = a.adoption_rate / f.kpiBase.assumptions.adoption_rate;
     const b = f.kpiBase.baseline;
     const n = f.kpiBase.nextmove;

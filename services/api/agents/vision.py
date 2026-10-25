@@ -39,7 +39,7 @@ KEYS = {"angle", "area", "position", "issue", "severity", "box"}
 MONEY_KEY = re.compile(r"charge|cost|price|fee|amount|usd|dollar|estimate", re.IGNORECASE)
 MONEY_TEXT = re.compile(r"[$€£]|\busd\b|dollar|\d+\s*(?:bucks|cents)", re.IGNORECASE)
 PROMPT_VERSION = "inspector@v1"
-DISCLAIMER = ("Estimate from your photos only. Charges come from NextMove's standard wear table, not the photo model. "
+DISCLAIMER = ("Estimate from your photos only. Charges come from NXT's standard wear table, not the photo model. "
               "Final charges are set at the official lease-end inspection.")
 SYSTEM = f"""You inspect photos of a leased car for lease-end wear and damage. Report only damage you can see.
 Reply with ONLY a JSON array, no prose. Each item: {{"angle": one of the photo angles given, "area": one of

@@ -21,7 +21,7 @@ const SLIDERS: { key: keyof Assumptions; title: string; min: number; max: number
 
 const chartConfig = {
   baseline_retention: { label: "Baseline", color: "var(--chart-2)" },
-  nextmove_retention: { label: "NextMove", color: "var(--chart-1)" },
+  nextmove_retention: { label: "NXT", color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
 // Display-only difference between two API numbers; rates read as percentage points.
@@ -53,7 +53,7 @@ export default function Proof() {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-semibold">Proof <MockBadge path="/kpis" /></h1>
-          <p className="text-sm text-muted-foreground">Baseline vs NextMove across the portfolio. Move an assumption to re-run the simulation.</p>
+          <p className="text-sm text-muted-foreground">Baseline vs NXT across the portfolio. Move an assumption to re-run the simulation.</p>
         </div>
         {k && <p className="text-xs text-muted-foreground">{kpiSource(k)} · as of {asOf(k.as_of)}</p>}
       </div>
@@ -93,7 +93,7 @@ export default function Proof() {
 
       {k && (
         <>
-          <section aria-label="KPI deltas, baseline vs NextMove" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <section aria-label="KPI deltas, baseline vs NXT" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {KPIS.map(({ key, title, fmt, lower }) => {
               const base = k.baseline[key] ?? 0;
               const next = k.nextmove[key] ?? 0;
@@ -119,10 +119,10 @@ export default function Proof() {
           <Card>
             <CardHeader>
               <CardTitle>Retention by month</CardTitle>
-              <CardDescription>Baseline vs NextMove at {pct(k.assumptions.adoption_rate)} adoption, {k.months}-month simulation</CardDescription>
+              <CardDescription>Baseline vs NXT at {pct(k.assumptions.adoption_rate)} adoption, {k.months}-month simulation</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-64 w-full" aria-label="Line chart of monthly retention, baseline vs NextMove">
+              <ChartContainer config={chartConfig} className="h-64 w-full" aria-label="Line chart of monthly retention, baseline vs NXT">
                 <LineChart data={k.series} margin={{ left: 4, right: 12 }}>
                   <CartesianGrid vertical={false} />
                   <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(m) => `M${m}`} />

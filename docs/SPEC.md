@@ -1,7 +1,7 @@
-# Toyota NextMove — Product and Build Spec
+# Toyota NXT — Product and Build Spec
 
 ## 1. Vision
-NextMove is a proactive financial co-pilot for every Toyota Financial Services customer. It watches each customer's situation, reaches out at the right moment, shows realistic options in plain language with exact numbers, and guides them to one clear next step. Employees see the whole portfolio, the profit impact, and every AI decision.
+NXT is a proactive financial co-pilot for every Toyota Financial Services customer. It watches each customer's situation, reaches out at the right moment, shows realistic options in plain language with exact numbers, and guides them to one clear next step. Employees see the whole portfolio, the profit impact, and every AI decision.
 
 **Problems solved:** customers decide too late and leave; options are confusing; service effort (calls) is high; payment stress is caught too late.
 
@@ -11,7 +11,7 @@ NextMove is a proactive financial co-pilot for every Toyota Financial Services c
 | Personalize | Toyota | Synthetic Customer 360: contract, mileage, payment history, life events |
 | Simplify | Toyota | Engine computes options; AI explains assumptions, trade-offs, why-not |
 | Guide | Toyota | One recommended next step with a single action |
-| Value | Toyota | 1,000+ customer simulation, baseline vs. NextMove KPIs |
+| Value | Toyota | 1,000+ customer simulation, baseline vs. NXT KPIs |
 | Working prototype | Toyota | Deployed, both surfaces connected live |
 | Synthetic data | Toyota | Generator + simulation + labelled everywhere |
 | Responsible AI | Toyota | No protected attributes, fairness report, audit, overrides, Guardian |
@@ -112,7 +112,7 @@ docs/               SPEC.md, DECISIONS.md
 | --- | --- | --- |
 | C0 Foundation | Shell, sidebar, role switcher, theme, shadcn, MSW | All pages load mock data |
 | C1 Core portfolio | Command Center, Opportunity Queue, Customer 360 | Advisor finds the 3 personas and sees why |
-| C2 Act + connect | NextMove Review (override), Live Activity, handoff inbox, deal packets, alert approvals | A mock handoff appears live and can be claimed |
+| C2 Act + connect | NXT Review (override), Live Activity, handoff inbox, deal packets, alert approvals | A mock handoff appears live and can be claimed |
 | C3 Prove value | Proof dashboard, Long-term Profit, Offer Studio (+A/B), Market Intel | Assumption slider updates every KPI |
 | C4 Trust + agents | Agent trace panel, Responsible AI, Agent Studio | Recall Notifier deploys from template in < 60s |
 | C5 Integrate + polish | Real API, skeletons, empty/error states, Cmd+K | Demo runs on live data with cache fallback |

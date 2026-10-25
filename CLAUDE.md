@@ -1,6 +1,6 @@
-# CLAUDE.md — Toyota NextMove (HackTX)
+# CLAUDE.md — Toyota NXT (HackTX)
 
-You are building **Toyota NextMove**, a proactive, agentic financial co-pilot for Toyota Financial Services (TFS) customers. Full product and build spec: `docs/SPEC.md`. Stage prompts: `PROMPTS.md`.
+You are building **Toyota NXT**, a proactive, agentic financial co-pilot for Toyota Financial Services (TFS) customers. Full product and build spec: `docs/SPEC.md`. Stage prompts: `PROMPTS.md`.
 
 ## The one question
 "Given my situation today, what's the smartest next move for me and my Toyota?"

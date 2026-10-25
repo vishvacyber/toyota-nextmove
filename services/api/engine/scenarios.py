@@ -78,7 +78,7 @@ def new_price(model: str) -> tuple[float, str]:
     for year in (TODAY.year + 1, TODAY.year):
         if m := real_msrp(model, trim, year):
             return m["price"], f"{year} MSRP from {m['source']}, as of {m['as_of']}"
-    return cat["price"], "Toyota list price (NextMove catalog)"
+    return cat["price"], "Toyota list price (NXT catalog)"
 
 
 def base_msrp(model: str) -> float:

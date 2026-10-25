@@ -11,7 +11,7 @@ import { MockBadge } from "@/components/mock-provider";
 
 const chartConfig = {
   baseline: { label: "Baseline", color: "var(--chart-2)" },
-  nextmove: { label: "NextMove", color: "var(--chart-1)" },
+  nextmove: { label: "NXT", color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
 const usdShort = (n: number) => (Math.abs(n) >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : usd(n));
@@ -38,7 +38,7 @@ export default function Profit() {
 
       {metrics && (
         <>
-          <section aria-label="Long-term value, baseline vs NextMove" className="grid gap-3 md:grid-cols-3">
+          <section aria-label="Long-term value, baseline vs NXT" className="grid gap-3 md:grid-cols-3">
             {metrics.map((m) => {
               const d = m.lower ? m.base - m.next : m.next - m.base;
               return (
@@ -59,10 +59,10 @@ export default function Profit() {
           <Card>
             <CardHeader>
               <CardTitle>Portfolio value</CardTitle>
-              <CardDescription>Loyalty revenue and cost to serve, baseline vs NextMove ({k.months} months)</CardDescription>
+              <CardDescription>Loyalty revenue and cost to serve, baseline vs NXT ({k.months} months)</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-64 w-full" aria-label="Bar chart of loyalty revenue and cost to serve, baseline vs NextMove">
+              <ChartContainer config={chartConfig} className="h-64 w-full" aria-label="Bar chart of loyalty revenue and cost to serve, baseline vs NXT">
                 <BarChart data={metrics.slice(1).map((m) => ({ name: m.title, baseline: m.base, nextmove: m.next }))} margin={{ left: 4, right: 12 }}>
                   <CartesianGrid vertical={false} />
                   <XAxis dataKey="name" tickLine={false} axisLine={false} />

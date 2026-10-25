@@ -1,5 +1,5 @@
 "use client";
-import { TfsLogo } from "@nextmove/tokens";
+import { NxtMark, TfsLogo } from "@nextmove/tokens";
 import { useI18n } from "@/lib/i18n";
 
 export function TopBar({ onSignOut }: { onSignOut?: () => void }) {
@@ -8,7 +8,7 @@ export function TopBar({ onSignOut }: { onSignOut?: () => void }) {
     <header className="flex items-center justify-between gap-4 border-b border-line px-6 py-4">
       <span className="flex items-center gap-3">
         <TfsLogo className="h-10 w-auto" />
-        <span className="border-l border-line pl-3 text-base font-medium tracking-wide">NextMove</span>
+        <span className="border-l border-line pl-3"><NxtMark className="h-7 w-auto" /></span>
       </span>
       <div className="flex items-center gap-3">
         {onSignOut && <button type="button" onClick={onSignOut} className="btn-outline btn-sm">{t("sign_out")}</button>}

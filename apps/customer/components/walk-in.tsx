@@ -11,6 +11,7 @@ import { DEFAULTS, toQuery, type Inputs } from "@/lib/walk-in";
 
 export type Mode = "estimate" | "trade" | "compare";
 const TERMS = [36, 48, 60, 72];
+const YEARS = Array.from({ length: 18 }, (_, k) => 2027 - k);   // 2027 back to 2010
 const TIERS = ["A", "B", "C", "D"] as const;
 const name = (m: Model) => (m === "bZ" ? "bZ4X" : m);
 
@@ -63,8 +64,10 @@ export function WalkIn({ mode, onBack }: { mode: Mode; onBack: () => void }) {
                   </select>
                 </Field>
                 <Field label={t("walk_year")}>
-                  <input type="number" inputMode="numeric" min={2005} max={2027} value={trade.year}
-                    onChange={(e) => set({ trade_in: { ...trade, year: clamp(e.target.value, 2005, 2027) } })} className={INPUT} />
+                  {/* A list, not a number box: a half-typed year ("202") would be priced, and spend a live market search. */}
+                  <select value={trade.year} onChange={(e) => set({ trade_in: { ...trade, year: Number(e.target.value) } })} className={INPUT}>
+                    {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
+                  </select>
                 </Field>
                 <Field label={t("odometer")}>
                   <input type="number" inputMode="numeric" min={0} step={1000} value={trade.odometer_miles}

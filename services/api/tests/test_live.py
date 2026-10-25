@@ -204,3 +204,31 @@ def test_guest_setup_declares_identify_and_hides_the_name(gemini):
     names = [f["name"] for f in setup["tools"][0]["functionDeclarations"]]
     assert "identify_customer" in names and "estimate_payment" in names and "Customer ID" not in json.dumps(setup)
     assert setup["generationConfig"]["speechConfig"]["voiceConfig"]["prebuiltVoiceConfig"]["voiceName"] == live.AGENT_VOICE
+
+
+def test_voice_socket_refuses_other_websites():
+    from starlette.websockets import WebSocketDisconnect
+    with TestClient(app) as api, pytest.raises(WebSocketDisconnect) as e, \
+            api.websocket_connect("/voice/CUST-HUNG2026", headers={"origin": "https://evil.example"}) as ws:
+        ws.receive_json()
+    assert e.value.code == 4403
+
+
+def test_guardian_checks_speech_split_by_verification(gemini):
+    g = gemini(said("Your lease payment is $123.45. "), ident("Vishwa", "RAV4"), said("Thanks, you're verified."), DONE)
+    with TestClient(app) as api, api.websocket_connect("/voice/GUEST", headers={"origin": "http://localhost:3000"}) as ws:
+        c = until(ws, lambda c: sum(1 for x in c["lines"] if x.get("guardian")) == 2)
+        ws.send_json({"type": "hangup"})
+    first = next(x for x in c["lines"] if x["role"] == "agent")
+    assert "$123.45" in first["text"] and first["guardian"]["verdict"] == "block"   # checked even though it isn't last
+    assert any("[Guardian]" in m.get("realtimeInput", {}).get("text", "") for m in g.sent)
+
+
+def test_spoken_phone_number_is_masked_even_when_split(gemini):
+    heard = [{"serverContent": {"inputTranscription": {"text": t}}} for t in ("Call me at 555-123", "-4567 please")]
+    gemini(*heard, said("Sure."), DONE)
+    with TestClient(app) as api, api.websocket_connect("/voice/CUST-HUNG2026") as ws:
+        c = until(ws, checked)
+        ws.send_json({"type": "hangup"})
+    caller = next(x for x in c["lines"] if x["role"] == "customer")
+    assert "4567" not in caller["text"] and "[phone]" in caller["text"]

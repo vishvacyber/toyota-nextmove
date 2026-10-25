@@ -1,4 +1,4 @@
-# Toyota NextMove: BUILD_PLAN
+# Toyota NXT: BUILD_PLAN
 
 ## 1. Repo structure
 ```
@@ -39,7 +39,7 @@ toyota-nextmove/
 | Stage | Build | Verify |
 |---|---|---|
 | C1 | Command Center, Opportunity Queue (TanStack), Customer 360 | find Vishwaa/Sameera/Hung and see why queued |
-| C2 | NextMove Review, Live Activity (Supabase realtime), handoff inbox, deal packets, L3 approvals | mock handoff appears live and can be claimed |
+| C2 | NXT Review, Live Activity (Supabase realtime), handoff inbox, deal packets, L3 approvals | mock handoff appears live and can be claimed |
 | C3 | Proof (sliders), Long-term Profit, Offer Studio, Market Intel | moving a slider updates every KPI |
 | C4 | Trace panel, Responsible AI, Agent Studio | Recall Notifier deploys from template under 60s |
 | C5 | MSW → real API per page behind a flag, skeletons, empty/error states, Cmd+K, synthetic banner | demo runs on live data with cache fallback |

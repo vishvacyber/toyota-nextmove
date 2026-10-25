@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Toyota NextMove",
-    short_name: "NextMove",
+    name: "Toyota NXT",
+    short_name: "NXT",
     start_url: "/app",
     display: "standalone",
     background_color: "#0b0b0d",

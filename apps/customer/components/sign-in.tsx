@@ -1,32 +1,19 @@
 "use client";
 import { useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import type { Customer } from "@nextmove/contracts";
-import { api } from "@nextmove/contracts/client";
+import { normalizeId } from "@/lib/ids";
 import { useI18n } from "@/lib/i18n";
 
-/** "vishwaa 2026", "vishwaa-2026" or "cust-vishwaa2026" → "CUST-VISHWAA2026". */
-export const normalizeId = (raw: string) => {
-  const id = raw.trim().toUpperCase().replace(/^CUST[-\s]*/, "").replace(/[\s_-]+/g, "");
-  return id ? `CUST-${id}` : "";
-};
-
-/** Sign in by name or customer ID, QR deep link (`?id=CUST-…`, handled by the page), or learn more as a guest. */
+/** Sign in by customer ID (a name alone isn't enough: that's what the voice line's name + car check is for), QR deep link (`?id=CUST-…`, handled by the page), or learn more as a guest. */
 export function SignIn({ onSignIn }: { onSignIn: (id: string) => void }) {
   const { t } = useI18n();
   const [guest, setGuest] = useState(false);
   const [value, setValue] = useState("");
 
-  async function submit(e: FormEvent) {
+  function submit(e: FormEvent) {
     e.preventDefault();
-    const raw = value.trim();
-    if (!raw) return;
-    // A name alone ("Vishwaa"): sign in when exactly one account matches; anything else is read as an ID.
-    if (!/\d/.test(raw)) {
-      const found = await api<Customer[]>(`/customers?q=${encodeURIComponent(raw)}`).catch(() => []);
-      if (found.length === 1) return onSignIn(found[0].id);
-    }
-    onSignIn(normalizeId(raw));
+    const id = normalizeId(value);
+    if (id) onSignIn(id);
   }
 
   return (

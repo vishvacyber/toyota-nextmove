@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Toyota NextMove API
+  title: Toyota NXT API
   version: 0.1.0
   description: >
     Contract shared by the Customer App, Employee Console and API.
@@ -41,7 +41,7 @@ paths:
   /customers/{id}/recommendation/review:
     post:
       operationId: reviewRecommendation
-      description: Employee approves or overrides a recommendation (NextMove Review).
+      description: Employee approves or overrides a recommendation (NXT Review).
       parameters: [{ $ref: "#/components/parameters/CustomerId" }]
       requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/RecommendationReview" } } } }
       responses:
@@ -211,7 +211,7 @@ paths:
   /kpis:
     get:
       operationId: getKpis
-      description: Baseline vs NextMove over the synthetic portfolio. Query params override simulation assumptions.
+      description: Baseline vs NXT over the synthetic portfolio. Query params override simulation assumptions.
       parameters:
         - { name: adoption_rate, in: query, schema: { type: number, minimum: 0, maximum: 1 } }
         - { name: outreach_lead_days, in: query, schema: { type: integer } }

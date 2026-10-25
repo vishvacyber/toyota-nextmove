@@ -40,7 +40,7 @@ from tools import store
 from tools.actions import new_id
 
 O = OptionType
-REVIEWS: dict[str, Review] = {}   # customer_id → latest employee review (NextMove Review)
+REVIEWS: dict[str, Review] = {}   # customer_id → latest employee review (NXT Review)
 EXPLANATIONS: dict[str, dict] = {}   # cache key → {"why", "why_not", "trace_id", "outputs"}
 LOCKS: dict[str, asyncio.Lock] = {}
 PREFER = {   # first eligible option wins
@@ -165,7 +165,7 @@ async def explain(c: Customer, ss: ScenarioSet, rec: Scenario, alts: list[Scenar
                           status=Status8.executed if result else Status8.blocked),
             model=model, prompt_version=version))
         if result is None:
-            raise sdk.Busy("NextMove is still working on this explanation. Please try again in a moment.")
+            raise sdk.Busy("NXT is still working on this explanation. Please try again in a moment.")
         result["trace_id"] = tid
         EXPLANATIONS[key] = result
         store.save("explanations", key, result)

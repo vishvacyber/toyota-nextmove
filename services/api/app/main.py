@@ -1,5 +1,6 @@
 import asyncio
 import os
+import re
 import threading
 from contextlib import asynccontextmanager
 from typing import Annotated
@@ -66,6 +67,9 @@ from sim import simulate
 from sim.generator import customers_by_id
 from tools import ToolError, actions, market, store
 
+# The browsers that may use this API: any localhost port (parallel dev servers). The REST API enforces it with CORS;
+# WebSockets skip CORS, so /voice checks the same pattern itself.
+LOCAL_ORIGIN = re.compile(r"http://(localhost|127\.0\.0\.1)(:\d+)?")
 PERSONAS = ["CUST-VISHWAA2026", "CUST-SAMEERA2026", "CUST-HUNG2026"]
 
 
@@ -83,7 +87,7 @@ async def lifespan(_: FastAPI):
         warm.cancel()
 
 
-app = FastAPI(title="Toyota NextMove API", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="Toyota NXT API", version="0.1.0", lifespan=lifespan)
 
 
 @app.exception_handler(sdk.Busy)
@@ -98,7 +102,7 @@ def hydrate_reviews() -> None:
 app.add_middleware(
     CORSMiddleware,
     # shortcut: any localhost port, so parallel dev servers work; list real origins when the frontends deploy.
-    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
+    allow_origin_regex=LOCAL_ORIGIN.pattern,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -279,6 +283,10 @@ async def send_call_message(id: str, body: CallMessage) -> Call:
 @app.websocket("/voice/{customer_id}")
 async def voice(ws: WebSocket, customer_id: str, lang: str = "en", surface: Surface = Surface.kiosk) -> None:
     """Live voice call (Gemini Live). Protocol in agents/live.py; not expressible in OpenAPI."""
+    origin = ws.headers.get("origin")
+    if origin is not None and not LOCAL_ORIGIN.fullmatch(origin):   # another website open in the kiosk's browser
+        await ws.close(code=4403)
+        return
     if customer_id != live.GUEST and customer_id not in customers_by_id():
         await ws.close(code=4404)
         return

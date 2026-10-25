@@ -65,7 +65,7 @@ Implement B4: GET /customers/{id}/timing (month-by-month optimizer), POST /inspe
 
 ### B5 — Proof + trust
 ```
-Implement B5: 24-month simulation baseline vs. NextMove over all customers with adjustable assumptions; GET /kpis; GET /fairness (recommendation/offer rates by region and credit tier, flag gaps); GET /audit; offers + /offers/{id}/simulate with A/B; Agent Studio endpoints with deploy gate (eval cases + prompt-injection tests). Done when console Proof and Responsible AI pages can show real numbers.
+Implement B5: 24-month simulation baseline vs. NXT over all customers with adjustable assumptions; GET /kpis; GET /fairness (recommendation/offer rates by region and credit tier, flag gaps); GET /audit; offers + /offers/{id}/simulate with A/B; Agent Studio endpoints with deploy gate (eval cases + prompt-injection tests). Done when console Proof and Responsible AI pages can show real numbers.
 ```
 
 ---
@@ -79,12 +79,12 @@ Implement C1 in apps/console using shadcn/ui: Command Center (KPI cards, maturit
 
 ### C2 — Act + connect
 ```
-Implement C2: NextMove Review (customer's options + internal margin, approve/override with reason), Live Activity (Supabase realtime sessions + handoff inbox with claim), Deal packets view, Alert approvals (L3). Done when a mock handoff appears live and can be claimed.
+Implement C2: NXT Review (customer's options + internal margin, approve/override with reason), Live Activity (Supabase realtime sessions + handoff inbox with claim), Deal packets view, Alert approvals (L3). Done when a mock handoff appears live and can be claimed.
 ```
 
 ### C3 — Prove value
 ```
-Implement C3: Proof dashboard (baseline vs NextMove, assumption sliders, KPI deltas), Long-term Profit (LTV, loyalty revenue, cost-to-serve saved), Offer Studio (rules, simulate, A/B), Market Intel (values, trends, recalls with source + as-of). Done when moving a slider updates every KPI.
+Implement C3: Proof dashboard (baseline vs NXT, assumption sliders, KPI deltas), Long-term Profit (LTV, loyalty revenue, cost-to-serve saved), Offer Studio (rules, simulate, A/B), Market Intel (values, trends, recalls with source + as-of). Done when moving a slider updates every KPI.
 ```
 
 ### C4 — Trust + agents

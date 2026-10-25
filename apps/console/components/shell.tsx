@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
-import { TfsLogo } from "@nextmove/tokens";
+import { NxtMark, TfsLogo } from "@nextmove/tokens";
 import { CommandMenu } from "@/components/command-menu";
 import { Button } from "@/components/ui/button";
 import { NAV } from "@/lib/nav";
@@ -26,7 +26,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen">
       <aside className="w-56 shrink-0 border-r bg-sidebar text-sidebar-foreground">
         <div className="flex items-center gap-2 px-4 py-4 text-sm font-semibold">
-          <TfsLogo className="h-8 w-auto" /> <span className="border-l pl-2">NextMove</span>
+          <TfsLogo className="h-8 w-auto" /> <span className="border-l pl-2"><NxtMark className="h-6 w-auto" /></span>
         </div>
         <nav aria-label="Console" className="space-y-4 px-2 pb-4">
           {groups.map((g) => (

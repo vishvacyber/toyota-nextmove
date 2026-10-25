@@ -13,7 +13,7 @@ import { MockBadge } from "@/components/mock-provider";
 
 const chartConfig = {
   baseline_retention: { label: "Baseline", color: "var(--chart-2)" },
-  nextmove_retention: { label: "NextMove", color: "var(--chart-1)" },
+  nextmove_retention: { label: "NXT", color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
 export default function CommandCenter() {
@@ -35,7 +35,7 @@ export default function CommandCenter() {
 
       {k && (
         <>
-          <section aria-label="KPIs, baseline vs NextMove" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <section aria-label="KPIs, baseline vs NXT" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {KPIS.map(({ key, title, fmt, lower }) => {
               const base = k.baseline[key] ?? 0;
               const next = k.nextmove[key] ?? 0;
@@ -48,7 +48,7 @@ export default function CommandCenter() {
                   </CardHeader>
                   <CardContent className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>Baseline <span className="tabular-nums text-foreground">{fmt(base)}</span></span>
-                    <Badge variant={better ? "outline" : "destructive"}>{better ? "▲ Better" : "▼ Worse"} with NextMove</Badge>
+                    <Badge variant={better ? "outline" : "destructive"}>{better ? "▲ Better" : "▼ Worse"} with NXT</Badge>
                   </CardContent>
                 </Card>
               );
@@ -59,10 +59,10 @@ export default function CommandCenter() {
             <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle>Retention by month</CardTitle>
-                <CardDescription>Baseline vs NextMove, {k.months}-month simulation</CardDescription>
+                <CardDescription>Baseline vs NXT, {k.months}-month simulation</CardDescription>
               </CardHeader>
               <CardContent>
-                <ChartContainer config={chartConfig} className="h-64 w-full" aria-label="Line chart of monthly retention, baseline vs NextMove">
+                <ChartContainer config={chartConfig} className="h-64 w-full" aria-label="Line chart of monthly retention, baseline vs NXT">
                   <LineChart data={k.series} margin={{ left: 4, right: 12 }}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="month" tickLine={false} axisLine={false} tickFormatter={(m) => `M${m}`} />

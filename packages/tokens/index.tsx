@@ -17,3 +17,14 @@ export function TfsLogo({ className = "h-9 w-auto" }: { className?: string }) {
     </svg>
   );
 }
+
+/** The NXT wordmark: even-weight geometric letters, with the X's rising stroke running past the letter into a
+ * Toyota-red arrow (the "next move"). Letters follow the current color. */
+export function NxtMark({ className = "h-6 w-auto" }: { className?: string }) {
+  return (
+    <svg viewBox="0 -6 56 31" role="img" aria-label="NXT" className={className}>
+      <path fill="currentColor" d="M2 4h3v20H2zM13 4h3v20h-3zM2 4h3.4L16 24h-3.4zM20 4h3.4L34 24h-3.4zM39 4h16v3H39zM45.5 4h3v20h-3z" />
+      <path fill="#EB0A1E" d="M20 24L32.7 0h3.4L23.4 24zM31.2 -1.7L37 -4.9L37.6 1.7z" />
+    </svg>
+  );
+}

@@ -448,7 +448,7 @@ export const estimateVehicles: Record<Model, components["schemas"]["EstimateVehi
       "mpg": 35.0
     },
     "msrp": 49115.0,
-    "msrp_source": "Toyota list price (NextMove catalog)",
+    "msrp_source": "Toyota list price (NXT catalog)",
     "apr": 7.4,
     "loan_payment": 954.84,
     "lease_payment": 746.36,

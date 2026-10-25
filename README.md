@@ -1,4 +1,4 @@
-# Toyota NextMove
+# Toyota NXT
 
 **A proactive, agentic financial co-pilot for Toyota Financial Services (TFS) customers.** Built at HackTX.
 
@@ -15,7 +15,7 @@ The hosted copies run on recorded mock data. The live engine, agents and realtim
 ## Contents
 
 1. [The problem](#the-problem)
-2. [What NextMove does](#what-nextmove-does)
+2. [What NXT does](#what-nextmove-does)
 3. [Track coverage](#track-coverage)
 4. [Architecture](#architecture)
 5. [How it works: flows](#how-it-works-flows)
@@ -38,11 +38,11 @@ The hosted copies run on recorded mock data. The live engine, agents and realtim
 
 TFS customers decide too late. A lease ends, miles run over, a payment slips, and by the time anyone notices, the best option is gone. Options are confusing, so every question becomes a phone call. Payment stress is caught after the damage is done.
 
-## What NextMove does
+## What NXT does
 
-NextMove watches each customer's situation, reaches out at the right moment, compares every eligible option with exact numbers, and guides them to **one clear next step**. Employees see the whole portfolio, the profit impact, and every AI decision.
+NXT watches each customer's situation, reaches out at the right moment, compares every eligible option with exact numbers, and guides them to **one clear next step**. Employees see the whole portfolio, the profit impact, and every AI decision.
 
-| Persona | Situation | What NextMove shows (live engine output) |
+| Persona | Situation | What NXT shows (live engine output) |
 | --- | --- | --- |
 | **Vishwaa** | Lease ends in 90 days, 9,800 miles over the allowance | **Buy it.** The buyout keeps **$6,467** of equity; returning it costs **$3,200** in fees. Photo pre-inspection estimates wear charges before the official inspection. |
 | **Sameera** | Loan with positive equity, high fuel spend | **Upgrade to a Camry SE Hybrid** (real **$32,200** MSRP from toyota.com via SerpApi). Payment **$496 → $403/mo**, true monthly cost **$847 → $660**, **1,718 kg less CO2/year**. Acting now is worth **$820** more than waiting 3 months. See it in the showroom, then send a deal packet to the dealer. |
@@ -54,7 +54,7 @@ NextMove watches each customer's situation, reaches out at the right moment, com
 
 ## Track coverage
 
-| Requirement | How NextMove meets it |
+| Requirement | How NXT meets it |
 | --- | --- |
 | Personalize | Customer 360 built from contract, mileage, payment history and life events |
 | Simplify | The engine computes every option; the AI explains assumptions, trade-offs and why not the others |
@@ -164,7 +164,7 @@ flowchart TD
   F6 --> X3["Book follow-up"]
   F6 --> X4["Talk to someone<br/>live voice call"]
   D --> S["See it in the showroom<br/>real photos"]
-  C --> H["5. Ask NextMove<br/>chat + voice, EN/ES"]
+  C --> H["5. Ask NXT<br/>chat + voice, EN/ES"]
 ```
 
 Every action needs the customer's tap plus a confirmation (L3), and confirmed actions are recorded with TFS (they show in the console's audit log). After 60 seconds idle the kiosk resets to the attract screen and clears everything. "Continue on your phone" shows a QR code generated on the device.
@@ -286,7 +286,7 @@ flowchart LR
 
 ### Autonomy levels
 
-| Level | Meaning | Examples in NextMove |
+| Level | Meaning | Examples in NXT |
 | --- | --- | --- |
 | **L1** read / analyze | Runs automatically | `get_customer`, `run_scenario`, `get_market_value`, `get_timing`, `inspect_photos` |
 | **L2** draft | Runs automatically and is visible in the console | Sentinel outreach drafts, `create_offer_draft` |
@@ -339,9 +339,9 @@ New agents deploy only if they pass: a tool-policy check, the three persona eval
 
 ## Results: proof of value
 
-24-month simulation over all 1,200 generated customers, baseline vs NextMove, at the default assumptions (60% adoption, 90-day outreach lead, 50% hardship uptake). Deterministic and seeded: the same inputs always give the same numbers.
+24-month simulation over all 1,200 generated customers, baseline vs NXT, at the default assumptions (60% adoption, 90-day outreach lead, 50% hardship uptake). Deterministic and seeded: the same inputs always give the same numbers.
 
-| KPI | Baseline | NextMove | Change |
+| KPI | Baseline | NXT | Change |
 | --- | ---: | ---: | ---: |
 | Retention | 54.4% | 68.6% | +14.1 pts |
 | Calls per 100 customers | 184.9 | 147.6 | −37.3 |
@@ -437,7 +437,7 @@ All 34 operations of the contract are implemented, plus the `/voice/{customer_id
 | POST | `/customers/{id}/actions` | app | Record the customer's confirmed self-service start or due-date change (L3) |
 | GET | `/customers/{id}/timing` | app | Month-by-month best time to move |
 | POST | `/scenarios` | both | Run options, with what-if overrides |
-| POST | `/agents/advisor/ask` | app | Ask NextMove (live agent + Guardian) |
+| POST | `/agents/advisor/ask` | app | Ask NXT (live agent + Guardian) |
 | POST | `/inspections` | app | Photo pre-inspection (multipart) |
 | GET / POST | `/handoffs` | both | List or create a talk-to-a-person request |
 | PATCH | `/handoffs/{id}` | console | Claim or resolve |
@@ -448,7 +448,7 @@ All 34 operations of the contract are implemented, plus the `/voice/{customer_id
 | GET | `/opportunities` | console | Queue with next-best-action $ value and retention odds |
 | GET / POST | `/offers` | console | Offer rules and A/B variants |
 | POST | `/offers/{id}/simulate` | console | Simulate acceptance, profit and retention lift |
-| GET | `/kpis?adoption_rate=&outreach_lead_days=&hardship_uptake=` | console | Baseline vs NextMove simulation |
+| GET | `/kpis?adoption_rate=&outreach_lead_days=&hardship_uptake=` | console | Baseline vs NXT simulation |
 | GET | `/traces?customer_id=` | console | Agent traces |
 | GET | `/audit` | console | Audit log |
 | GET | `/fairness` | console | Fairness report |
@@ -641,7 +641,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
   - Photo pre-inspection
   - Payment help
   - Action center
-- **5. Ask NextMove:** chat and voice in EN/ES, with the numbers used and a "checked" note.
+- **5. Ask NXT:** chat and voice in EN/ES, with the numbers used and a "checked" note.
 - **Kiosk home:** four tiles (my account, estimate a payment, what's my trade worth, compare cars) and an always-on "Talk to someone".
 - **Walk-in tools (no account):** real MSRPs, engine loan and lease payments, 5-year cost, fuel and CO2; trade-in value from live SerpApi comps and equity after payoff; up to 3 cars side by side; "Take it home" QR to `/app/summary`, which re-prices on the phone (no numbers in the link).
 - **Talk to someone:** ringback, then a live Gemini voice agent with captions; a rep can take over from the console.
@@ -653,7 +653,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 | Group | Pages |
 | --- | --- |
 | Portfolio | Command Center, Opportunity Queue, Customers + Customer 360 |
-| Act | NextMove Review, Live Activity (live voice calls with Take over, sessions, handoff inbox), Deal Packets, Alert Approvals |
+| Act | NXT Review, Live Activity (live voice calls with Take over, sessions, handoff inbox), Deal Packets, Alert Approvals |
 | Prove | Proof, Long-term Profit, Offer Studio, Market Intel |
 | Trust | Agent Traces, Responsible AI, Agent Studio |
 
@@ -716,7 +716,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 ### Tests
 
-236 automated tests: 184 API (voice sign-in, engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, Gemini provider, live voice calls against a fake Gemini Live, walk-in estimates, MSRP parsing, AI explanations, contract coverage, simulation, persistence), 38 contract (every endpoint has a working mock), 6 console and 8 customer app (audio encoding, take-home links).
+240 automated tests: 187 API (voice sign-in, engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, Gemini provider, live voice calls against a fake Gemini Live, walk-in estimates, MSRP parsing, AI explanations, contract coverage, simulation, persistence), 38 contract (every endpoint has a working mock), 6 console and 9 customer app (audio encoding, take-home links, ID parsing).
 
 ---
 

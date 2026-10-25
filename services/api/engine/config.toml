@@ -6,7 +6,7 @@ as_of = "2026-10-24T09:00:00Z"   # fixed "today" so results never drift between 
 [market]
 # Value = median of cached SerpApi comps for the model-year (when at least min_comps) − (miles over expected × per_mile_adjust).
 # Fallback without comps: msrp × retention[age] − (miles over expected × per_mile_adjust).
-source = "NextMove valuation model"
+source = "NXT valuation model"
 min_comps = 3
 band = 0.06                       # ± range shown on GET /market when there are no comps
 expected_miles_per_year = 12000
@@ -177,13 +177,13 @@ carpet = { minor = 0, moderate = 100, major = 250 }
 # 24-month portfolio simulation (sim/simulate.py, GET /kpis). Expected values over all customers: no random draws, so
 # the same assumptions always give the same KPIs. Synthetic coefficients; each line says why it is set where it is.
 months = 24
-adoption_rate = 0.6            # default share of customers who act on NextMove outreach (mock / Proof slider default)
+adoption_rate = 0.6            # default share of customers who act on NXT outreach (mock / Proof slider default)
 outreach_lead_days = 90        # default days of notice before the decision (Sentinel's lease-end window)
 hardship_uptake = 0.5          # default share of stressed customers who take the hardship path
 reach_tau_days = 60            # reach = 1 − exp(−lead/τ): 30 d ≈ 39%, 90 d ≈ 78%, 180 d ≈ 95% decide after outreach
 # Month a non-maturing customer makes their decision (refinance away, trade elsewhere...). Maturity within 24 months wins.
 event_month = { lease_end = 3, mileage_overage = 9, positive_equity = 8, rate_drop = 6, early_payoff = 4, life_event = 6, payment_stress = 3, ev_switch = 10 }
-# Share who stay with TFS at that decision without NextMove (industry-style lease/loan return-to-brand rates).
+# Share who stay with TFS at that decision without NXT (industry-style lease/loan return-to-brand rates).
 baseline_retention = { lease_end = 0.52, mileage_overage = 0.48, positive_equity = 0.55, rate_drop = 0.45, early_payoff = 0.4, life_event = 0.5, payment_stress = 0.5, ev_switch = 0.45, none = 0.5 }
 roll_rate_per_risk = 0.1       # 24-month chance of serious delinquency = risk_score × this (current accounts)
 stress_roll_rate = 0.6         # past-due accounts roll to serious delinquency far more often

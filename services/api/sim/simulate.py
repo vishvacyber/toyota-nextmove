@@ -1,4 +1,4 @@
-"""24-month portfolio simulation: baseline vs NextMove (GET /kpis), fairness report and offer A/B simulation.
+"""24-month portfolio simulation: baseline vs NXT (GET /kpis), fairness report and offer A/B simulation.
 
 Engine math only (rule 1). Each customer's next-best action and retention odds come from B4's NBA scoring over the
 engine's options; the simulation adds expected values over the horizon, so the same assumptions always give the same
@@ -91,7 +91,7 @@ def reach(lead_days: int) -> float:
 
 
 def _metrics(rs: tuple[Row, ...], a: Assumptions | None) -> tuple[KpiMetrics, list[float]]:
-    """a=None is the baseline (no NextMove). Returns the metrics and the 24-month retention series."""
+    """a=None is the baseline (no NXT). Returns the metrics and the 24-month retention series."""
     n, months = len(rs), SIM["months"]
     act = a.adoption_rate * reach(a.outreach_lead_days) if a else 0.0
     uptake = a.hardship_uptake if a else 0.0

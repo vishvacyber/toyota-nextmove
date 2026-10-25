@@ -112,13 +112,16 @@ async def publish(c: Call, console: bool = True) -> None:
 
 
 def add(c: Call, role: CallRole, text: str, fresh: bool = False) -> CallLine:
-    """Append a transcript chunk to the speaker's open line, or start a new line."""
+    """Append a transcript chunk to the speaker's open line, or start a new line. The caller's words are masked as a
+    whole line (rule 6), since a phone number can arrive split over several chunks."""
     last = c.lines[-1] if c.lines else None
     if last and last.role == role and not fresh and last.guardian is None and role in (CallRole.customer, CallRole.agent):
         last.text += text
-        return last
-    c.lines.append(CallLine(role=role, text=text, at=now()))
-    return c.lines[-1]
+    else:
+        c.lines.append(last := CallLine(role=role, text=text, at=now()))
+    if role == CallRole.customer:
+        last.text = traces.mask(last.text)
+    return last
 
 
 def handoff(c: Call, reason: str, claimed_by: str | None = None):
@@ -176,13 +179,15 @@ async def ai(c: Call, ws: WebSocket, g, calls: list[ToolCall]) -> None:
         if t := (sc.get("outputTranscription") or {}).get("text"):
             add(c, CallRole.agent, t)
             await publish(c, console=False)
-        if sc.get("turnComplete") and c.lines and c.lines[-1].role == CallRole.agent and c.lines[-1].guardian is None:
-            line = c.lines[-1]
+        # Every agent line not yet checked: a turn can be split in two by a line in between ("Caller verified").
+        if sc.get("turnComplete") and (unchecked := [x for x in c.lines if x.role == CallRole.agent and x.guardian is None]):
             heard = next((x.text for x in reversed(c.lines) if x.role == CallRole.customer), "")
-            line.guardian, _ = guardian.check(line.text, outputs(calls), heard, spoken=True)
-            if line.guardian.verdict != Verdict.pass_:
-                why = "; ".join(ch.detail or ch.name.value for ch in line.guardian.checks if not ch.passed)
-                await g.send(say(f"[Guardian] Your last answer failed the compliance check: {why}. "
+            failed = []
+            for line in unchecked:
+                line.guardian, _ = guardian.check(line.text, outputs(calls), heard, spoken=True)
+                failed += [ch.detail or ch.name.value for ch in line.guardian.checks if not ch.passed]
+            if failed:
+                await g.send(say(f"[Guardian] Your last answer failed the compliance check: {'; '.join(failed)}. "
                                  "Briefly correct it; use only numbers your tools returned."))
             await publish(c)
 

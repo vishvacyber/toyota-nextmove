@@ -30,7 +30,7 @@ function Review() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">NextMove Review</h1>
+      <h1 className="text-2xl font-semibold">NXT Review</h1>
       <ApiState loading={opps.loading} error={opps.error} />
       <div className="grid gap-3 lg:grid-cols-[18rem_1fr]">
         <Card size="sm">

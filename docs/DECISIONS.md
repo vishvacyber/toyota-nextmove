@@ -22,7 +22,7 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Console strings are English-only for now**; console i18n comes with a later C stage.
 
 ## Stage C2 (console)
-- **"Internal value" on NextMove Review is `Opportunity.expected_value`** (plus `retention_odds`) from `/opportunities`. The contract has no internal-margin field, so no contract change.
+- **"Internal value" on NXT Review is `Opportunity.expected_value`** (plus `retention_odds`) from `/opportunities`. The contract has no internal-margin field, so no contract change.
 - **A reason is required for approve and override.** The contract only requires it on override; the stage prompt asks for a reason on every review, and it makes the audit trail complete.
 - **The reviewer, claimer and alert actor is a fixed demo employee, `EMP-ADVISOR-1`** (`lib/employee.ts`, matches the audit fixtures). The header role switcher stays cosmetic.
 - **Handoffs cross apps over Supabase Realtime Broadcast**: channel `handoffs`, event `created` (new contract `Handoff`) and `updated` (after claim/resolve), no tables. The inbox seeds from `GET /handoffs`, then upserts every event by id. The console subscribes with `broadcast.self: true` so the tab that sends an event updates the same way as every other tab.
@@ -33,10 +33,10 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Console unit tests use `node --test`** (Node 24 runs TypeScript directly), so no test runner was added.
 
 ## Stage C3 (console)
-- **Proof sliders send all three assumptions** (`adoption_rate`, `outreach_lead_days`, `hardship_uptake`) to `GET /kpis`, debounced 300 ms. The mock handler only scales NextMove with adoption, so lead time and hardship uptake are echoed but don't move numbers until the B5 simulation; the page says so under the sliders.
+- **Proof sliders send all three assumptions** (`adoption_rate`, `outreach_lead_days`, `hardship_uptake`) to `GET /kpis`, debounced 300 ms. The mock handler only scales NXT with adoption, so lead time and hardship uptake are echoed but don't move numbers until the B5 simulation; the page says so under the sliders.
 - **KPI deltas are a display subtraction** (`nextmove − baseline`, rates shown in percentage points). The console computes no new money numbers. The KPI list moved to `lib/kpis.ts` so Command Center and Proof share it.
 - **Proof keeps the last snapshot on screen** while a new `/kpis` request loads (`useApi` blanks data on path change), so cards don't flicker while dragging.
-- **Long-term Profit reads the default `/kpis`** (LTV, `loyalty_revenue`, cost to serve). "Saved" is baseline minus NextMove cost to serve.
+- **Long-term Profit reads the default `/kpis`** (LTV, `loyalty_revenue`, cost to serve). "Saved" is baseline minus NXT cost to serve.
 - **A/B variants are offers with `variant_of`**: listed under their parent; "Simulate" runs only on parent offers (the endpoint returns parent + variants). New offers are drafts and are kept in page state plus the per-browser MSW store, so they disappear on reload until the real API lands.
 - **"Leader" on a simulation** is the variant with the highest API `expected_profit`; a comparison, not a calculation.
 - **Market Intel fetches all six models** (one `/market/{model}` each). Each card's footer shows the quote's `source` and `as_of`; comps and recalls link to their `source_url`.
@@ -73,7 +73,7 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Kiosk blur on the timing chart and true-cost columns is one tap per block**, labels included, rather than one tap per number.
 
 ## Stage K3 (customer app)
-- **Placement:** the alerts inbox is in step 1 (Situation), and step 4 (Decide + act) opens with the hardship card for `payment_stress` and the photo pre-inspection for leases. Advisor chat is a new step 5, "Ask NextMove". All of it is shared by `/app` and `/kiosk`.
+- **Placement:** the alerts inbox is in step 1 (Situation), and step 4 (Decide + act) opens with the hardship card for `payment_stress` and the photo pre-inspection for leases. Advisor chat is a new step 5, "Ask NXT". All of it is shared by `/app` and `/kiosk`.
 - **Customers see only `sent` / `approved` alerts.** L3 drafts awaiting employee approval never reach them. In the mocks Vishwaa's alert is still `pending_approval`, so Sameera is the persona with a visible alert. Consent and dismiss are `PATCH /alerts/{id}` with the customer ID as `actor`.
 - **Accepting the due-date change is UI-only** (confirm-then-acknowledge, like K2's self-service): the contract has no endpoint for it. The callback handoff reason records whether it was accepted.
 - **Extension is treated like deferral (L4):** it changes credit terms, so neither has an accept button. Both go to a specialist through "Request a callback" (K2's follow-up booking: `POST /handoffs` with `callback_at`, broadcast `created`).
@@ -100,7 +100,7 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **No Supabase yet.** The 1,200 synthetic customers are regenerated in memory on startup (deterministic, seed 42, ~0.3 s). `sim/seed_supabase.py` upserts them into a `customers (id, data jsonb)` table when keys exist; it hasn't been run.
 - **Config is TOML, not YAML** (`engine/config.toml`, `engine/eligibility.toml`): it's in the standard library (`tomllib`), so no new dependency, and it's just as readable.
 - **Fixed engine date** `2026-10-24T09:00Z` (same as the mocks' `AS_OF`), so results never drift between runs.
-- **Market value** = MSRP × depreciation curve by age − $0.10/mile over a 12k/yr pace, labelled "NextMove depreciation table (synthetic, pre-SerpApi)" with an as-of date in every scenario. B2 replaces it with SerpApi comps.
+- **Market value** = MSRP × depreciation curve by age − $0.10/mile over a 12k/yr pace, labelled "NXT depreciation table (synthetic, pre-SerpApi)" with an as-of date in every scenario. B2 replaces it with SerpApi comps.
 - **Lease equity** = market value − residual (valued at lease end). Lease options exclude the remaining lease payments, which every option shares.
 - **total_cost** = out-of-pocket over the option's horizon (payments + down payment + fees). Buyout/upgrade include financing interest.
 - **Options modeled:** do_nothing, keep, buyout, return, refinance, trade_in, extend, upgrade, plus due_date_change and deferral for payment stress. `new_lease`, `pay_extra`, `pay_off` return "not modeled yet" when requested.
@@ -172,11 +172,11 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Simulation** (`sim/simulate.py`, coefficients in `[simulation]`, each with its rationale). It uses expected values, not random draws, so the same assumptions always give the same KPIs. Each customer's recommended option, retention odds, margin and cure lift come from `recommend.pick` and B4's `nba.score`. The simulation adds only the horizon math:
   - Each customer has one stay-or-leave decision: at maturity if it falls within 24 months, otherwise at a per-situation month.
   - Reach = `1 − exp(−lead_days / 60)`.
-  - NextMove stay = `baseline + adoption × reach × max(0, nba_odds − baseline)`.
+  - NXT stay = `baseline + adoption × reach × max(0, nba_odds − baseline)`.
   - Delinquency for stressed accounts × `1 − hardship_uptake × cure_lift`.
   - Inbound calls are deflected by adoption × reach and by hardship uptake.
   - Revenue = margin on current payments up to the decision, plus loyalty revenue (stay × NBA margin of the next contract), minus credit losses (roll × payoff × loss-given-default).
-  - Hardship uptake applies independently of adoption, since it's its own slider. At adoption 0 and uptake 0, NextMove retention and delinquency equal the baseline. Cost to serve still includes outreach touches.
+  - Hardship uptake applies independently of adoption, since it's its own slider. At adoption 0 and uptake 0, NXT retention and delinquency equal the baseline. Cost to serve still includes outreach touches.
   - Per-customer rows are computed once per process (~0.1 s, warmed at startup), so `GET /kpis` is arithmetic over 1,200 rows: about 2 ms over HTTP.
   - Defaults (adoption 0.6, lead 90 days, uptake 0.5): retention 54.5% → 68.6%, delinquency 4.49% → 4.04%, calls per 100 customers 184.9 → 147.6, revenue $531,612 → $781,016. Revenue here is TFS margin, not gross payments, so it is smaller than the mock's.
 - **Fairness** uses region and credit tier only. A group is flagged when its recommendation or offer rate is more than 5 points off its dimension's overall rate. Currently nothing is flagged. Offer rates are low (1–4%) because the only active offers target lease-end customers. `GET /fairness` has no `threshold` query parameter because the contract has none; the threshold lives in config.
@@ -199,7 +199,7 @@ Simplest option that satisfies the spec, per CLAUDE.md.
   - `POST /customers/{id}/recommendation/review` writes an `AuditEntry` through `log_decision` (`approve_recommendation` / `override_recommendation`, L3, with `override_reason` and the recommendation's trace). It also sets `Recommendation.review`. An override without a reason gets a 422, and an agent name as reviewer gets a 409. A review never changes the engine's recommended option or its numbers. `log_decision` gained an optional `override_reason`.
   - `tests/test_contract_routes.py` checks that every method + path in `openapi.yaml` has a FastAPI route, so a missing endpoint fails the build.
 - **`MarketQuote.reviews_summary`** now lists the top 3 YouTube review titles and their channels from the cached search: `Top YouTube reviews: "…" (CarGurus); …`. Emoji are stripped. The transcript excerpt it replaces read poorly. Source and as-of stay on the quote. Transcripts are no longer read or seeded (`scripts/seed_cache.py`), so the same data needs one fewer SerpApi call. Cached transcript rows are left in place, unused.
-- **Market `source` names the value's own source first.** When there are fewer than `min_comps` comps, `estimated_value` comes from the depreciation table, so `source` now starts with "NextMove depreciation table (synthetic)" before the SerpApi engines the quote also read (trends, dealers, reviews). Prius 2023 (2 comps), Tacoma, Highlander and bZ show the table; RAV4 and Camry show SerpApi Google Search. Values are unchanged.
+- **Market `source` names the value's own source first.** When there are fewer than `min_comps` comps, `estimated_value` comes from the depreciation table, so `source` now starts with "NXT depreciation table (synthetic)" before the SerpApi engines the quote also read (trends, dealers, reviews). Prius 2023 (2 comps), Tacoma, Highlander and bZ show the table; RAV4 and Camry show SerpApi Google Search. Values are unchanged.
 - **Offline snapshot covers every model's review search.** `seed_cache` also seeds the YouTube review search for Tacoma, Highlander and bZ (2024), so their showroom "what reviewers say" works offline. Those rows were already in Supabase from Market Intel, so the run made **0 live SerpApi calls**. The rewritten snapshot drops the 4 unused transcript rows; the other rows changed only in timestamp formatting. bZ has no Google Trends term, so its `trend` stays empty.
 - **`GET /opportunities` doesn't write traces** (0 new traces over repeated calls; the scan is cached). The extra Sentinel traces in the console come from API restarts: each start (and every `--reload`) reruns the startup scan, which rebuilds the in-memory alert drafts and writes one trace. That's kept as designed.
 - **Live checks (2026-10-25):**
@@ -245,11 +245,19 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Skipped:** printing the summary, VIN/plate photo reading, rep voice (WebRTC), a call link on Customer 360.
 
 ## Demo polish: team accounts, Toyota branding, voice sign-in
-- **Demo accounts are the team.** Maria/James/Priya became **Vishwaa** (`CUST-VISHWAA2026`, lease ending), **Sameera** (`CUST-SAMEERA2026`, equity + hybrid upgrade) and **Hung** (`CUST-HUNG2026`, missed payment / hardship). First names only on screen. Rows saved in Supabase under the old IDs are left untouched but never loaded (`tools/store.RETIRED`). Sign-in accepts a name ("Vishwaa", one match) or any spelling of the ID ("vishwaa 2026").
-- **No demo or synthetic labels (team decision, replaces the old rule 5 badge).** The "Synthetic data" badge, the console banner and the "Demo customers" buttons are gone; source labels no longer say "(synthetic)" ("NextMove valuation model", "Toyota list price"). The data is still generated and there is still no real customer data; estimate disclaimers stay.
+- **Demo accounts are the team.** Maria/James/Priya became **Vishwaa** (`CUST-VISHWAA2026`, lease ending), **Sameera** (`CUST-SAMEERA2026`, equity + hybrid upgrade) and **Hung** (`CUST-HUNG2026`, missed payment / hardship). First names only on screen. Rows saved in Supabase under the old IDs are left untouched but never loaded (`tools/store.RETIRED`). Typed sign-in takes the customer ID in any spelling ("vishwaa 2026"); a name alone signs in only on the voice line, where the car must match too (audit: a typed name skipped that check, so it was removed).
+- **No demo or synthetic labels (team decision, replaces the old rule 5 badge).** The "Synthetic data" badge, the console banner and the "Demo customers" buttons are gone; source labels no longer say "(synthetic)" ("NXT valuation model", "Toyota list price"). The data is still generated and there is still no real customer data; estimate disclaimers stay.
 - **Real MSRPs for all six models.** RAV4 (2026 is hybrid-only, so the target trim is "XLE Premium Hybrid", $36,100 on toyota.com) and Tacoma TRD Sport i-FORCE MAX ($47,335, toyota.com) now parse; the next model year falls back to this year's MSRP while next year's isn't published. `parse_msrp` skips dealer asking prices ("Dealer price", "mi away"). Highlander Hybrid XLE has no clean match, so its catalog price is set to the real 2026 MSRP ($49,115, Kelley Blue Book via the cached SerpApi search).
 - **Toyota branding.** Official toyota.com imagery (studio shots on transparent backgrounds for every car card; lifestyle photos on the attract screen) is hot-linked from Toyota's own CDNs, and the Toyota Financial Services lockup (Toyota emblem and wordmark from toyota.com, "Financial Services" beneath, as on TFS materials) replaces the text mark in both apps. Toyota is the event sponsor and the team confirmed it permits this use. If Toyota's CDN refuses an image, the Wikimedia Commons photo is the fallback.
 - **toyota.com look.** Helvetica Neue (toyota.com's fallback family; their own font is proprietary), rectangular buttons with 8px corners (`btn-primary` red, `btn-secondary` black, `btn-outline`), smaller card radius, lucide line icons instead of emojis.
 - **Voice sign-in.** `identify_customer(name, vehicle_model)` (L1): the first name or ID must match, and so must the Toyota they drive, on exactly one account. It returns only the customer ID. Spoken names are matched tolerantly (doubled letters collapsed, close spellings accepted: speech-to-text heard "Vishwa"). Three tries per call. Before verification, account tools are refused; after, every account tool is pinned to the verified ID. The spoken name is masked in traces. The kiosk shows "Account found" and opens the account when the call ends; the console card switches from Walk-in guest to the customer live.
 - **Natural rep voice.** A rep's typed message is spoken with Gemini TTS (`gemini-3.8-flash-tts`, voice "Charon", about 3.5 s) and played through the same audio path as the agent; the AI agent has its own fixed voice ("Aoede"). If TTS fails, the kiosk falls back to the browser voice.
 
+## Audit fixes and the NXT name
+- **Platform name is NXT** (was NextMove) on every screen, in the AI prompts (versions bumped to v2), source labels and docs. Internal identifiers keep the old name so nothing breaks: package names (`@nextmove/*`), env vars (`NEXTMOVE_*`), the repo and Vercel project names, the `--nm-` CSS tokens and contract field names (`nextmove`, `nextmove_retention`).
+- **Voice socket checks the browser origin** (WebSockets skip CORS): only localhost pages can open `/voice`; other websites get close code 4403. Non-browser clients send no origin and are allowed.
+- **Guardian checks every unchecked agent line at turn end**, not just the last one (a "Caller verified" line could split a turn and leave the first part unchecked).
+- **Spoken caller lines are masked as a whole** (rule 6), so a phone number split across transcript chunks is still caught.
+- **Trade-in year is a list (2010-2027)**, not a number box that priced half-typed years and spent live SerpApi searches.
+- **`normalizeId` moved to `lib/ids.ts`** with a test.
+- **NXT wordmark** (`NxtMark` in `packages/tokens`): even-weight geometric letters; the X's rising stroke runs past the letter into a Toyota-red arrow, for "next move". Shown beside the TFS lockup in both apps.

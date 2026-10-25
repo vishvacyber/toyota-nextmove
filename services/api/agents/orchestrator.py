@@ -117,7 +117,7 @@ async def ask(req: AdvisorAsk) -> AdvisorAnswer:
                                     started_at=started, duration_ms=round((time.monotonic() - t0) * 1000), plan=plan,
                                     tool_calls=calls, guardian=verdict, model=model, prompt_version=version,
                                     action=Action(type="answer", autonomy_level=AutonomyLevel.L1, status=Status8.blocked)))
-            raise sdk.Busy("NextMove is busy right now. Please try again in a moment.")
+            raise sdk.Busy("NXT is busy right now. Please try again in a moment.")
 
     verdict, matches = guardian.check(text, outputs(calls), message)
     if verdict.verdict != Verdict.pass_:
@@ -144,7 +144,7 @@ async def ask(req: AdvisorAsk) -> AdvisorAnswer:
                             started_at=started, duration_ms=round((time.monotonic() - t0) * 1000), plan=plan,
                             tool_calls=calls, guardian=verdict, action=action, model=model, prompt_version=version))
     if req.session_id:
-        session[:] = [*session, f"Customer: {message}", f"NextMove: {text}"][-6:]
+        session[:] = [*session, f"Customer: {message}", f"NXT: {text}"][-6:]
         prev = SESSION_INFO.get(req.session_id)
         SESSION_INFO[req.session_id] = Session(
             id=req.session_id, customer_id=c.id, surface=req.surface or (prev.surface if prev else Surface.app),
