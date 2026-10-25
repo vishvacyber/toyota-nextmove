@@ -13,5 +13,13 @@ const config: NextConfig = {
     NEXT_PUBLIC_SUPABASE_URL: process.env.SUPABASE_URL ?? "",
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY ?? "",
   },
+  // One deployment, two front doors: toyotanxt.tech opens the kiosk, app.toyotanxt.tech the phone app. A redirect (not a
+  // rewrite) keeps /kiosk and /app in the address bar, which the screens use for sign-in links and QR codes.
+  async redirects() {
+    return [
+      { source: "/", has: [{ type: "host", value: "toyotanxt.tech" }], destination: "/kiosk", permanent: false },
+      { source: "/", has: [{ type: "host", value: "app.toyotanxt.tech" }], destination: "/app", permanent: false },
+    ];
+  },
 };
 export default config;

@@ -4,9 +4,17 @@
 
 > "Given my situation today, what's the smartest next move for me and my Toyota?"
 
-**Try it now (mock data, no setup):** [Customer App](https://toyota-nextmove-customer.vercel.app) · [Kiosk](https://toyota-nextmove-customer.vercel.app/kiosk) · [Sameera on the phone app](https://toyota-nextmove-customer.vercel.app/app?id=CUST-SAMEERA2026) · [Employee Console](https://toyota-nextmove-console.vercel.app)
+### Where it lives
 
-The hosted copies run on recorded mock data. The live engine, agents and realtime run on the demo laptop.
+| Surface | Domain | Today (Vercel) |
+| --- | --- | --- |
+| **Dealership kiosk** | **[ToyotaNXT.tech](https://toyotanxt.tech)** | [toyota-nextmove-customer.vercel.app/kiosk](https://toyota-nextmove-customer.vercel.app/kiosk) |
+| **Customer phone app** | **[app.ToyotaNXT.tech](https://app.toyotanxt.tech)** | [toyota-nextmove-customer.vercel.app/app](https://toyota-nextmove-customer.vercel.app/app?id=CUST-SAMEERA2026) |
+| Employee Console | | [toyota-nextmove-console.vercel.app](https://toyota-nextmove-console.vercel.app) |
+
+The hosted copies run on recorded sample data, so they need no setup. The live engine, AI agents, voice calls and realtime run from the demo laptop (see [Run it](#run-it)).
+
+> **Updated October 25, 2026:** every diagram, configuration table and statistic below was refreshed from the live code and API: the NXT name and Toyota Financial Services branding, the live voice agent with voice sign-in and rep takeover, the walk-in kiosk tools, real MSRPs for all six models, the new endpoints and tools, and current KPI, fairness and portfolio numbers.
 
 **Team:** Vishva Patel · Vishwaa Shah · Sameeraa K · Hung
 
@@ -15,7 +23,7 @@ The hosted copies run on recorded mock data. The live engine, agents and realtim
 ## Contents
 
 1. [The problem](#the-problem)
-2. [What NXT does](#what-nextmove-does)
+2. [What NXT does](#what-nxt-does)
 3. [Track coverage](#track-coverage)
 4. [Architecture](#architecture)
 5. [How it works: flows](#how-it-works-flows)
@@ -44,13 +52,13 @@ NXT watches each customer's situation, reaches out at the right moment, compares
 
 | Persona | Situation | What NXT shows (live engine output) |
 | --- | --- | --- |
-| **Vishwaa** | Lease ends in 90 days, 9,800 miles over the allowance | **Buy it.** The buyout keeps **$6,467** of equity; returning it costs **$3,200** in fees. Photo pre-inspection estimates wear charges before the official inspection. |
+| **Vishwaa** | Lease ends in 90 days, 9,800 miles over the allowance | **Buy it.** The buyout keeps **$6,467** of equity; returning it costs **$3,200** in fees. Acting now is worth **$721** more than waiting 3 months. Photo pre-inspection estimates wear charges before the official inspection. |
 | **Sameera** | Loan with positive equity, high fuel spend | **Upgrade to a Camry SE Hybrid** (real **$32,200** MSRP from toyota.com via SerpApi). Payment **$496 → $403/mo**, true monthly cost **$847 → $660**, **1,718 kg less CO2/year**. Acting now is worth **$820** more than waiting 3 months. See it in the showroom, then send a deal packet to the dealer. |
-| **Hung** | Missed a payment after a job change | **Move the due date to the 17th** to match the biweekly payday. Deferral and extension are money decisions, so they go to a **human callback**, never an agent. |
+| **Hung** | Missed a payment after a job change | **Move the due date to the 17th** to match the biweekly payday (acting now is worth **$833**). Deferral and extension are money decisions, so they go to a **human callback**, never an agent. |
 
 **Two surfaces, one brain:**
-- **Customer App:** phone mode and dealership kiosk mode, English and Spanish, voice, a showroom with real car photos.
-- **Employee Console:** portfolio, live activity, proof of value, responsible AI, Agent Studio.
+- **Customer App:** phone mode ([app.ToyotaNXT.tech](https://app.toyotanxt.tech)) and dealership kiosk mode ([ToyotaNXT.tech](https://toyotanxt.tech)), English and Spanish, a live voice agent, walk-in tools for people without an account, and a showroom with Toyota's own imagery.
+- **Employee Console:** portfolio, live activity with live voice calls a rep can take over, proof of value, responsible AI, Agent Studio.
 
 ## Track coverage
 
@@ -59,14 +67,14 @@ NXT watches each customer's situation, reaches out at the right moment, compares
 | Personalize | Customer 360 built from contract, mileage, payment history and life events |
 | Simplify | The engine computes every option; the AI explains assumptions, trade-offs and why not the others |
 | Guide | One recommended next step with a single action, plus the alternatives side by side |
-| Value | 24-month simulation over 1,200 customers: retention **54.4% → 68.6%** at 60% adoption, with live assumption sliders |
+| Value | 24-month simulation over 1,200 customers: retention **55.4% → 69.0%**, revenue **+$238,757**, calls **−20%** at 60% adoption, with live assumption sliders |
 | Working prototype | Both surfaces on one live API, with realtime handoffs between them |
 | Generated data | 1,200 seeded customers; no real customer data (no on-screen demo label, by team decision) |
 | Responsible AI | Guardian, autonomy levels, fairness report, audit log with overrides, deploy gate |
-| Reimagine CX | Proactive alerts, voice EN/ES, dealership kiosk, photo pre-inspection, showroom with real photos, AI-written explanations |
+| Reimagine CX | Proactive alerts; a live voice agent (say your name, get your account; a rep can take over); a dealership kiosk with walk-in estimate, trade-in and compare tools; photo pre-inspection; Toyota imagery; AI-written explanations in EN/ES |
 | Reusable agent platform | Agent Studio: templates, tool registry, guardrails, traces, evals. A Recall Notifier deploys from a template in about 12 s |
 | Enterprise grade | Role switcher, secrets only in env files, prompt-injection deploy gate, PII masking |
-| Meaningful SerpApi use | Market value is the median of real cached comps (source + as-of on every number); dealers, recalls, trends and reviews drive real decisions |
+| Meaningful SerpApi use | Real MSRPs for all six models, trade-in values from live listings (median of real comps), dealers, recalls, trends and reviews; source + as-of on every number |
 
 ---
 
@@ -75,23 +83,25 @@ NXT watches each customer's situation, reaches out at the right moment, compares
 ```mermaid
 flowchart LR
   subgraph Surfaces
-    CA["Customer App<br/>Next.js PWA<br/>/app phone · /kiosk"]
+    CA["Customer App<br/>Next.js PWA<br/>app.ToyotaNXT.tech · ToyotaNXT.tech (kiosk)"]
     EC["Employee Console<br/>Next.js + shadcn/ui"]
   end
 
   subgraph API["FastAPI · services/api"]
-    R["30 contract endpoints"]
+    R["34 contract endpoints<br/>+ /voice WebSocket"]
     ENG["Finance engine<br/>computes every number"]
-    TOOLS["12 tools<br/>one registry + MCP server"]
+    TOOLS["14 tools<br/>one registry + MCP server"]
     AG["Agents<br/>Gemini → Claude backup"]
+    VOICE["Voice calls<br/>Gemini Live + TTS"]
     GU["Guardian<br/>deterministic checks"]
     SIM["24-month simulation<br/>1,200 customers"]
   end
 
   subgraph External
     SB[("Supabase<br/>Postgres cache + traces<br/>Realtime broadcast")]
-    SERP["SerpApi<br/>comps · dealers · recalls<br/>trends · reviews"]
+    SERP["SerpApi<br/>MSRPs · comps · dealers<br/>recalls · trends · reviews"]
     CL["Gemini API (primary)<br/>Claude login (backup)"]
+    GL["Gemini Live (voice)<br/>Gemini TTS (rep voice)"]
   end
 
   CA -- REST --> R
@@ -99,13 +109,17 @@ flowchart LR
   R --> ENG
   R --> AG
   R --> SIM
+  CA -- "audio (WebSocket)" --> VOICE
+  VOICE <--> GL
+  VOICE --> TOOLS
+  VOICE --> GU
   AG --> TOOLS
   TOOLS --> ENG
   AG --> GU
   AG <--> CL
   TOOLS -- cache first --> SB
   TOOLS -- cache miss only --> SERP
-  R -- traces, handoffs --> SB
+  R -- "traces, handoffs, calls" --> SB
   SB -. realtime .-> EC
   SB -. realtime .-> CA
 ```
@@ -129,11 +143,11 @@ flowchart LR
 | Console | Next.js 16 (App Router), TypeScript, shadcn/ui, Tailwind 4, TanStack Table, Recharts, Framer Motion |
 | Customer App | Next.js 16 PWA, TypeScript, Tailwind 4, Framer Motion, official Toyota imagery and logo from toyota.com (sponsor permission), lucide icons, Web Speech API, `uqr` (on-device QR) |
 | API | Python 3.12, FastAPI, Pydantic v2 (generated from the contract), pytest, ruff, uv |
-| AI | Gemini (primary, REST + function calling) and the Claude Agent SDK (backup, subscription login), both locked to our tool registry; MCP server for the tools |
-| Data and realtime | Supabase Postgres (SerpApi cache, traces) and Realtime Broadcast (`handoffs`, `traces`) |
+| AI | Gemini (primary, REST + function calling) and the Claude Agent SDK (backup, subscription login), both locked to our tool registry; Gemini Live for voice calls and Gemini TTS for the rep's voice; MCP server for the tools |
+| Data and realtime | Supabase Postgres (SerpApi cache, traces, `app_store` for handoffs, calls, offers, audit) and Realtime Broadcast (`handoffs`, `traces`, `calls`) |
 | Market data | SerpApi: Google Search, Google Maps, Maps Reviews, Google News, Google Trends, YouTube |
 | Contract and mocks | OpenAPI 3.1 → `openapi-typescript` types, `datamodel-codegen` Pydantic models, MSW handlers |
-| Monorepo and hosting | pnpm workspaces; frontends on Vercel (mock mode), live stack on the demo laptop |
+| Monorepo and hosting | pnpm workspaces; frontends on Vercel (sample data) at ToyotaNXT.tech (kiosk) and app.ToyotaNXT.tech (phone); live stack on the demo laptop |
 
 ---
 
@@ -146,8 +160,9 @@ flowchart TD
   K["Kiosk attract screen"] --> KH{"Kiosk home"}
   KH -->|"No account"| W["Walk-in tools<br/>estimate · trade-in · compare<br/>QR to take it home"]
   KH -->|"Any time"| V["Talk to someone<br/>live voice call"]
+  V -->|"Say your name + your car"| C
   KH -->|"My Toyota account"| B{"Sign in"}
-  A["Phone deep link"] --> B
+  A["Phone deep link<br/>app.ToyotaNXT.tech"] --> B
   B -->|"Customer ID or QR"| C["1. My situation<br/>vehicle, contract, key dates"]
   B -->|"Guest"| G["Short intro + ID entry"] --> C
   C --> D["2. My next move<br/>recommended option + alternatives"]
@@ -163,7 +178,7 @@ flowchart TD
   F6 --> X2["Send deal packet"]
   F6 --> X3["Book follow-up"]
   F6 --> X4["Talk to someone<br/>live voice call"]
-  D --> S["See it in the showroom<br/>real photos"]
+  D --> S["See it in the showroom<br/>Toyota imagery"]
   C --> H["5. Ask NXT<br/>chat + voice, EN/ES"]
 ```
 
@@ -179,25 +194,31 @@ sequenceDiagram
   participant T as Engine tools
   participant GD as Guardian
   participant E as Console (Live calls)
-  C->>API: Talk to someone (ringback plays)
+  C->>API: Talk to someone (ringback plays, only this site's pages may connect)
   API->>G: setup: advisor prompt + tool registry, customer ID only
   G-->>C: greeting (native audio)
+  opt Not signed in
+    C->>API: "I'm Vishwaa, I drive a RAV4"
+    G->>API: identify_customer(name, car)
+    API-->>C: "Account found: Vishwaa" (console card switches to the customer)
+  end
   C->>API: speech (PCM 16 kHz)
   API->>G: audio
   G->>API: tool call (run_scenario …)
   API->>T: same registry as every agent
   T-->>G: engine numbers
   G-->>C: spoken answer (24 kHz) + captions
-  API->>GD: each finished agent turn
+  API->>GD: every finished agent line
   GD-->>API: pass, or flag → agent corrects itself out loud
   API-->>E: transcript + Guardian flags (Realtime `calls`)
   E->>API: Take over
-  API-->>C: "Alex from TFS joined"; AI leaves; claimed handoff
+  API-->>C: "Alex from TFS joined", the AI leaves, a claimed handoff is logged
   E->>API: typed message
-  API-->>C: shown + read aloud
+  API->>G: Gemini TTS (natural rep voice)
+  API-->>C: caption + rep's voice
 ```
 
-A caller who isn't signed in can say their first name (or customer ID) and which Toyota they drive; the `identify_customer` tool must match both, and from then on every account tool is pinned to that customer. A rep's typed messages are spoken in a natural Gemini TTS voice. The browser never sees the Gemini key. Speech can't be held for review, so the Guardian checks each finished agent turn immediately; a failed turn is flagged on screen and in the console, and the agent is told to correct itself (see DECISIONS). Walk-in guests can call too, with estimate and market tools only.
+A caller who isn't signed in can say their first name (or customer ID) and which Toyota they drive; the `identify_customer` tool must match both (spoken spellings like "Vishwa" are tolerated, three tries per call), and from then on every account tool is pinned to that customer. What the caller says is masked for personal details before it's stored. A rep's typed messages are spoken in a natural Gemini TTS voice. The browser never sees the Gemini key. Speech can't be held for review, so the Guardian checks each finished agent turn immediately; a failed turn is flagged on screen and in the console, and the agent is told to correct itself (see DECISIONS). Walk-in guests can call too, with estimate and market tools only.
 
 ### Advisor question (agent flow)
 
@@ -236,7 +257,7 @@ sequenceDiagram
   S-->>Console: live trace + live session
 ```
 
-### Talk to a person (realtime handoff)
+### Follow-up with a person (realtime handoff)
 
 ```mermaid
 sequenceDiagram
@@ -245,13 +266,13 @@ sequenceDiagram
   participant RT as Supabase Realtime ("handoffs")
   participant E as Employee Console
 
-  C->>C: tap "Talk to a person", then confirm (L3)
-  C->>API: POST /handoffs
+  C->>C: book a follow-up or callback, then confirm (L3)
+  C->>API: POST /handoffs (or the voice agent's handoff_to_human, or a rep's Take over)
   API->>RT: broadcast "created" (full Handoff)
   RT-->>E: appears in the inbox instantly
   E->>API: PATCH /handoffs/{id} (claimed, by employee)
   API->>RT: broadcast "updated"
-  RT-->>C: "EMP-ADVISOR-1 is on the way to help you"
+  RT-->>C: "Alex is on the way to help you"
 ```
 
 ### Photo pre-inspection
@@ -293,7 +314,7 @@ flowchart LR
 | **L3** customer-facing | Needs the customer's consent or an employee's approval | `book_appointment`, `handoff_to_human`, sending an alert, deal packets, self-service |
 | **L4** money or credit decision | Never an agent | Deferrals and extensions for customers in payment stress go to a human |
 
-Agents can only call L1 and L3 tools; there is no L4 tool. The SDK is locked down: no built-in Claude Code tools (no shell, files or web), no settings files, only our 12-tool registry. A test fails if any built-in tool is reachable.
+Agents can only call L1 and L3 tools; there is no L4 tool. The SDK is locked down: no built-in Claude Code tools (no shell, files or web), no settings files, only our 14-tool registry. A test fails if any built-in tool is reachable.
 
 ### The Guardian
 
@@ -308,7 +329,7 @@ Deterministic code, not an LLM. For every agent answer it checks:
 | `fairness` | No protected attributes in the answer |
 | `prompt_injection` | Customer messages that try to override instructions are caught |
 
-Verdicts are `pass`, `revise` (one rewrite allowed) or `block`. Each answer lists the **numbers used** with the tool that produced each one.
+Verdicts are `pass`, `revise` (one rewrite allowed) or `block`. Each answer lists the **numbers used** with the tool that produced each one. On voice calls, speech can't be held back, so every finished agent line is checked as soon as it ends (the written estimate disclosure is on the call screen instead); a failed line is flagged on the caller's captions and in the console, and the agent corrects itself out loud.
 
 ### Fairness report (live, at defaults)
 
@@ -316,14 +337,14 @@ Recommendation and offer rates by group; a group is flagged if it's more than 5 
 
 | Dimension | Group | Customers | Recommendation rate | Offer rate |
 | --- | --- | ---: | ---: | ---: |
-| Region | Midwest | 289 | 62.3% | 1.7% |
-| Region | Northeast | 297 | 62.3% | 1.0% |
+| Region | Midwest | 289 | 59.5% | 1.7% |
+| Region | Northeast | 297 | 58.9% | 1.0% |
 | Region | South | 295 | 62.7% | 3.7% |
-| Region | West | 319 | 59.6% | 1.6% |
-| Credit tier | A | 433 | 63.5% | 1.8% |
-| Credit tier | B | 391 | 59.3% | 1.8% |
-| Credit tier | C | 250 | 62.4% | 2.4% |
-| Credit tier | D | 126 | 61.1% | 2.4% |
+| Region | West | 319 | 57.4% | 1.6% |
+| Credit tier | A | 433 | 61.7% | 1.8% |
+| Credit tier | B | 391 | 58.1% | 1.8% |
+| Credit tier | C | 250 | 58.8% | 2.4% |
+| Credit tier | D | 126 | 58.7% | 2.4% |
 
 Region and credit tier are the only dimensions; the data has no protected attributes.
 
@@ -343,13 +364,15 @@ New agents deploy only if they pass: a tool-policy check, the three persona eval
 
 | KPI | Baseline | NXT | Change |
 | --- | ---: | ---: | ---: |
-| Retention | 54.4% | 68.6% | +14.1 pts |
-| Calls per 100 customers | 184.9 | 147.6 | −37.3 |
+| Retention | 55.4% | 69.0% | +13.6 pts |
+| Calls per 100 customers | 181.7 | 145.2 | −36.5 (−20%) |
 | Serious delinquency | 4.49% | 4.04% | −0.45 pts |
-| Revenue (TFS margin) | $531,612 | $781,016 | +$249,404 |
-| Cost to serve | $19,966 | $16,307 | −$3,659 |
-| Avg. lifetime value | $426 | $637 | +$211 |
-| Loyalty revenue | $600,788 | $799,742 | +$198,954 |
+| Revenue (TFS margin) | $513,970 | $752,727 | +$238,757 (+46%) |
+| Cost to serve | $19,629 | $16,041 | −$3,588 (−18%) |
+| Avg. lifetime value | $412 | $614 | +$202 |
+| Loyalty revenue | $569,281 | $757,588 | +$188,307 |
+
+**What that means for TFS:** more customers stay at decision time (retention), more of them finance their next Toyota with TFS (revenue), fewer of them need to call (service effort), and fewer payments roll into serious delinquency.
 
 All three assumptions are live sliders on the Proof page; each move re-runs the simulation (about 2 ms).
 
@@ -371,6 +394,9 @@ erDiagram
   DEAL_PACKET }o--|| DEALER : "goes to"
   CUSTOMER ||--o{ INSPECTION_RESULT : "photo estimate"
   CUSTOMER ||--o{ SESSION : "app or kiosk session"
+  CUSTOMER ||--o{ CALL : "voice call"
+  CALL ||--o{ CALL_LINE : transcript
+  CALL ||--o| AGENT_TRACE : "one per call"
   SESSION ||--o{ AGENT_TRACE : "each answer"
   AGENT_TRACE ||--o{ AUDIT_ENTRY : "logged as"
   OFFER ||--o{ OFFER : "A/B variant_of"
@@ -405,6 +431,16 @@ erDiagram
     float equity
     float fees
   }
+  CALL {
+    string status "ai, human or ended"
+    string taken_by
+    string surface
+  }
+  CALL_LINE {
+    string role "customer, agent, employee, system"
+    string text
+    string guardian "verdict per agent line"
+  }
   AGENT_TRACE {
     string agent
     string plan
@@ -430,20 +466,25 @@ All 34 operations of the contract are implemented, plus the `/voice/{customer_id
 | Method | Path | Used by | Purpose |
 | --- | --- | --- | --- |
 | GET | `/health` | both | Health check |
-| GET | `/customers?q=` | both | Search customers by ID or name |
+| GET | `/customers?q=` | console | Search customers by ID or name |
 | GET | `/customers/{id}` | both | Customer 360 |
 | GET | `/customers/{id}/recommendation` | both | Recommended option, alternatives, why / why not |
 | POST | `/customers/{id}/recommendation/review` | console | Approve or override (reason required) |
 | POST | `/customers/{id}/actions` | app | Record the customer's confirmed self-service start or due-date change (L3) |
 | GET | `/customers/{id}/timing` | app | Month-by-month best time to move |
 | POST | `/scenarios` | both | Run options, with what-if overrides |
+| POST | `/estimate` | kiosk | Walk-in estimate (no account): up to 3 cars at real MSRPs, loan and lease, 5-year cost, CO2, trade-in equity |
 | POST | `/agents/advisor/ask` | app | Ask NXT (live agent + Guardian) |
 | POST | `/inspections` | app | Photo pre-inspection (multipart) |
-| GET / POST | `/handoffs` | both | List or create a talk-to-a-person request |
+| GET / POST | `/handoffs` | both | List or create a follow-up with a person |
 | PATCH | `/handoffs/{id}` | console | Claim or resolve |
 | GET / POST | `/deal-packets` | both | List or send a deal packet to a dealer |
 | GET | `/alerts?customer_id=&status=` | both | Alerts inbox / approvals |
 | PATCH | `/alerts/{id}` | both | Approve (employee only), send, dismiss, consent |
+| GET | `/calls` | console | Voice calls, newest first |
+| POST | `/calls/{id}/takeover` | console | A rep joins the call; the AI leaves |
+| POST | `/calls/{id}/messages` | console | The rep's typed message, spoken to the caller |
+| WS | `/voice/{customer_id}` | app, kiosk | The live call itself (`GUEST` = not signed in); localhost pages only |
 | GET | `/sessions` | console | Live customer sessions |
 | GET | `/opportunities` | console | Queue with next-best-action $ value and retention odds |
 | GET / POST | `/offers` | console | Offer rules and A/B variants |
@@ -456,7 +497,7 @@ All 34 operations of the contract are implemented, plus the `/voice/{customer_id
 | GET / POST | `/studio/agents` | console | List or create agents from templates |
 | POST | `/studio/agents/{id}/deploy` | console | Deploy through the gate |
 
-**Realtime channels (Supabase Broadcast):** `handoffs` (events `created`, `updated`) and `traces` (event `created`), each carrying the full contract object.
+**Realtime channels (Supabase Broadcast):** `handoffs` (events `created`, `updated`), `traces` (event `created`) and `calls` (event `updated`), each carrying the full contract object.
 
 ---
 
@@ -472,11 +513,11 @@ Every number below lives in config, not code: [`services/api/engine/config.toml`
 | --- | --- |
 | Contract type | 505 leases · 695 loans |
 | Model | Prius 226 · Tacoma 207 · Camry 202 · Highlander 195 · RAV4 190 · bZ 180 |
-| Situation | Positive equity 363 · Rate drop 262 · Mileage overage 232 · None 222 · Payment stress 72 · Life event 25 · Lease end 24 |
+| Situation | Positive equity 338 · Rate drop 262 · None 247 · Mileage overage 232 · Payment stress 72 · Life event 25 · Lease end 24 |
 | Credit tier | A 433 · B 391 · C 250 · D 126 |
 | Region | West 319 · Northeast 297 · South 295 · Midwest 289 |
 
-978 customers have an opportunity in the console queue.
+953 customers have an opportunity in the console queue.
 
 ### Demo personas
 
@@ -485,9 +526,10 @@ Every number below lives in config, not code: [`services/api/engine/config.toml`
 | Vehicle | 2024 RAV4 XLE, gas, 41,200 mi | 2022 Camry SE, gas, 48,900 mi | 2023 Prius LE, hybrid, 31,500 mi |
 | Contract | Lease, $389/mo, 36 months, 33 paid | Loan, $496/mo at 5.9%, 72 months, 49 paid | Loan, $468/mo at 4.9%, 60 months, 43 paid |
 | Key facts | Residual $22,450 · 12,000 mi/yr allowance · $0.25/mi over · projected 45,800 mi | Payoff $10,760 · longer commute | Payoff $7,640 · 19 days past due · paid biweekly · new job |
-| Recommendation | Buyout: $444.07/mo, keeps $6,467 equity, $300 fee | Upgrade to Camry SE Hybrid ($32,200 real MSRP): $403.24/mo, $650 fees | Due date to the 17th: $468/mo, no extra cost |
-| Alternatives | Return ($3,200 fees) · Trade in · Extend 6 mo · Upgrade to RAV4 XLE Hybrid | Refinance ($493.50/mo) · Trade in · Extend 12 mo ($335.39/mo) | Extend 12 mo ($279.89/mo) · Defer one payment (human decision) |
-| Act now vs wait 3 months | +$721 | +$820 | +$841 |
+| Recommendation | Buyout: $444.07/mo, keeps $6,467 equity, $300 fee | Upgrade to Camry SE Hybrid ($32,200 real MSRP): $403.24/mo, $11,942 equity applied, $650 fees | Due date to the 17th: $468/mo, no change fee |
+| Alternatives | Return ($3,200 fees) · Trade in · Extend 6 mo · Upgrade to RAV4 XLE Premium Hybrid ($584.05/mo) | Refinance ($493.50/mo) · Trade in · Extend 12 mo ($335.39/mo) | Extend 12 mo ($279.89/mo) · Defer one payment (human decision) |
+| Act now vs wait 3 months | +$721 | +$820 | +$833 |
+| Voice sign-in | Name + "RAV4" | Name + "Camry" | Name + "Prius" |
 
 ### Rates by credit tier (APR %)
 
@@ -512,16 +554,28 @@ Every number below lives in config, not code: [`services/api/engine/config.toml`
 
 - **With comps:** median of at least 3 cached SerpApi comps for the model-year, adjusted $0.10 per mile above or below 12,000 mi/year.
 - **Fallback:** base-trim MSRP × retention by age (1.00, 0.90, 0.84, 0.80, 0.76, 0.71, 0.66, 0.61, 0.56, 0.52, 0.48), same mileage adjustment.
-- **Real MSRPs** come from SerpApi Google searches (toyota.com preferred), cached with source and date. The prices below are the configured fallbacks used when no MSRP is found.
+- **Real MSRPs** come from SerpApi Google searches (toyota.com preferred, dealer asking prices skipped), cached with source and date. Next model year's MSRP is used when published, otherwise this year's.
 
-| Model | MSRP | Upgrade target | Price | MPG / MPGe |
-| --- | ---: | --- | ---: | ---: |
-| Camry | $29,500 | Camry SE Hybrid | $33,500 | 51 |
-| RAV4 | $34,500 | RAV4 XLE Hybrid | $36,800 | 41 |
-| Tacoma | $36,500 | Tacoma TRD Sport i-FORCE MAX | $46,500 | 23 |
-| Highlander | $42,000 | Highlander XLE Hybrid | $47,500 | 35 |
-| Prius | $29,500 | bZ XLE (EV) | $37,500 | 114 |
-| bZ | $40,000 | bZ XLE (EV) | $37,500 | 114 |
+| Model | New-car target (upgrade and walk-in) | Real MSRP in use | Source | Catalog fallback | MPG / MPGe |
+| --- | --- | ---: | --- | ---: | ---: |
+| Camry | 2027 Camry SE Hybrid | $32,200 | 2027, toyota.com | $33,500 | 51 |
+| RAV4 | 2027 RAV4 XLE Premium Hybrid | $36,100 | 2026, toyota.com | $36,800 | 41 |
+| Tacoma | 2027 Tacoma TRD Sport i-FORCE MAX | $47,335 | 2026, toyota.com | $46,500 | 23 |
+| Highlander | 2027 Highlander XLE Hybrid | $49,115 | 2026 MSRP (Kelley Blue Book) | $49,115 | 35 |
+| Prius | 2027 Prius XLE | $32,200 | 2027, toyota.com | $32,500 | 57 |
+| bZ | 2027 bZ XLE (EV) | $34,980 | 2027, toyota.com | $37,500 | 114 |
+
+Prius owners upgrade to the bZ (EV) by default; every other model upgrades to its own electrified trim.
+
+### Walk-in estimate (`[estimate]` in config)
+
+| Setting | Value |
+| --- | --- |
+| Credit tier when the customer doesn't pick one | B (APRs from the new-vehicle row above) |
+| Lease term | 36 months |
+| Lease residual | 60% of MSRP |
+| "5-year cost" horizon | 60 months: down payment + loan payments + fuel, maintenance and insurance |
+| Trade-in value | Median of live SerpApi listings for that model-year (one live search on a cache miss), else the valuation model |
 
 ### True cost and CO2 inputs
 
@@ -600,7 +654,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 | --- | --- | --- | --- |
 | Orchestrator | Every request | Routes, keeps session context, enforces autonomy, writes traces | Code |
 | Advisor | App, kiosk, voice | Answers questions from engine output | Gemini → Claude |
-| Voice agent | "Talk to someone" (kiosk, app) | Live voice call over the same tools; Guardian on every turn; a rep can take over | Gemini Live |
+| Voice agent | "Talk to someone" (kiosk, app) | Live voice call over the same tools; voice sign-in; Guardian on every agent line; a rep can take over and is voiced by Gemini TTS | Gemini Live |
 | Hardship | Payment stress | Proposes policy-limited options, escalates L4 to a human | Gemini → Claude |
 | Inspector | Photo pre-inspection | Names wear items; charges come from the engine | Gemini → Claude (vision) |
 | Sentinel | At startup / daily | Detects triggers, ranks the queue, drafts outreach (L2) | Code |
@@ -622,6 +676,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 | `book_appointment` | L3 | Appointment pending approval |
 | `handoff_to_human` | L3 | Handoff in the console queue |
 | `estimate_payment` | L1 | Walk-in loan/lease payments, 5-year cost, CO2 and trade-in equity (no account) |
+| `identify_customer` | L1 | Voice sign-in: name (or ID) + the car they drive must match one account; returns the ID only |
 
 **SerpApi:** cache-first, in this order: the Supabase `serpapi_cache` table, then the committed `snapshot.json`, then a live call only on a cache miss (at most 10 per process; never with `NEXTMOVE_OFFLINE=1`). The whole build used about 40 live searches.
 
@@ -630,7 +685,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 ## Screens
 
 **Customer App** (`/app` phone, `/kiosk` dealership):
-- **Sign in:** customer ID, QR deep link or guest; demo persona buttons.
+- **Sign in:** customer ID (any spelling: "vishwaa 2026"), QR deep link or guest. On a call, say your name and your car instead.
 - **1. My situation:** what we noticed, vehicle, lease or loan, key dates, alerts with consent controls.
 - **2. My next move:** recommended option and alternatives side by side; "See it in the showroom".
 - **3. Why this:** explanation, why not the others, assumptions with sources.
@@ -644,9 +699,10 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 - **5. Ask NXT:** chat and voice in EN/ES, with the numbers used and a "checked" note.
 - **Kiosk home:** four tiles (my account, estimate a payment, what's my trade worth, compare cars) and an always-on "Talk to someone".
 - **Walk-in tools (no account):** real MSRPs, engine loan and lease payments, 5-year cost, fuel and CO2; trade-in value from live SerpApi comps and equity after payoff; up to 3 cars side by side; "Take it home" QR to `/app/summary`, which re-prices on the phone (no numbers in the link).
-- **Talk to someone:** ringback, then a live Gemini voice agent with captions; a rep can take over from the console.
+- **Talk to someone:** ringback, then a live Gemini voice agent with captions; say your name and your car to pull up your account ("Account found: Vishwaa"); a rep can take over from the console, and their typed messages are spoken in a natural voice.
 - **Kiosk extras:** attract loop, 60 s idle reset (paused during a call), QR to continue on a phone, 64 px touch targets.
-- **Showroom:** a real photo of each trim's model (credited), what each part does, trims priced by the engine, "what reviewers say".
+- **Showroom:** Toyota's studio image of each trim's model, what each part does, trims priced by the engine, "what reviewers say".
+- **Look:** TOYOTA Financial Services lockup with the NXT wordmark, Helvetica Neue, rectangular 8px buttons in Toyota red, black or outline, line icons (no emojis), Toyota's lifestyle photography on the attract screen.
 
 **Employee Console** (14 pages):
 
@@ -673,7 +729,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 | URL | What |
 | --- | --- |
-| http://localhost:3000/kiosk | Kiosk: tap the attract screen, then a tile or "Talk to someone" |
+| http://localhost:3000/kiosk | Kiosk: tap the attract screen, then a tile or "Talk to someone" (use Chrome and allow the mic) |
 | http://localhost:3000/app?id=CUST-SAMEERA2026 | Phone app, signed in as Sameera |
 | http://localhost:3001 | Employee Console |
 | http://localhost:8000/docs | API docs (Swagger) |
@@ -692,7 +748,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 | `CLAUDE_CONFIG_DIR` | API | Folder holding the Claude subscription login for the backup AI (absolute path) |
 | `NEXT_PUBLIC_API_URL` | frontends | API address (default `http://localhost:8000`) |
 | `NEXT_PUBLIC_API_MOCKING` | frontends | `disabled` (live), `enabled` (all mocks), or a comma list of path prefixes to keep mocked |
-| `NEXT_PUBLIC_PHONE_URL` | customer app | Public URL for the kiosk's continue-on-phone QR |
+| `NEXT_PUBLIC_PHONE_URL` | customer app | Public URL for the kiosk's continue-on-phone and take-home QR codes (`https://app.toyotanxt.tech`) |
 | `NEXTMOVE_OFFLINE` | API | `1` = never call SerpApi live |
 | `STUDIO_GATE_LIVE` | API | `1` = the deploy gate also runs live model evals |
 | `NEXTMOVE_MODEL` | API | Claude model for the agents (default `claude-haiku-5-5`, fast) |
@@ -700,7 +756,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 **Agent login (one time):** run `claude` with `CLAUDE_CONFIG_DIR` set, then `/login`. Without it, AI answers return "busy" and the app offers a retry; there are no pre-written answers.
 
-**Supabase tables (one time):** run the SQL in [`services/api/migrations/`](services/api/migrations) in the Supabase SQL editor (`001` SerpApi cache, `002` traces, `003` app_store for handoffs, deal packets, offers, Studio agents, audit and AI explanations).
+**Supabase tables (one time):** run the SQL in [`services/api/migrations/`](services/api/migrations) in the Supabase SQL editor (`001` SerpApi cache, `002` traces, `003` app_store for handoffs, deal packets, offers, Studio agents, audit, voice calls and AI explanations).
 
 ### Scripts
 
@@ -724,18 +780,18 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 ```
 apps/console          Next.js employee console (14 pages)
-apps/customer         Next.js PWA: /app phone, /kiosk dealership, photo showroom
+apps/customer         Next.js PWA: /app phone, /kiosk dealership, walk-in tools, voice calls, showroom
 services/api          FastAPI
   ├─ app/             routes + generated Pydantic models
   ├─ engine/          finance formulas, scenarios, timing, NBA, config.toml, eligibility.toml
-  ├─ tools/           12-tool registry + MCP server
-  ├─ agents/          orchestrator, advisor, hardship, inspector, sentinel, market intel, guardian, studio
+  ├─ tools/           14-tool registry + MCP server
+  ├─ agents/          orchestrator, advisor, hardship, inspector, voice (Gemini Live), sentinel, market intel, guardian, studio
   ├─ serpapi/         cached SerpApi client + offline snapshot
   ├─ sim/             portfolio generator + 24-month simulation
   ├─ migrations/      Supabase SQL
   └─ tests/           pytest suite
 packages/contracts    openapi.yaml (frozen contract), generated TS types, MSW mocks
-packages/tokens       design tokens (Toyota red accent) + Toyota Financial Services logo
+packages/tokens       design tokens (Toyota red accent) + Toyota Financial Services lockup + NXT wordmark
 docs/                 SPEC.md, BUILD_PLAN.md, DECISIONS.md
 ```
 
@@ -769,7 +825,7 @@ flowchart LR
   subgraph S4["Stage 4"]
     B4["B4 timing, vision,<br/>deal packets, NBA"]
     C4["C4 traces, responsible<br/>AI, studio"]
-    K4["K4 3D showroom"]
+    K4["K4 showroom<br/>(3D, later Toyota imagery)"]
   end
   S4 --> S5
   subgraph S5["Stage 5"]
@@ -778,6 +834,12 @@ flowchart LR
     K5["K5 kiosk polish,<br/>real API"]
   end
   S5 --> F["Final<br/>demo runs, fixes,<br/>deploy, README"]
+  F --> S6
+  subgraph S6["Stage 6 · kiosk + brand"]
+    V6["Live voice agent,<br/>voice sign-in, rep takeover"]
+    W6["Walk-in estimate,<br/>trade-in, compare"]
+    T6["NXT name, TFS branding,<br/>real MSRPs, audit fixes"]
+  end
 ```
 
 Every trade-off is recorded in [docs/DECISIONS.md](docs/DECISIONS.md). The product spec is [docs/SPEC.md](docs/SPEC.md).
@@ -791,6 +853,8 @@ Every trade-off is recorded in [docs/DECISIONS.md](docs/DECISIONS.md). The produ
 - **AI-native, with honest waiting.** Every explanation is written live and checked by the Guardian; nothing is pre-written. Answers use a fast Claude model, and explanations are cached, so a repeat view is instant. If the model is busy, the app says so and retries rather than showing anything unchecked.
 - **Self-service starts online.** "Start self-service" and the due-date change are recorded with TFS (audit log); a specialist or dealer completes them.
 - **Estimates, not quotes.** Insurance, wear charges and market values are estimates and are labelled as such.
+- **Voice is checked as it's spoken.** The Guardian can't hold speech back, so it checks each agent line as soon as it ends and makes the agent correct itself; a rep's voice is typed text spoken by TTS, not a live microphone.
+- **Toyota imagery and logo** are loaded from Toyota's own servers with the sponsor's permission.
 
 ---
 
