@@ -33,7 +33,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               <div className="px-2 pb-1 text-xs uppercase tracking-wide text-muted-foreground">{g}</div>
               {NAV.filter((p) => p.group === g).map((p) => {
                 const href = `/${p.slug}`;
-                const active = path === href;
+                const active = path === href || (!!p.slug && path.startsWith(`${href}/`));
                 return (
                   <Link
                     key={p.slug}

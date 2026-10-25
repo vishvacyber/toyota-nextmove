@@ -1,4 +1,4 @@
-// One entry per console page. Stage 0 renders every page generically from its endpoints; C1–C4 replace them with real screens.
+// One entry per console page (drives the sidebar). Pages without their own route render generically from their endpoints via app/[...slug]; C1 built /, /queue, /customers.
 export type NavPage = { slug: string; title: string; group: string; endpoints: string[] };
 
 export const NAV: NavPage[] = [

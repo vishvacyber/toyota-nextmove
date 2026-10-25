@@ -12,3 +12,11 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Kiosk idle reset** remounts the screen (re-blurring every number) and resets language to English. Sign-out comes with K1 sign-in.
 - **Framer Motion / GSAP / R3F not installed yet**: added in the stage that first uses them (K1, K4).
 - **Python 3.12 via uv**; Node 24, pnpm 10.
+
+## Stage C1 (console)
+- **Generic route is now `app/[...slug]`** (was optional catch-all) so `app/page.tsx` can own `/`; real routes (`/queue`, `/customers`, `/customers/[id]`) win over the catch-all.
+- **TanStack Table v8**, not v9: v8 is the shadcn data-table pattern; v9's API differs.
+- **Equity on Customer 360 comes from the recommendation's scenarios** (`Scenario.equity`); `Customer` has no equity field and the console computes no numbers.
+- **Risk bands** (Low < 30%, Medium < 60%, High) are display-only thresholds on `risk_score`.
+- **Queue filters** are situation, priority and a text search over name, ID, model and reason; the `/customers` page uses the API's `?q=` search.
+- **Console strings are English-only for now**; console i18n comes with a later C stage.
