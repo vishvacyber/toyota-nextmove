@@ -84,7 +84,7 @@ def handoff_to_human(args: HandoffCreate) -> Handoff:
     """Hand the conversation to a TFS specialist; it waits in the console queue for someone to claim it."""
     customer(args.customer_id)
     h = Handoff(id=new_id("HND"), customer_id=args.customer_id, reason=args.reason, surface=args.surface,
-                status=Status4.waiting, context_summary=args.reason, callback_at=args.callback_at, created_at=now())
+                status=Status4.waiting, callback_at=args.callback_at, created_at=now())
     STORE["handoffs"].append(h)
     return h
 
