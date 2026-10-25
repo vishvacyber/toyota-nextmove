@@ -52,6 +52,10 @@ Employee Console (Next.js)  ─┘     │                    └─ SerpApi (co
 | Reusable agent platform | Agent Studio: templates, tool registry, guardrails, traces, evals. A Recall Notifier deploys from a template in ~12 s |
 | Meaningful SerpApi use | Market value = median of cached comps (source + as-of on every number); dealers, recalls, trends and reviews drive real decisions |
 
+## Try it
+
+**Public demo (mock data, no setup):** [Customer App](https://toyota-nextmove-customer.vercel.app) ([kiosk](https://toyota-nextmove-customer.vercel.app/kiosk), [James on the phone app](https://toyota-nextmove-customer.vercel.app/app?id=CUST-JAMES)) · [Employee Console](https://toyota-nextmove-console.vercel.app). The hosted copies run on recorded mock data; the live engine, agents and realtime run on the demo laptop.
+
 ## Run it
 
 Needs Node 20+, pnpm 10, and [uv](https://docs.astral.sh/uv/) (installs Python 3.12 itself).
