@@ -10,6 +10,7 @@ AGENT_TOOLS = {
     "advisor": ["get_customer", "run_scenario", "check_eligibility", "get_market_value", "find_dealer", "get_recalls",
                 "get_timing", "book_appointment"],
     "hardship": ["get_customer", "run_scenario", "check_eligibility"],
+    "explainer": ["get_customer", "run_scenario", "check_eligibility", "get_market_value", "get_timing"],
 }
 assert all(REGISTRY[n].autonomy in (AutonomyLevel.L1, AutonomyLevel.L3) for ts in AGENT_TOOLS.values() for n in ts)
 

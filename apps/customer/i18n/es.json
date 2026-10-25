@@ -7,7 +7,6 @@
   "your_vehicle": "Tu vehículo",
   "monthly_payment": "Pago mensual",
   "miles": "{miles} millas",
-  "tap_to_reveal": "Toca para ver",
   "loading": "Cargando…",
   "error": "Algo salió mal. Inténtalo de nuevo.",
   "language": "Idioma",
@@ -131,7 +130,7 @@
   "act_self_service": "Empezar en línea",
   "act_self_service_body": "Empieza “{option}” en línea, a tu ritmo.",
   "confirm_self_service": "¿Empezar en línea ahora?",
-  "self_service_started": "Iniciado. Después, termínalo en línea o con tu concesionario Toyota.",
+  "self_service_started": "Iniciado y registrado con TFS. Termínalo en línea o con tu concesionario Toyota.",
   "act_claim": "Reclamar una oferta",
   "confirm_claim": "¿Reclamar esta oferta?",
   "offer_claimed": "Oferta reclamada. Quedó guardada en tu cuenta.",
@@ -157,7 +156,7 @@
   "hardship_specialist": "Un especialista de TFS decide esto. Pide que te llamen.",
   "accept_due_date": "Aceptar cambio de fecha de pago",
   "confirm_due_date": "¿Aceptar “{option}”?",
-  "due_date_accepted": "Aceptado: {option}. Pide una llamada y un especialista de TFS lo hará oficial.",
+  "due_date_accepted": "Registrado con TFS: {option}. Un especialista confirma la nueva fecha en tu llamada.",
   "request_callback": "Pedir una llamada",
   "request_callback_body": "Un especialista de TFS te llama sobre un aplazamiento o una extensión. Solo ellos pueden aprobarlos.",
   "inspection_title": "Preinspección con fotos",
@@ -252,5 +251,9 @@
   "continue_phone_body": "Escanea con la cámara de tu teléfono para seguir justo aquí. La sesión en este quiosco se reiniciará sola.",
   "qr_alt": "Código QR que abre NextMove en tu teléfono",
   "slow_advisor": "Obteniendo una respuesta en vivo. Puede tardar hasta 20 segundos.",
-  "slow_inspection": "Revisión de fotos en vivo. Tarda unos 10 segundos."
+  "slow_inspection": "Revisión de fotos en vivo. Tarda unos 10 segundos.",
+  "ai_busy": "NextMove está ocupado en este momento. Tu respuesta estará lista en un momento.",
+  "retry": "Intentar de nuevo",
+  "writing_explanation": "NextMove está escribiendo tu explicación…",
+  "ai_busy_photos": "El análisis de fotos está ocupado. Tus fotos siguen aquí: toca Obtener estimado para intentarlo de nuevo."
 }

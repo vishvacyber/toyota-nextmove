@@ -5,7 +5,6 @@ import type { Customer, MarketQuote, Recommendation } from "@nextmove/contracts"
 import { useApi } from "@nextmove/contracts/client";
 import { SyntheticBadge } from "@nextmove/tokens";
 import { Card } from "@/components/cards";
-import { Private } from "@/components/private";
 import type { Hotspot } from "@/components/showroom-canvas";
 import { useI18n, type Key } from "@/lib/i18n";
 import { COLORS, PARTS, trims, type Part } from "@/lib/showroom";
@@ -107,7 +106,7 @@ export function Showroom({ c, r, initial, onClose }: { c: Customer; r: Recommend
                         <span className="block font-semibold">{o.vehicle.year} {o.vehicle.model} {o.vehicle.trim}</span>
                         <span className="block text-sm text-muted">
                           {o.scenario
-                            ? <><Private>{money(o.scenario.monthly_payment)}</Private> {t("per_month")} · {o.scenario.label}</>
+                            ? <><>{money(o.scenario.monthly_payment)}</> {t("per_month")} · {o.scenario.label}</>
                             : t("price_na")}
                         </span>
                       </span>

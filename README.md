@@ -63,7 +63,7 @@ NextMove watches each customer's situation, reaches out at the right moment, com
 | Working prototype | Both surfaces on one live API, with realtime handoffs between them |
 | Synthetic data | 1,200 seeded customers; "Synthetic data" badge on every screen |
 | Responsible AI | Guardian, autonomy levels, fairness report, audit log with overrides, deploy gate |
-| Reimagine CX | Proactive alerts, voice EN/ES, kiosk with privacy blur, photo pre-inspection, 3D showroom |
+| Reimagine CX | Proactive alerts, voice EN/ES, dealership kiosk, photo pre-inspection, 3D showroom, AI-written explanations |
 | Reusable agent platform | Agent Studio: templates, tool registry, guardrails, traces, evals. A Recall Notifier deploys from a template in about 12 s |
 | Enterprise grade | Role switcher, secrets only in env files, prompt-injection deploy gate, PII masking |
 | Meaningful SerpApi use | Market value is the median of real cached comps (source + as-of on every number); dealers, recalls, trends and reviews drive real decisions |
@@ -80,7 +80,7 @@ flowchart LR
   end
 
   subgraph API["FastAPI · services/api"]
-    R["29 contract endpoints"]
+    R["30 contract endpoints"]
     ENG["Finance engine<br/>computes every number"]
     TOOLS["12 tools<br/>one registry + MCP server"]
     AG["Agents<br/>Claude Agent SDK"]
@@ -163,7 +163,7 @@ flowchart TD
   C --> H["5. Ask NextMove<br/>chat + voice, EN/ES"]
 ```
 
-Every action needs the customer's tap plus a confirmation (L3). On the kiosk, every dollar figure stays blurred until tapped, and after 60 seconds idle the kiosk resets to the attract screen and clears everything. "Continue on your phone" shows a QR code generated on the device.
+Every action needs the customer's tap plus a confirmation (L3), and confirmed actions are recorded with TFS (they show in the console's audit log). After 60 seconds idle the kiosk resets to the attract screen and clears everything. "Continue on your phone" shows a QR code generated on the device.
 
 ### Advisor question (agent flow)
 
@@ -194,7 +194,8 @@ sequenceDiagram
     A-->>O: second draft (checked again)
   end
   opt SDK down, rate-limited, or still failing
-    O->>O: serve the pre-written, Guardian-checked answer
+    O-->>C: 503 Busy: nothing unchecked is shown
+    C->>API: retry automatically (then a "Try again" button)
   end
   O->>S: write AgentTrace + broadcast on "traces"
   O-->>C: answer, numbers used, Guardian verdict, session ID
@@ -226,7 +227,7 @@ flowchart LR
   P["Guided capture<br/>6 angles, camera or file"] --> U["POST /inspections<br/>photos stay in memory"]
   U --> V["Vision model<br/>names area + severity + box"]
   V --> X{"Any money in<br/>the model output?"}
-  X -->|"yes"| F["Rejected: canned result"]
+  X -->|"yes"| F["Rejected: 503 Busy,<br/>photos kept for a retry"]
   X -->|"no"| C["Engine charge table<br/>area × severity → $"]
   C --> R["Estimate, labelled as an estimate<br/>items marked on each photo"]
   F --> R
@@ -390,7 +391,7 @@ The full schema (25+ types) is in [`packages/contracts/openapi.yaml`](packages/c
 
 ## API reference
 
-All 29 operations of the contract are implemented.
+All 30 operations of the contract are implemented.
 
 | Method | Path | Used by | Purpose |
 | --- | --- | --- | --- |
@@ -399,6 +400,7 @@ All 29 operations of the contract are implemented.
 | GET | `/customers/{id}` | both | Customer 360 |
 | GET | `/customers/{id}/recommendation` | both | Recommended option, alternatives, why / why not |
 | POST | `/customers/{id}/recommendation/review` | console | Approve or override (reason required) |
+| POST | `/customers/{id}/actions` | app | Record the customer's confirmed self-service start or due-date change (L3) |
 | GET | `/customers/{id}/timing` | app | Month-by-month best time to move |
 | POST | `/scenarios` | both | Run options, with what-if overrides |
 | POST | `/agents/advisor/ask` | app | Ask NextMove (live agent + Guardian) |
@@ -553,7 +555,7 @@ An option is shown only if every rule passes; otherwise the customer sees the fi
 | Dashboard | 0 | 150 | 350 |
 | Carpet | 0 | 100 | 250 |
 
-Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Photos: up to 6, 5 MB each, JPEG/PNG/WebP, 25 s timeout before the fallback.
+Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Photos: up to 6, 5 MB each, JPEG/PNG/WebP, 25 s timeout.
 
 ---
 
@@ -603,7 +605,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
   - Payment help
   - Action center
 - **5. Ask NextMove:** chat and voice in EN/ES, with the numbers used and a "checked" note.
-- **Kiosk extras:** attract loop, privacy blur on every dollar figure, 60 s idle reset, QR to continue on a phone, 64 px touch targets.
+- **Kiosk extras:** attract loop, 60 s idle reset, QR to continue on a phone, 64 px touch targets.
 - **3D showroom:** 360° orbit, exploded view, feature hotspots, trim and color, "what reviewers say".
 
 **Employee Console** (14 pages):
@@ -649,10 +651,12 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 | `NEXT_PUBLIC_PHONE_URL` | customer app | Public URL for the kiosk's continue-on-phone QR |
 | `NEXTMOVE_OFFLINE` | API | `1` = never call SerpApi live |
 | `STUDIO_GATE_LIVE` | API | `1` = the deploy gate also runs live model evals |
+| `NEXTMOVE_MODEL` | API | Claude model for the agents (default `claude-haiku-5-5`, fast) |
+| `NEXTMOVE_WARM` | API | `0` = don't write the personas' AI explanations at startup |
 
-**Agent login (one time):** run `claude` with `CLAUDE_CONFIG_DIR` set, then `/login`. Without it, the three personas get their pre-written, Guardian-checked answers.
+**Agent login (one time):** run `claude` with `CLAUDE_CONFIG_DIR` set, then `/login`. Without it, AI answers return "busy" and the app offers a retry; there are no pre-written answers.
 
-**Supabase tables (one time):** run the SQL in [`services/api/migrations/`](services/api/migrations) in the Supabase SQL editor.
+**Supabase tables (one time):** run the SQL in [`services/api/migrations/`](services/api/migrations) in the Supabase SQL editor (`001` SerpApi cache, `002` traces, `003` app_store for handoffs, deal packets, offers, Studio agents, audit and AI explanations).
 
 ### Scripts
 
@@ -668,7 +672,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 ### Tests
 
-205 automated tests: 161 API (engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, contract coverage, simulation), 33 contract (every endpoint has a working mock), 6 console and 5 customer app.
+206 automated tests: 161 API (engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, AI explanations, contract coverage, simulation, persistence), 34 contract (every endpoint has a working mock), 6 console and 5 customer app.
 
 ---
 
@@ -740,9 +744,8 @@ Every trade-off is recorded in [docs/DECISIONS.md](docs/DECISIONS.md). The produ
 
 - **Synthetic data only.** No real customers, accounts or credit decisions.
 - **The live agents run on the demo laptop**, using a Claude subscription login. The public Vercel copies run on mock data, so a few of their numbers differ slightly from the live engine.
-- **Live answers take 10–20 seconds.** Pre-written, Guardian-checked answers cover the personas when the model is slow or rate-limited.
-- **In-memory demo stores.** Handoffs, deal packets, offers and Studio agents reset when the API restarts; the SerpApi cache and traces persist in Supabase.
-- **Some actions only confirm.** "Start self-service" and the due-date change have no backend endpoint yet, so they confirm the choice and route the rest through a specialist callback.
+- **AI-native, with honest waiting.** Every explanation is written live and checked by the Guardian; nothing is pre-written. Answers use a fast Claude model, and explanations are cached, so a repeat view is instant. If the model is busy, the app says so and retries rather than showing anything unchecked.
+- **Self-service starts online.** "Start self-service" and the due-date change are recorded with TFS (audit log); a specialist or dealer completes them.
 - **Estimates, not quotes.** Insurance, wear charges and market values are estimates and are labelled as such.
 
 ---

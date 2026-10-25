@@ -1,15 +1,16 @@
 """Agent Studio: agents built from templates over the B2 tool registry, deployed only through a gate.
 
-The gate is cheap and deterministic: the persona eval cases run against the committed, Guardian-checked fallback
-answers, plus prompt-injection tests against the Guardian. It calls the live SDK only when STUDIO_GATE_LIVE=1, which
-adds the same cases on the real model (3 subscription calls, run in parallel). shortcut: agents live in memory per process; move to Supabase if Studio agents must survive restarts.
+The gate is cheap and deterministic: for each persona eval case, the engine must still recommend the expected
+option and that persona's AI explanation (written live, cached) must pass the Guardian; plus prompt-injection tests
+against the Guardian. It calls the live SDK only when STUDIO_GATE_LIVE=1, which adds the same cases on the real model
+(3 subscription calls, run in parallel). Agents are saved to Supabase (tools/store.py) so they survive restarts.
 """
 
 import asyncio
 import os
 from datetime import timedelta
 
-from agents import fallback, guardian, orchestrator, recommend, sdk, traces
+from agents import guardian, orchestrator, recommend, sdk, traces
 from agents.autonomy import AGENT_TOOLS
 from agents.prompts import PROMPTS
 from app.models import (
@@ -26,7 +27,7 @@ from app.models import (
 )
 from engine.scenarios import AS_OF
 from evals.cases import CASES
-from tools import REGISTRY
+from tools import REGISTRY, store
 from tools.actions import DecisionIn, log_decision, new_id, now
 from tools.customer import customer
 
@@ -47,6 +48,18 @@ AGENTS: dict[str, StudioAgent] = {
     for a, name in BUILT_IN}
 
 
+def keep(a: StudioAgent) -> StudioAgent:
+    AGENTS[a.id] = a
+    store.save("studio_agents", a.id, a.model_dump(mode="json"))
+    return a
+
+
+def hydrate() -> None:
+    for data in store.load("studio_agents"):
+        a = StudioAgent.model_validate(data)
+        AGENTS[a.id] = a
+
+
 def health(agent: str, recent: list) -> Health1 | None:
     runs = [t for t in recent if t.agent.root == agent]
     if not runs:
@@ -63,10 +76,8 @@ def list_agents() -> list[StudioAgent]:
 
 
 def create(body: StudioAgentCreate) -> StudioAgent:
-    a = StudioAgent(id=new_id("AG"), name=body.name, template=body.template, tools=body.tools, status=Status9.draft,
-                    prompt_version=f"{body.template.value}@v1")
-    AGENTS[a.id] = a
-    return a
+    return keep(StudioAgent(id=new_id("AG"), name=body.name, template=body.template, tools=body.tools,
+                            status=Status9.draft, prompt_version=f"{body.template.value}@v1"))
 
 
 def tool_policy(tools: list[str]) -> EvalResult:
@@ -78,16 +89,17 @@ def tool_policy(tools: list[str]) -> EvalResult:
 
 
 def persona_eval(case: dict) -> EvalResult:
-    name = f"{case['customer_id'].removeprefix('CUST-').title()}: {case['question']}"
-    fb = fallback.answer(case["customer_id"], case["question"])
-    if fb is None:
-        return EvalResult(case=name, passed=False, detail="No committed fallback answer")
-    outputs = [(t["tool"], t["output"]) for t in fb["tool_calls"]]
-    v, _ = guardian.check(fb["answer"], outputs, case["question"])
-    rec = recommend.recommendation(customer(case["customer_id"])).recommended.option.value
-    problems = ([] if v.verdict == Verdict.pass_ else [f"Guardian {v.verdict.value}"]) + \
-        ([] if rec == case["recommended"] else [f"engine now recommends {rec}"])
-    return EvalResult(case=name, passed=not problems, detail="; ".join(problems) or None)
+    """Engine pick must match the case; the persona's live AI explanation, once written, must pass the Guardian."""
+    c = customer(case["customer_id"])
+    name = f"{c.id.removeprefix('CUST-').title()}: {case['question']}"
+    ss, rec, _, _ = recommend.parts(c)
+    problems = [] if rec.option.value == case["recommended"] else [f"engine now recommends {rec.option.value}"]
+    ex = recommend.EXPLANATIONS.get(recommend.cache_key(c, ss))
+    if ex:
+        v, _ = guardian.check(recommend.check_text(ex["why"], ex["why_not"], ss), [(t, o) for t, o in ex["outputs"]])
+        problems += [] if v.verdict == Verdict.pass_ else [f"AI explanation: Guardian {v.verdict.value}"]
+    return EvalResult(case=name, passed=not problems,
+                      detail="; ".join(problems) or (None if ex else "AI explanation not written yet; engine pick checked"))
 
 
 async def live_eval(case: dict) -> EvalResult:
@@ -132,7 +144,7 @@ async def deploy(agent_id: str) -> DeployResult:
     injections = [injection_test(*t) for t in INJECTIONS]
     passed = all(r.passed for r in [*evals, *injections])
     at = now() if passed else None
-    AGENTS[agent_id] = a.model_copy(update={"status": Status9.deployed if passed else Status9.failed, "deployed_at": at})
+    keep(a.model_copy(update={"status": Status9.deployed if passed else Status9.failed, "deployed_at": at}))
     failed = [r.case for r in [*evals, *injections] if not r.passed]
     log_decision(DecisionIn(actor="guardian", action=f"deploy_gate {'passed' if passed else 'failed'} {a.id}",
                             autonomy_level=AutonomyLevel.L2, detail=f"Failed: {', '.join(failed)}" if failed else

@@ -1,7 +1,6 @@
 "use client";
 import type { ReactNode } from "react";
 import type { Scenario } from "@nextmove/contracts";
-import { Private } from "@/components/private";
 import { useI18n } from "@/lib/i18n";
 
 export function Card({ title, children, className = "" }: { title: string; children: ReactNode; className?: string }) {
@@ -31,13 +30,13 @@ export function ScenarioCard({ s, recommended, children }: { s: Scenario; recomm
       <h3 className={`font-semibold ${recommended ? "mt-2 text-2xl" : "mt-6 text-lg"}`}>{s.label}</h3>
       {s.target_vehicle && <p className="text-sm text-muted">{s.target_vehicle.year} {s.target_vehicle.model} {s.target_vehicle.trim}</p>}
       <p className="mt-4 text-sm text-muted">{t("monthly_payment")}</p>
-      <p className={`font-semibold tabular-nums ${recommended ? "text-4xl" : "text-2xl"}`}><Private>{money(s.monthly_payment)}</Private></p>
+      <p className={`font-semibold tabular-nums ${recommended ? "text-4xl" : "text-2xl"}`}><>{money(s.monthly_payment)}</></p>
       <dl className="mt-4 text-sm">
-        <Row label={s.horizon_months ? t("total_cost_months", { months: s.horizon_months }) : t("total_cost")}><Private>{money(s.total_cost)}</Private></Row>
-        <Row label={t("equity")}><Private>{money(s.equity)}</Private></Row>
-        <Row label={t("fees")}><Private>{money(s.fees)}</Private></Row>
+        <Row label={s.horizon_months ? t("total_cost_months", { months: s.horizon_months }) : t("total_cost")}><>{money(s.total_cost)}</></Row>
+        <Row label={t("equity")}><>{money(s.equity)}</></Row>
+        <Row label={t("fees")}><>{money(s.fees)}</></Row>
       </dl>
-      {!s.eligible && s.ineligible_reason && <p className="mt-3 text-sm text-muted"><Private>{s.ineligible_reason}</Private></p>}
+      {!s.eligible && s.ineligible_reason && <p className="mt-3 text-sm text-muted"><>{s.ineligible_reason}</></p>}
       <div className="mt-auto">{children}</div>
     </article>
   );

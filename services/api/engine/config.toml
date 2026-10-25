@@ -151,28 +151,6 @@ seat = { minor = 0, moderate = 150, major = 400 }
 dashboard = { minor = 0, moderate = 150, major = 350 }
 carpet = { minor = 0, moderate = 100, major = 250 }
 
-# Shown when photo analysis is unavailable (SDK down, slow or rejected) for the demo lease persona.
-[[inspection.canned.CUST-MARIA]]
-angle = "front"
-area = "front_bumper"
-issue = "Scratch, about 3 in"
-severity = "minor"
-box = [0.42, 0.62, 0.18, 0.1]
-[[inspection.canned.CUST-MARIA]]
-angle = "left"
-area = "door"
-position = "rear_left"
-issue = "Dent"
-severity = "moderate"
-box = [0.55, 0.4, 0.12, 0.14]
-[[inspection.canned.CUST-MARIA]]
-angle = "wheels"
-area = "wheel"
-position = "front_right"
-issue = "Light curb rash"
-severity = "minor"
-box = [0.3, 0.3, 0.4, 0.4]
-
 [simulation]
 # 24-month portfolio simulation (sim/simulate.py, GET /kpis). Expected values over all customers: no random draws, so
 # the same assumptions always give the same KPIs. Synthetic coefficients; each line says why it is set where it is.

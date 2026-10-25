@@ -3,14 +3,14 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import type { Customer, Recommendation } from "@nextmove/contracts";
-import { useApi } from "@nextmove/contracts/client";
+import { isBusy, useApi } from "@nextmove/contracts/client";
 import { Card, Row, ScenarioCard } from "@/components/cards";
 import { AdvisorChat } from "@/components/advisor-chat";
 import { Alerts } from "@/components/alerts";
 import { DecideAct, HandoffBanner } from "@/components/decide-act";
 import { Attract } from "@/components/attract";
 import { ContinueOnPhone } from "@/components/continue-on-phone";
-import { Private, PrivacyContext } from "@/components/private";
+import { KioskContext } from "@/components/kiosk";
 import { Showroom } from "@/components/showroom";
 import { SignIn } from "@/components/sign-in";
 import { TopBar } from "@/components/top-bar";
@@ -25,7 +25,7 @@ export function NextMoveScreen({ customerId }: { customerId?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   // Kiosk opens on the attract loop; the idle reset remounts this screen, which brings it back.
-  const [attract, setAttract] = useState(useContext(PrivacyContext));
+  const [attract, setAttract] = useState(useContext(KioskContext));
   if (attract && !customerId) return <MotionConfig reducedMotion="user"><Attract onStart={() => setAttract(false)} /></MotionConfig>;
   return (
     <MotionConfig reducedMotion="user">
@@ -49,7 +49,7 @@ export function NextMoveScreen({ customerId }: { customerId?: string }) {
 
 function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
   const { t } = useI18n();
-  const kiosk = useContext(PrivacyContext);
+  const kiosk = useContext(KioskContext);
   const customer = useApi<Customer>(`/customers/${encodeURIComponent(id)}`);
   const rec = useApi<Recommendation>(`/customers/${encodeURIComponent(id)}/recommendation`);
   const [step, setStep] = useState(0);
@@ -67,6 +67,14 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
 
   const c = customer.data;
   const r = rec.data;
+  if (rec.error && isBusy(rec.error) && !customer.error) {
+    return (
+      <main className="mx-auto max-w-3xl px-6 py-12">
+        <p role="alert" className="text-xl">{t("ai_busy")}</p>
+        <button type="button" onClick={rec.retry} className="mt-6 rounded-full bg-accent px-6 py-3 font-semibold text-on-accent">{t("retry")}</button>
+      </main>
+    );
+  }
   if (customer.error || rec.error) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-12">
@@ -75,7 +83,13 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
       </main>
     );
   }
-  if (!c || !r) return <p className="px-6 py-12 text-muted">{t("loading")}</p>;
+  if (!c || !r) {
+    return (
+      <p role="status" className="animate-pulse px-6 py-12 text-muted">
+        {c && (rec.busy || rec.loading) ? t("writing_explanation") : t("loading")}
+      </p>
+    );
+  }
 
   return (
     <main className="mx-auto max-w-6xl px-6 pb-16">
@@ -169,11 +183,11 @@ function SituationStep({ c, r }: { c: Customer; r: Recommendation }) {
 
       <Card title={k.type === "lease" ? t("your_lease") : t("your_loan")}>
         <dl>
-          <Row label={t("monthly_payment")}><Private>{money(k.monthly_payment)}</Private></Row>
+          <Row label={t("monthly_payment")}><>{money(k.monthly_payment)}</></Row>
           <Row label={t("apr")}>{num(k.apr)}%</Row>
           <Row label={t("payments_made")}>{t("of_n", { n: num(k.payments_made), total: num(k.term_months) })}</Row>
           <Row label={k.type === "lease" ? t("buyout_price") : t("payoff_amount")}>
-            <Private>{money(k.type === "lease" && k.residual_value != null ? k.residual_value : k.payoff_amount)}</Private>
+            <>{money(k.type === "lease" && k.residual_value != null ? k.residual_value : k.payoff_amount)}</>
           </Row>
           {k.annual_mile_allowance != null && <Row label={t("mile_allowance")}>{t("miles_per_year", { miles: num(k.annual_mile_allowance) })}</Row>}
           {k.projected_miles_at_maturity != null && <Row label={t("projected_miles")}>{t("miles", { miles: num(k.projected_miles_at_maturity) })}</Row>}
@@ -207,7 +221,7 @@ function NextMoveStep({ r, onAct, onExplore }: { r: Recommendation; onAct: () =>
   if (r.guardian.verdict === "block") return <p role="status" className="text-xl">{t("under_review")}</p>;
   return (
     <div>
-      <p className="text-2xl font-semibold leading-snug sm:text-3xl"><Private>{r.headline}</Private></p>
+      <p className="text-2xl font-semibold leading-snug sm:text-3xl"><>{r.headline}</></p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[r.recommended, ...r.alternatives].map((s, i) => (
           <motion.div key={s.option} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease, delay: 0.08 * i }}>
@@ -241,7 +255,7 @@ function WhyStep({ r }: { r: Recommendation }) {
       {/* The explanation quotes dollar amounts, so it gets the kiosk privacy blur too. */}
       <section aria-labelledby="why-text" className="rounded-3xl border-2 border-accent p-6 md:col-span-2">
         <h2 id="why-text" className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">{r.recommended.label}</h2>
-        <p className="mt-3 text-xl leading-relaxed sm:text-2xl"><Private>{r.why}</Private></p>
+        <p className="mt-3 text-xl leading-relaxed sm:text-2xl"><>{r.why}</></p>
       </section>
 
       <Card title={t("why_not_others")}>
@@ -249,7 +263,7 @@ function WhyStep({ r }: { r: Recommendation }) {
           {r.why_not.map((w) => (
             <li key={w.option}>
               <p className="font-semibold">{labelOf(w.option)}</p>
-              <p className="text-muted"><Private>{w.reason}</Private></p>
+              <p className="text-muted"><>{w.reason}</></p>
             </li>
           ))}
         </ul>
@@ -257,7 +271,7 @@ function WhyStep({ r }: { r: Recommendation }) {
 
       <Card title={t("assumptions")}>
         <ul className="list-disc space-y-2 pl-5 text-muted">
-          {r.assumptions.map((a) => <li key={a}><Private>{a}</Private></li>)}
+          {r.assumptions.map((a) => <li key={a}><>{a}</></li>)}
         </ul>
       </Card>
 

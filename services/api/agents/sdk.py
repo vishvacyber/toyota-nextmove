@@ -29,12 +29,17 @@ from tools import REGISTRY, ToolError, call
 
 SERVER = "nextmove"
 PREFIX = f"mcp__{SERVER}__"
-MODEL = os.environ.get("NEXTMOVE_MODEL", "claude-sonnet-5-5")
-TIMEOUT_S = 60
+MODEL = os.environ.get("NEXTMOVE_MODEL", "claude-haiku-5-5")   # fast enough for a live demo; Sonnet via env
+TIMEOUT_S = 45
 
 
 class SdkUnavailable(RuntimeError):
-    """SDK failed, timed out or hit the subscription's rate limit: serve the fallback."""
+    """SDK failed, timed out or hit the subscription's rate limit."""
+
+
+class Busy(RuntimeError):
+    """Nothing Guardian-checked is ready (model unavailable or still failing checks). The API answers 503 and the
+    app offers a retry; there are no pre-written answers."""
 
 
 @dataclass

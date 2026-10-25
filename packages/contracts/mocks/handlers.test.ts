@@ -18,6 +18,7 @@ const calls: [string, string, RequestInit?][] = [
   ["GET /customers/{id}", "/customers/CUST-JAMES"],
   ["GET /customers/{id}/recommendation", "/customers/CUST-PRIYA/recommendation"],
   ["POST /customers/{id}/recommendation/review", "/customers/CUST-MARIA/recommendation/review", json({ decision: "override", reviewer: "EMP-1", override_option: "return", reason: "test" })],
+  ["POST /customers/{id}/actions", "/customers/CUST-PRIYA/actions", json({ type: "due_date_change", option: "due_date_change", detail: "the 17th" })],
   ["GET /customers/{id}/timing", "/customers/CUST-JAMES/timing"],
   ["POST /scenarios", "/scenarios", json({ customer_id: "CUST-MARIA" })],
   ["POST /agents/advisor/ask", "/agents/advisor/ask", json({ customer_id: "CUST-MARIA", message: "What should I do at lease end?" })],

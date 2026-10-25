@@ -1,13 +1,15 @@
 import asyncio
+import json
 
 import pytest
 from claude_agent_sdk import ResultMessage, SystemMessage
 from fastapi.testclient import TestClient
 
-from agents import fallback, orchestrator, recommend, sdk, sentinel, traces
+from agents import orchestrator, recommend, sdk, sentinel, traces
 from agents.autonomy import AGENT_TOOLS, gate
 from app.main import app
 from app.models import AdvisorAsk, AutonomyLevel, ToolCall
+from engine.scenarios import usd
 from evals.cases import CASES, failures
 from tools import call
 from tools.customer import customer
@@ -15,19 +17,32 @@ from tools.customer import customer
 BUILT_INS = ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "WebFetch", "WebSearch", "Task", "NotebookEdit", "TodoWrite"]
 
 
-def fake_run(text_for):
-    """Fake SDK: calls the real tools (so outputs are real engine numbers) and returns scripted text."""
+def fake_run(text_for, why_for=None):
+    """Fake SDK: calls the real tools (so outputs are real engine numbers) and returns scripted text. Explainer
+    prompts (they list alternatives) get a JSON explanation; Advisor prompts get `text_for`."""
     async def run(system, prompt, names):
         cid = prompt.split("Customer ID: ")[1].split("\n")[0]
         out = call("run_scenario", {"customer_id": cid})
         calls = [ToolCall(tool="run_scenario", input={"customer_id": cid}, output=out, duration_ms=1)]
-        return sdk.Run(text=text_for(customer(cid)), tool_calls=calls, model="fake")
+        text = (why_for or engine_json)(customer(cid)) if "Alternatives to explain" in prompt else text_for(customer(cid))
+        return sdk.Run(text=text, tool_calls=calls, model="fake")
     return run
 
 
 def engine_text(c):
-    r = recommend.recommendation(c)
-    return f"{r.headline}. {recommend.template_why(r.recommended, r.baseline)}"
+    _, rec, _, _ = recommend.parts(c)
+    money = f": {usd(rec.monthly_payment)} a month" if rec.monthly_payment else ""
+    equity = f", keeps {usd(rec.equity)} of equity" if rec.equity else ""
+    return f"{recommend.headline(c, rec)}. {rec.label}{money}{equity}."
+
+
+def engine_json(c):
+    _, _rec, _, alts = recommend.parts(c)
+    return json.dumps({"why": engine_text(c), "why_not": {s.option.value: f"{s.label} fits you less well." for s in alts}})
+
+
+def rec_for(cid):
+    return asyncio.run(recommend.recommendation(customer(cid)))
 
 
 def ask(cid, message, **kw):
@@ -79,21 +94,22 @@ def test_maria_answer_passes_guardian_and_writes_trace(monkeypatch):
 
 
 def test_invented_number_never_reaches_the_customer(monkeypatch):
+    # Two drafts with an invented number: nothing is shown, the trace says blocked, and the app is told to retry.
     monkeypatch.setattr(sdk, "run", fake_run(lambda c: "Buying saves you exactly $9,999."))
-    a = ask("CUST-JAMES", "Should I upgrade?")
-    assert "9,999" not in a.answer and a.guardian.verdict == "pass"
-    assert traces.MEMORY[-1].model.startswith("fallback:")
-    assert any("block" in p for p in traces.MEMORY[-1].plan)
+    with pytest.raises(sdk.Busy):
+        ask("CUST-JAMES", "Should I upgrade?")
+    t = traces.MEMORY[-1]
+    assert t.action.status == "blocked" and sum("Guardian block" in p for p in t.plan) == 2
 
 
-def test_sdk_failure_serves_fallback_marked_in_trace(monkeypatch):
+def test_sdk_failure_is_busy_and_traced(monkeypatch):
     async def down(*a):
         raise sdk.SdkUnavailable("rate_limited")
     monkeypatch.setattr(sdk, "run", down)
-    a = ask("CUST-MARIA", "What should I do at lease end?")
+    with pytest.raises(sdk.Busy):
+        ask("CUST-MARIA", "What should I do at lease end?")
     t = traces.MEMORY[-1]
-    assert a.guardian.verdict == "pass" and t.model.startswith("fallback:") and "+fallback" in t.prompt_version
-    assert any("SDK unavailable" in p for p in t.plan)
+    assert t.action.status == "blocked" and any("SDK unavailable" in p for p in t.plan)
 
 
 def test_priya_deferral_goes_to_a_human(monkeypatch):
@@ -130,35 +146,52 @@ def test_autonomy_gate():
 def test_persona_evals(monkeypatch, case):
     monkeypatch.setattr(sdk, "run", fake_run(engine_text))
     a = ask(case["customer_id"], case["question"])
-    rec = recommend.recommendation(customer(case["customer_id"])).recommended.option.value
+    rec = recommend.parts(customer(case["customer_id"]))[1].option.value
     assert failures(case, a, traces.MEMORY[-1], rec) == []
 
 
-def test_committed_fallbacks_still_pass_guardian():
-    from agents import guardian
-    for cid, entries in fallback.data()["answers"].items():
-        for e in entries:
-            fresh = [(t["tool"], call(t["tool"], t["input"])) for t in e["tool_calls"] if t["tool"] != "handoff_to_human"]
-            assert guardian.check(e["answer"], fresh, e["question"])[0].verdict == "pass", (cid, e["question"])
-            es = e["answer_es"]   # every persona answer has a Spanish version with exactly the same numbers
-            assert guardian.check(es, fresh, e["question_es"])[0].verdict == "pass", (cid, "es")
-            assert sorted(guardian.numbers(es)) == sorted(guardian.numbers(e["answer"])), (cid, "es numbers differ")
+# ---- AI-native recommendation explanations ----
+
+def test_explanation_is_ai_written_checked_and_cached(monkeypatch):
+    recommend.EXPLANATIONS.clear()
+    calls = []
+    fake = fake_run(engine_text)
+
+    async def counting(*a):
+        calls.append(1)
+        return await fake(*a)
+    monkeypatch.setattr(sdk, "run", counting)
+    r = rec_for("CUST-JAMES")
+    assert r.guardian.verdict == "pass" and r.trace_id and "Camry SE Hybrid" in r.why
+    assert {w.option.value for w in r.why_not} == {a.option.value for a in r.alternatives}
+    assert all(w.reason for w in r.why_not)
+    rec_for("CUST-JAMES")
+    assert len(calls) == 1   # second view reuses the checked explanation; no new model call
 
 
-@pytest.mark.parametrize("case", CASES, ids=[c["customer_id"] for c in CASES])
-def test_spanish_fallback_served_when_sdk_is_down(monkeypatch, case):
+def test_explanation_with_invented_number_is_busy(monkeypatch):
+    recommend.EXPLANATIONS.clear()
+    bad = lambda c: json.dumps({"why": "You save exactly $9,999.", "why_not": {}})
+    monkeypatch.setattr(sdk, "run", fake_run(engine_text, why_for=bad))
+    with pytest.raises(sdk.Busy):
+        rec_for("CUST-MARIA")
+    assert traces.MEMORY[-1].action.status == "blocked" and len(traces.MEMORY[-1].plan) == 3   # task + 2 tries
+
+
+def test_recommendation_endpoint_answers_503_when_ai_is_down(monkeypatch):
+    recommend.EXPLANATIONS.clear()
+
     async def down(*a):
         raise sdk.SdkUnavailable("rate_limited")
     monkeypatch.setattr(sdk, "run", down)
-    e = fallback.data()["answers"][case["customer_id"]][0]
-    a = ask(case["customer_id"], e["question_es"], language="es")
-    assert a.answer == e["answer_es"] and a.guardian.verdict == "pass"
-    assert traces.MEMORY[-1].model == "fallback:pregenerated"
+    r = TestClient(app).get("/customers/CUST-PRIYA/recommendation")
+    assert r.status_code == 503 and r.headers["retry-after"] == "5"
 
 
 # ---- Endpoints ----
 
-def test_endpoints():
+def test_endpoints(monkeypatch):
+    monkeypatch.setattr(sdk, "run", fake_run(engine_text))
     client = TestClient(app)
     r = client.get("/customers/CUST-MARIA/recommendation").json()
     assert r["recommended"]["option"] == "buyout" and r["guardian"]["verdict"] == "pass"
@@ -174,8 +207,7 @@ def test_endpoints():
 
 
 def test_recommendations_pick_persona_options():
-    picks = {cid: recommend.recommendation(customer(cid)).recommended.option.value
-             for cid in ("CUST-MARIA", "CUST-JAMES", "CUST-PRIYA")}
+    picks = {cid: recommend.parts(customer(cid))[1].option.value for cid in ("CUST-MARIA", "CUST-JAMES", "CUST-PRIYA")}
     assert picks == {"CUST-MARIA": "buyout", "CUST-JAMES": "upgrade", "CUST-PRIYA": "due_date_change"}
 
 
@@ -194,12 +226,11 @@ def test_patch_alert_enforces_approval_before_send():
     assert client.get("/alerts", params={"status": "sent"}).json()[0]["id"] == aid
 
 
-def test_recommendation_assumptions_are_unique():
+def test_recommendation_assumptions_are_unique(monkeypatch):
     # The option and the scenario set both carry the market-value note; it must show once (it's also a React key).
-    from agents import recommend
-    from sim.generator import customers_by_id
+    monkeypatch.setattr(sdk, "run", fake_run(engine_text))
     for cid in ("CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"):
-        a = recommend.recommendation(customers_by_id()[cid]).assumptions
+        a = rec_for(cid).assumptions
         assert len(a) == len(set(a)), cid
 
 
@@ -209,3 +240,25 @@ def test_first_question_starts_a_session(monkeypatch):
     a = ask("CUST-JAMES", "Is now a good time to upgrade?")
     assert a.session_id and a.session_id in orchestrator.SESSION_INFO
     assert ask("CUST-JAMES", "And the payment?", session_id=a.session_id).session_id == a.session_id
+
+
+def test_customer_action_is_recorded_in_audit():
+    client = TestClient(app)
+    r = client.post("/customers/CUST-PRIYA/actions", json={"type": "due_date_change", "option": "due_date_change",
+                                                          "detail": "Due date moved to the 17th"})
+    assert r.status_code == 201 and r.json()["autonomy_level"] == "L3" and r.json()["actor"] == "CUST-PRIYA"
+    assert client.get("/audit").json()[0]["detail"] == "Due date moved to the 17th"
+    assert client.post("/customers/CUST-JAMES/actions",   # James is current: no due-date change for him
+                       json={"type": "due_date_change", "option": "due_date_change"}).status_code == 422
+    assert client.post("/customers/CUST-NOPE/actions", json={"type": "start_self_service", "option": "buyout"}).status_code == 404
+
+
+def test_demo_state_survives_a_restart(monkeypatch):
+    from tools import actions, store
+    saved: dict = {}
+    monkeypatch.setattr(store, "save", lambda kind, id, data: saved.setdefault(kind, {}).__setitem__(id, data) or True)
+    monkeypatch.setattr(store, "load", lambda kind: list(saved.get(kind, {}).values()))
+    h = actions.handoff_to_human(actions.HandoffCreate(customer_id="CUST-JAMES", reason="Trim questions", surface="app"))
+    actions.STORE["handoffs"].clear()   # "restart"
+    actions.hydrate()
+    assert [x.id for x in actions.STORE["handoffs"]] == [h.id]

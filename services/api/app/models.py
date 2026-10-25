@@ -229,6 +229,19 @@ class Review(BaseModel):
     reason: str | None = None
 
 
+class CustomerActionType(StrEnum):
+    start_self_service = 'start_self_service'
+    due_date_change = 'due_date_change'
+
+
+class CustomerAction(BaseModel):
+    type: CustomerActionType
+    option: OptionType
+    detail: Annotated[
+        str | None, Field(description='e.g. the new due date the customer accepted')
+    ] = None
+
+
 class Decision(StrEnum):
     approve = 'approve'
     override = 'override'

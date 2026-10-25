@@ -17,6 +17,7 @@ export type InspectionResult = S["InspectionResult"];
 export type Handoff = S["Handoff"];
 export type DealPacket = S["DealPacket"];
 export type DealPacketCreate = S["DealPacketCreate"];
+export type CustomerAction = S["CustomerAction"];
 export type Alert = S["Alert"];
 export type Session = S["Session"];
 export type Opportunity = S["Opportunity"];

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { Customer, Recommendation } from "@nextmove/contracts";
 import { Card, ScenarioCard } from "@/components/cards";
-import { Action, FollowUpAction } from "@/components/decide-act";
+import { Action, FollowUpAction, recordAction } from "@/components/decide-act";
 import { useI18n } from "@/lib/i18n";
 import type { HandoffChannel } from "@/lib/realtime";
 
@@ -33,6 +33,7 @@ export function Hardship({ c, r, channel }: { c: Customer; r: Recommendation; ch
             primary
             confirmText={t("confirm_due_date", { option: dueDate.label })}
             run={async () => {
+              await recordAction(c.id, { type: "due_date_change", option: "due_date_change", detail: `Accepted: ${dueDate.label}` });
               setAccepted(true);
               return t("due_date_accepted", { option: dueDate.label });
             }}

@@ -1,10 +1,10 @@
 "use client";
 import { useContext, useEffect, useState, type ReactNode } from "react";
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { components, Customer, DealPacket, Handoff, Offer, Recommendation, ScenarioRequest, ScenarioSet, TimingPlan } from "@nextmove/contracts";
+import type { components, Customer, CustomerAction, DealPacket, Handoff, Offer, Recommendation, ScenarioRequest, ScenarioSet, TimingPlan } from "@nextmove/contracts";
 import { api, useApi } from "@nextmove/contracts/client";
 import { Card, ScenarioCard } from "@/components/cards";
-import { Private, PrivacyContext } from "@/components/private";
+import { KioskContext } from "@/components/kiosk";
 import { useI18n, type Key } from "@/lib/i18n";
 import type { HandoffChannel } from "@/lib/realtime";
 import { Hardship } from "@/components/hardship";
@@ -56,7 +56,7 @@ function WhatIf({ c, r, overrides, onChange, set, error }: {
   const { t, money, num, locale } = useI18n();
   // Slider positions are inputs the customer picks; the engine computes what they cost.
   const sliders = [
-    { key: "down_payment", label: t("down_payment"), min: 0, max: 10000, step: 500, value: overrides.down_payment ?? 0, show: (v: number) => <Private>{money(v)}</Private> },
+    { key: "down_payment", label: t("down_payment"), min: 0, max: 10000, step: 500, value: overrides.down_payment ?? 0, show: (v: number) => <>{money(v)}</> },
     { key: "term_months", label: t("term"), min: 24, max: 72, step: 12, value: overrides.term_months ?? 60, show: (v: number) => t("months_n", { n: v }) },
     { key: "annual_miles", label: t("annual_miles"), min: 6000, max: 24000, step: 1000, value: overrides.annual_miles ?? c.contract.annual_mile_allowance ?? 12000, show: (v: number) => t("miles_per_year", { miles: num(v) }) },
   ] as const;
@@ -85,7 +85,7 @@ function WhatIf({ c, r, overrides, onChange, set, error }: {
       </div>
       {set && (
         <p className="mt-4 text-sm text-muted">
-          <Private>{set.assumptions.join(" · ")}</Private> · {t("calculated_at", { at: asOf(set.as_of, locale) })}
+          <>{set.assumptions.join(" · ")}</> · {t("calculated_at", { at: asOf(set.as_of, locale) })}
         </p>
       )}
     </Card>
@@ -103,9 +103,9 @@ function Timing({ id }: { id: string }) {
   return (
     <Card title={t("best_time")}>
       {best && <p className="text-2xl font-semibold">{plan.best_month_offset === 0 ? t("best_now") : t("best_in", { months: plan.best_month_offset })}</p>}
-      <p className="mt-1 text-muted"><Private>{plan.summary}</Private></p>
+      <p className="mt-1 text-muted"><>{plan.summary}</></p>
       <div className="mt-4">
-        <Private className="block w-full">
+        <>
           <div role="img" aria-label={t("timing_chart_label")} className="h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
@@ -118,13 +118,13 @@ function Timing({ id }: { id: string }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </Private>
+        </>
         <ul className="sr-only">
           {data.map((m) => <li key={m.month_offset}>{m.label}: {money(m.net_position)}</li>)}
         </ul>
       </div>
       <p className="mt-4">
-        {t("act_now_vs_wait")} <span className="font-semibold tabular-nums"><Private>{money(plan.act_now_vs_wait_3)}</Private></span>
+        {t("act_now_vs_wait")} <span className="font-semibold tabular-nums"><>{money(plan.act_now_vs_wait_3)}</></span>
       </p>
       <p className="mt-2 text-sm text-muted">{t("net_position_hint")} · {t("calculated_at", { at: asOf(plan.as_of, locale) })}</p>
     </Card>
@@ -146,14 +146,14 @@ function TrueCost({ set }: { set: ScenarioSet }) {
           return (
             <section key={s.option} aria-label={s.label} className="rounded-2xl border border-line p-5">
               <h3 className="text-lg font-semibold">{s.label}</h3>
-              <Private className="mt-3 block w-full">
+              <>
                 {COST_ROWS.map((k) => (
                   <span key={k} className={`flex justify-between gap-4 border-t border-line py-2 first:border-t-0 ${k === "total_monthly" ? "font-semibold" : ""}`}>
                     <span className={k === "total_monthly" ? "" : "text-muted"}>{t(`tc_${k}` as Key)}</span>
                     <span className="tabular-nums">{money(tc[k])}</span>
                   </span>
                 ))}
-              </Private>
+              </>
               <p className="mt-3 flex justify-between gap-4 rounded-xl bg-surface px-3 py-2">
                 <span>{t("co2")}</span>
                 <span className="font-semibold tabular-nums">{t("kg_per_year", { kg: num(tc.co2_kg_per_year) })}</span>
@@ -235,11 +235,15 @@ export async function requestHandoff(channel: HandoffChannel, body: components["
 }
 
 /** Callback at a picked slot: a handoff with `callback_at`. */
+/** L3: the customer's own confirmed tap, recorded with TFS (shows in the console's audit log). */
+export const recordAction = (customerId: string, body: CustomerAction) =>
+  api(`/customers/${encodeURIComponent(customerId)}/actions`, { method: "POST", body: JSON.stringify(body) });
+
 export function FollowUpAction({ customerId, channel, title, body, primary, reason }: {
   customerId: string; channel: HandoffChannel; title: string; body: string; primary?: boolean; reason: string;
 }) {
   const { t, locale } = useI18n();
-  const surface = useContext(PrivacyContext) ? "kiosk" : "app";
+  const surface = useContext(KioskContext) ? "kiosk" : "app";
   const [slots] = useState(() => followUpSlots());
   const [slot, setSlot] = useState(0);
   const when = (d: Date) => d.toLocaleString(locale, { weekday: "long", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
@@ -271,14 +275,14 @@ export function FollowUpAction({ customerId, channel, title, body, primary, reas
 
 function ActionCenter({ c, r, channel }: { c: Customer; r: Recommendation; channel: HandoffChannel }) {
   const { t, money } = useI18n();
-  const surface = useContext(PrivacyContext) ? "kiosk" : "app";
+  const surface = useContext(KioskContext) ? "kiosk" : "app";
   const offers = useApi<Offer[]>("/offers");
   const primary = (type: ActionType) => r.action.type === type;
   const matching = offers.data?.filter((o) => o.status === "active" && o.target_situation === r.situation) ?? [];
   const incentive = (o: Offer) =>
     o.incentive.type === "rate_reduction" ? t("offer_rate", { pct: o.incentive.value })
       : o.incentive.type === "fee_waiver" ? t("offer_fee_waiver")
-        : <Private>{money(o.incentive.value)}</Private>;
+        : <>{money(o.incentive.value)}</>;
 
   const handoff = (reason: string) => requestHandoff(channel, { customer_id: c.id, reason, surface });
 
@@ -312,14 +316,18 @@ function ActionCenter({ c, r, channel }: { c: Customer; r: Recommendation; chann
           body={t("act_self_service_body", { option: r.recommended.label })}
           primary={primary("start_self_service")}
           confirmText={t("confirm_self_service")}
-          run={async () => t("self_service_started")}
+          run={async () => {
+            await recordAction(c.id, { type: "start_self_service", option: r.recommended.option,
+                                       detail: `Customer started "${r.recommended.label}" in the app` });
+            return t("self_service_started");
+          }}
         />
         {matching.length
           ? matching.map((o) => (
             <Action
               key={o.id}
               title={t("act_claim")}
-              body={<><Private>{o.name}</Private> · {incentive(o)}</>}
+              body={<><>{o.name}</> · {incentive(o)}</>}
               primary={primary("claim_offer")}
               confirmText={t("confirm_claim")}
               run={async () => t("offer_claimed")}

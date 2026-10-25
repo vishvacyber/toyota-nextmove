@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { PrivacyContext } from "@/components/private";
+import { KioskContext } from "@/components/kiosk";
 import { useI18n } from "@/lib/i18n";
 
 const IDLE_MS = 60_000;
@@ -38,11 +38,11 @@ export function KioskShell({ children }: { children: ReactNode }) {
   }, [setLang, router]);
 
   return (
-    <PrivacyContext.Provider value={true}>
+    <KioskContext.Provider value={true}>
       <div className="kiosk min-h-screen text-xl">
         {notice && <p role="status" className="sr-only">{t("idle_notice")}</p>}
         <div key={session}>{children}</div>
       </div>
-    </PrivacyContext.Provider>
+    </KioskContext.Provider>
   );
 }

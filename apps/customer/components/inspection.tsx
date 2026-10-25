@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import type { InspectionResult } from "@nextmove/contracts";
-import { api } from "@nextmove/contracts/client";
+import { api, isBusy } from "@nextmove/contracts/client";
 import { Card } from "@/components/cards";
-import { Private } from "@/components/private";
 import { boxStyle } from "@/lib/box";
 import { useI18n, type Key } from "@/lib/i18n";
 
@@ -17,7 +16,7 @@ export function Inspection({ customerId }: { customerId: string }) {
   const [photos, setPhotos] = useState<Partial<Record<Angle, Photo>>>({});
   const [i, setI] = useState(0);
   const [camera, setCamera] = useState<"off" | "on" | "failed">("off");
-  const [phase, setPhase] = useState<"capture" | "busy" | "error">("capture");
+  const [phase, setPhase] = useState<"capture" | "busy" | "error" | "ai_busy">("capture");
   const [result, setResult] = useState<InspectionResult>();
   // Kept for the result view only; revoked on unmount.
   const [shown, setShown] = useState<Partial<Record<Angle, string>>>({});
@@ -85,8 +84,8 @@ export function Inspection({ customerId }: { customerId: string }) {
       setShown(Object.fromEntries(Object.entries(photos).map(([a, p]) => [a, p.url])));
       setPhotos({});
       setResult(res);
-    } catch {
-      setPhase("error");
+    } catch (e) {
+      setPhase(isBusy(e) ? "ai_busy" : "error");   // photos stay, so "Get estimate" retries the same set
     }
   }
 
@@ -99,7 +98,7 @@ export function Inspection({ customerId }: { customerId: string }) {
       <Card title={t("inspection_title")}>
         <div className="flex flex-wrap items-center gap-3">
           {result.is_estimate && <span className="rounded-full bg-accent px-3 py-1 text-sm font-semibold text-on-accent">{t("estimate")}</span>}
-          <p className="text-2xl font-semibold">{t("inspection_total")} <Private>{money(result.total_estimated_charge)}</Private></p>
+          <p className="text-2xl font-semibold">{t("inspection_total")} <>{money(result.total_estimated_charge)}</></p>
         </div>
         <p role="note" className="mt-2 text-muted">{result.disclaimer}</p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -123,7 +122,7 @@ export function Inspection({ customerId }: { customerId: string }) {
                   {items.map((it) => (
                     <li key={no.get(it)} className="flex justify-between gap-4 border-t border-line pt-2 first:border-t-0">
                       <span><span className="font-semibold">{no.get(it)}. {it.area}</span> <span className="text-muted">· {it.issue} · {t(`sev_${it.severity}` as Key)}</span></span>
-                      <span className="font-semibold tabular-nums"><Private>{money(it.estimated_charge)}</Private></span>
+                      <span className="font-semibold tabular-nums"><>{money(it.estimated_charge)}</></span>
                     </li>
                   ))}
                 </ol>
@@ -205,6 +204,7 @@ export function Inspection({ customerId }: { customerId: string }) {
         </button>
         {phase === "busy" && <p className="animate-pulse text-sm text-muted">{t("slow_inspection")}</p>}
         {phase === "error" && <p role="alert" className="text-accent">{t("error")}</p>}
+        {phase === "ai_busy" && <p role="alert" className="text-accent">{t("ai_busy_photos")}</p>}
       </div>
     </Card>
   );

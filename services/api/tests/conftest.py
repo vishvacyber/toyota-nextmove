@@ -28,3 +28,4 @@ def no_live_sdk(monkeypatch):
 
     monkeypatch.setattr(sdk, "query", blocked)
     monkeypatch.setenv("CLAUDE_CONFIG_DIR", "/nonexistent-test-login")
+    monkeypatch.setenv("NEXTMOVE_WARM", "0")   # the app's startup would otherwise write persona explanations live

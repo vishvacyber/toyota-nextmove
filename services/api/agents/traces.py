@@ -4,12 +4,12 @@ Memory keeps every trace this process wrote, so GET /traces still works when Sup
 """
 
 import logging
-import os
 import re
 
 import httpx
 
 from app.models import AgentTrace
+from tools.store import supabase
 
 log = logging.getLogger("nextmove.traces")
 MEMORY: list[AgentTrace] = []
@@ -26,9 +26,7 @@ def mask(text: str) -> str:
     return text
 
 
-def _supabase() -> tuple[str, dict] | None:
-    url, key = os.environ.get("SUPABASE_URL"), os.environ.get("SUPABASE_SERVICE_KEY")
-    return (url.rstrip("/"), {"apikey": key, "Authorization": f"Bearer {key}"}) if url and key else None
+_supabase = supabase
 
 
 def broadcast(channel: str, event: str, payload: dict) -> bool:

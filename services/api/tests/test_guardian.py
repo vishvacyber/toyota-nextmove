@@ -80,11 +80,3 @@ def test_ordinal_prefers_a_day_of_month_field():
     assert matches == []   # 5 is a small count, so it's left out of numbers_used...
     _, matches = check("Your payment is due on the 17th." + D, [("x", {"horizon_months": 17, "due_day": 17})])
     assert matches[0].label == "Due day"
-
-
-def test_priya_fallback_answers_label_the_17th_as_her_new_due_date():
-    from agents import fallback
-    e = fallback.data()["answers"]["CUST-PRIYA"][0]
-    for text in (e["answer"], e["answer_es"]):
-        labels = {m.label for m in check(text, priya())[1] if m.value == 17}
-        assert labels == {"Move due date to the 17th"}, labels

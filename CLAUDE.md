@@ -17,7 +17,7 @@ You are building **Toyota NextMove**, a proactive, agentic financial co-pilot fo
 - Customer App: Next.js PWA + TypeScript + Tailwind + Framer Motion + GSAP; React Three Fiber + drei for 3D; Web Speech API for voice.
 - API: Python 3.11+, FastAPI, Pydantic, pytest.
 - Data + realtime + auth: Supabase (Postgres, Realtime). Channels: `sessions`, `handoffs`, `traces`, `alerts`.
-- LLM: **Claude Agent SDK** (`claude-agent-sdk`, Python) on a separate Claude Pro login (`CLAUDE_CONFIG_DIR`), no API key. Tools come from the B2 registry as an in-process SDK MCP server. Fallback when the SDK fails or hits limits: pre-generated, Guardian-checked persona answers. Guardian stays deterministic code run on every agent output.
+- LLM: **Claude Agent SDK** (`claude-agent-sdk`, Python) on a separate Claude Pro login (`CLAUDE_CONFIG_DIR`), no API key. Tools come from the B2 registry as an in-process SDK MCP server. AI-native: every customer-facing explanation is written live by the model, Guardian-checked and cached (Supabase); there are no pre-written answers. When nothing checked is ready, the API answers 503 and the app retries. Default model is Haiku-class for speed (`NEXTMOVE_MODEL`). Guardian stays deterministic code run on every agent output.
 - Mocks: MSW in both frontends, fed by `packages/contracts/mocks`.
 - Package manager: pnpm workspaces.
 
@@ -49,6 +49,6 @@ You are building **Toyota NextMove**, a proactive, agentic financial co-pilot fo
 ## Look and feel
 - Toyota red as the single accent, otherwise neutral. Dark-first console, premium light/dark customer app.
 - Console: dense, data-heavy, KPI cards, tables, charts.
-- Customer App: large type, generous spacing, smooth motion. Kiosk touch targets ≥ 64 px, 60s idle reset, privacy blur on numbers until tapped.
+- Customer App: large type, generous spacing, smooth motion. Kiosk touch targets ≥ 64 px and a 60s idle reset. Numbers are always visible (synthetic data; the privacy blur was removed by decision).
 - English + Spanish strings from day one (`i18n` files).
 - Accessible: contrast, focus states, screen-reader labels.

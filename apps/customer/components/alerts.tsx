@@ -3,7 +3,6 @@ import { useState } from "react";
 import type { Alert } from "@nextmove/contracts";
 import { api, useApi } from "@nextmove/contracts/client";
 import { Card } from "@/components/cards";
-import { Private } from "@/components/private";
 import { useI18n } from "@/lib/i18n";
 
 /** Proactive alerts (L3). Only alerts an employee approved or sent reach the customer; consent is the customer's own choice. */
@@ -33,8 +32,8 @@ export function Alerts({ customerId }: { customerId: string }) {
       <ul className="space-y-4">
         {shown.map((a) => (
           <li key={a.id} className="rounded-2xl border border-line bg-bg p-5">
-            <p className="text-lg font-semibold"><Private>{a.title}</Private></p>
-            <p className="mt-1 text-muted"><Private>{a.body}</Private></p>
+            <p className="text-lg font-semibold"><>{a.title}</></p>
+            <p className="mt-1 text-muted"><>{a.body}</></p>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
               <label className="flex cursor-pointer items-center gap-3">
                 <input

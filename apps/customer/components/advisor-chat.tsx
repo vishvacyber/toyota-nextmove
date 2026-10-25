@@ -2,9 +2,9 @@
 import { useContext, useEffect, useRef, useState, type FormEvent } from "react";
 import { useReducedMotion } from "framer-motion";
 import type { AdvisorAnswer } from "@nextmove/contracts";
-import { api } from "@nextmove/contracts/client";
+import { api, isBusy } from "@nextmove/contracts/client";
 import { Card } from "@/components/cards";
-import { Private, PrivacyContext } from "@/components/private";
+import { KioskContext } from "@/components/kiosk";
 import { useI18n } from "@/lib/i18n";
 
 // Minimal Web Speech types: TS's DOM lib lacks the webkit-prefixed constructor Chrome ships.
@@ -20,12 +20,12 @@ const recognitionCtor = () =>
     : ((window as unknown as { SpeechRecognition?: RecognitionCtor; webkitSpeechRecognition?: RecognitionCtor }).SpeechRecognition
       ?? (window as unknown as { webkitSpeechRecognition?: RecognitionCtor }).webkitSpeechRecognition);
 
-type Turn = { q: string; a?: AdvisorAnswer; error?: boolean };
+type Turn = { q: string; a?: AdvisorAnswer; error?: "busy" | "failed" };
 
 /** Step 5: Advisor chat. The API returns JSON (not a stream), so the answer is revealed client-side. Every number shown comes from `numbers_used`. */
 export function AdvisorChat({ customerId }: { customerId: string }) {
   const { t, lang, locale } = useI18n();
-  const surface = useContext(PrivacyContext) ? "kiosk" : "app";
+  const surface = useContext(KioskContext) ? "kiosk" : "app";
   const [turns, setTurns] = useState<Turn[]>([]);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -74,8 +74,9 @@ export function AdvisorChat({ customerId }: { customerId: string }) {
       if (a.session_id) setSessionId(a.session_id);
       setTurns((ts) => ts.map((x, k) => (k === ts.length - 1 ? { ...x, a } : x)));
       if (speakOn && a.guardian.verdict !== "block") speak(a.answer);
-    } catch {
-      setTurns((ts) => ts.map((x, k) => (k === ts.length - 1 ? { ...x, error: true } : x)));
+    } catch (e) {
+      const error = isBusy(e) ? "busy" : "failed";
+      setTurns((ts) => ts.map((x, k) => (k === ts.length - 1 ? { ...x, error } : x)));
     } finally {
       setBusy(false);
     }
@@ -106,7 +107,15 @@ export function AdvisorChat({ customerId }: { customerId: string }) {
         {turns.map((turn, k) => (
           <li key={k} className="space-y-3">
             <p className="ml-auto w-fit max-w-[85%] rounded-2xl bg-fg px-4 py-3 text-bg">{turn.q}</p>
-            {turn.error && <p role="alert" className="text-accent">{t("error")}</p>}
+            {turn.error && (
+              <p role="alert" className="text-accent">
+                {t(turn.error === "busy" ? "ai_busy" : "error")}{" "}
+                <button type="button" disabled={busy} className="font-semibold underline"
+                  onClick={() => { setTurns((ts) => ts.filter((x) => x !== turn)); void ask(turn.q); }}>
+                  {t("retry")}
+                </button>
+              </p>
+            )}
             {!turn.a && !turn.error && <p role="status" className="animate-pulse text-muted">{t("thinking")} <span className="block text-sm">{t("slow_advisor")}</span></p>}
             {turn.a && <Answer a={turn.a} />}
           </li>
@@ -123,7 +132,7 @@ export function AdvisorChat({ customerId }: { customerId: string }) {
 
       {speaking && (
         <div role="status" className="mt-4 flex items-start gap-3 rounded-2xl bg-fg px-4 py-3 text-bg">
-          <p className="flex-1"><span className="font-semibold">{t("caption")}: </span><Private>{speaking}</Private></p>
+          <p className="flex-1"><span className="font-semibold">{t("caption")}: </span><>{speaking}</></p>
           <button type="button" onClick={stopSpeaking} className="rounded-full border border-bg/40 px-4 py-1 font-semibold">{t("stop")}</button>
         </div>
       )}
@@ -180,7 +189,7 @@ function Answer({ a }: { a: AdvisorAnswer }) {
   return (
     <div className="max-w-[85%] rounded-2xl border border-line bg-bg px-4 py-3">
       {/* Visible text is revealed word by word; screen readers get the full answer once. */}
-      <p aria-hidden className="text-lg leading-relaxed"><Private>{words.slice(0, shown).join("")}</Private></p>
+      <p aria-hidden className="text-lg leading-relaxed"><>{words.slice(0, shown).join("")}</></p>
       <p aria-live="polite" className="sr-only">{a.answer}</p>
       {a.numbers_used.length > 0 && (
         <div className="mt-3 border-t border-line pt-3 text-sm">
@@ -189,7 +198,7 @@ function Answer({ a }: { a: AdvisorAnswer }) {
             {a.numbers_used.map((n) => (
               <li key={`${n.label}-${n.value}-${n.source_tool}`} className="flex flex-wrap justify-between gap-x-4">
                 <span>{n.label}</span>
-                <span className="tabular-nums"><span className="font-semibold"><Private>{num(n.value)}</Private></span> <span className="text-muted">· {n.source_tool}</span></span>
+                <span className="tabular-nums"><span className="font-semibold"><>{num(n.value)}</></span> <span className="text-muted">· {n.source_tool}</span></span>
               </li>
             ))}
           </ul>

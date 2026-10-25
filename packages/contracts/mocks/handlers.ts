@@ -37,6 +37,16 @@ export const handlers = [
     f.audit.unshift(entry);
     return HttpResponse.json(entry);
   }),
+  http.post(u("/customers/:id/actions"), async ({ params, request }) => {
+    const body = (await request.json()) as components["schemas"]["CustomerAction"];
+    if (!f.customers.some((c) => c.id === params.id)) return notFound();
+    const entry = {
+      id: nextId("AU"), at: now(), actor: String(params.id), action: `${body.type} ${body.option}`, customer_id: String(params.id),
+      autonomy_level: "L3" as const, detail: body.detail ?? "Customer confirmed in the app",
+    };
+    f.audit.unshift(entry);
+    return HttpResponse.json(entry, { status: 201 });
+  }),
   http.get(u("/customers/:id/timing"), ({ params }) => {
     const t = f.timingFor(String(params.id));
     return t ? HttpResponse.json(t) : notFound();

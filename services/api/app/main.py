@@ -1,11 +1,14 @@
+import asyncio
+import os
 import threading
 from contextlib import asynccontextmanager
 from typing import Annotated
 
-from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
-from agents import orchestrator, recommend, sentinel, studio, traces, vision
+from agents import orchestrator, recommend, sdk, sentinel, studio, traces, vision
 from agents.autonomy import AGENTS
 from app.models import (
     AdvisorAnswer,
@@ -18,6 +21,8 @@ from app.models import (
     AuditEntry,
     AutonomyLevel,
     Customer,
+    CustomerAction,
+    CustomerActionType,
     DealPacket,
     DealPacketCreate,
     Decision,
@@ -35,6 +40,7 @@ from app.models import (
     OfferCreate,
     OfferSimulation,
     Opportunity,
+    OptionType,
     PhotoAngle,
     Recommendation,
     RecommendationReview,
@@ -52,18 +58,37 @@ from engine import scenarios, timing
 from engine.scenarios import CFG
 from sim import simulate
 from sim.generator import customers_by_id
-from tools import ToolError, actions, market
+from tools import ToolError, actions, market, store
+
+PERSONAS = ["CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"]
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    # Durable demo state comes back from Supabase first (handoffs, packets, offers, Studio, audit, AI explanations).
+    actions.hydrate(), studio.hydrate(), recommend.hydrate(), hydrate_reviews()
     # Sentinel's daily scan runs once per start, off the request path. Market Intel can spend SerpApi quota on
     # cache misses, so it runs only on purpose: python -m agents.market_intel
     threading.Thread(target=lambda: (sentinel.run(), simulate.kpis()), daemon=True).start()   # + warm the simulation
+    # The personas' AI explanations are written before anyone asks (no-op when already saved for today's numbers).
+    warm = asyncio.create_task(recommend.warm(PERSONAS)) if os.environ.get("NEXTMOVE_WARM", "1") == "1" else None
     yield
+    if warm:
+        warm.cancel()
 
 
 app = FastAPI(title="Toyota NextMove API", version="0.1.0", lifespan=lifespan)
+
+
+@app.exception_handler(sdk.Busy)
+async def busy(_: Request, e: sdk.Busy) -> JSONResponse:
+    """AI only: when nothing Guardian-checked is ready, say so and let the app retry. Never a canned answer."""
+    return JSONResponse({"detail": str(e)}, status_code=503, headers={"Retry-After": "5"})
+
+
+def hydrate_reviews() -> None:
+    for data in store.load("reviews"):
+        recommend.REVIEWS[data["customer_id"]] = Review.model_validate(data["review"])
 app.add_middleware(
     CORSMiddleware,
     # shortcut: any localhost port, so parallel dev servers work; list real origins when the frontends deploy.
@@ -106,15 +131,31 @@ def review_recommendation(id: str, body: RecommendationReview) -> AuditEntry:
     override = body.decision == Decision.override
     if override and not (body.reason or "").strip():
         raise HTTPException(422, "An override needs a reason")
-    rec = recommend.recommendation(c)
-    detail = f"Engine recommended {rec.recommended.option.value}" + \
+    rec = recommend.pick(c.situation, recommend.scenario_set(c))
+    detail = f"Engine recommended {rec.option.value}" + \
         (f"; employee chose {body.override_option.value}" if override and body.override_option else "")
     entry = actions.log_decision(actions.DecisionIn(
         actor=body.reviewer, action=f"{body.decision.value}_recommendation", autonomy_level=AutonomyLevel.L3,
-        customer_id=c.id, detail=detail, override_reason=body.reason if override else None, trace_id=rec.trace_id))
-    recommend.REVIEWS[c.id] = Review(status=Status3.overridden if override else Status3.approved, by=body.reviewer,
-                                     reason=body.reason)
+        customer_id=c.id, detail=detail, override_reason=body.reason if override else None,
+        trace_id=recommend.cached_trace_id(c)))
+    review = Review(status=Status3.overridden if override else Status3.approved, by=body.reviewer, reason=body.reason)
+    recommend.REVIEWS[c.id] = review
+    store.save("reviews", c.id, {"customer_id": c.id, "review": review.model_dump(mode="json")})
     return entry
+
+
+@app.post("/customers/{id}/actions", response_model=AuditEntry, status_code=201)
+def record_customer_action(id: str, body: CustomerAction) -> AuditEntry:
+    """The customer's own confirmed tap (L3 consent). Recorded in the audit log, so the console sees it."""
+    c = _customer(id)
+    if body.type == CustomerActionType.due_date_change and body.option != OptionType.due_date_change:
+        raise HTTPException(422, "A due-date change records the due_date_change option")
+    s = scenarios.run(ScenarioRequest(customer_id=c.id, options=[body.option]), c).scenarios[0]
+    if not s.eligible:
+        raise HTTPException(422, s.ineligible_reason or f"{body.option.value} isn't available for this customer")
+    return actions.log_decision(actions.DecisionIn(
+        actor=c.id, action=f"{body.type.value} {body.option.value}", autonomy_level=AutonomyLevel.L3,
+        customer_id=c.id, detail=body.detail or f"Customer confirmed {s.label} in the app"))
 
 
 @app.post("/scenarios", response_model=ScenarioSet)
@@ -192,9 +233,9 @@ def update_handoff(id: str, body: HandoffUpdate) -> Handoff:
         raise HTTPException(404, f"Unknown handoff {id}")
     if body.status == Status4.claimed and not (body.claimed_by or hs[i].claimed_by):
         raise HTTPException(422, "Claiming a handoff needs claimed_by")
-    hs[i] = hs[i].model_copy(update=body.model_dump(exclude_none=True))
-    traces.broadcast("handoffs", "updated", hs[i].model_dump(mode="json"))
-    return hs[i]
+    h = actions.keep("handoffs", hs[i].model_copy(update=body.model_dump(exclude_none=True)))
+    traces.broadcast("handoffs", "updated", h.model_dump(mode="json"))
+    return h
 
 
 @app.get("/sessions", response_model=list[Session])
@@ -214,8 +255,8 @@ async def ask_advisor(req: AdvisorAsk) -> AdvisorAnswer:
 
 
 @app.get("/customers/{id}/recommendation", response_model=Recommendation)
-def get_recommendation(id: str) -> Recommendation:
-    return recommend.recommendation(_customer(id))
+async def get_recommendation(id: str) -> Recommendation:
+    return await recommend.recommendation(_customer(id))
 
 
 @app.get("/opportunities", response_model=list[Opportunity])

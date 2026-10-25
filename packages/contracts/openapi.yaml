@@ -36,6 +36,7 @@ paths:
       parameters: [{ $ref: "#/components/parameters/CustomerId" }]
       responses:
         "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Recommendation" } } } }
+        "503": { $ref: "#/components/responses/Busy" }
         "404": { $ref: "#/components/responses/NotFound" }
   /customers/{id}/recommendation/review:
     post:
@@ -45,6 +46,16 @@ paths:
       requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/RecommendationReview" } } } }
       responses:
         "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/AuditEntry" } } } }
+  /customers/{id}/actions:
+    post:
+      operationId: recordCustomerAction
+      description: The customer confirms a self-service action (L3, their own tap). Recorded in the audit log.
+      parameters: [{ $ref: "#/components/parameters/CustomerId" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/CustomerAction" } } } }
+      responses:
+        "201": { description: Recorded, content: { application/json: { schema: { $ref: "#/components/schemas/AuditEntry" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { description: Option not eligible for this customer }
   /customers/{id}/timing:
     get:
       operationId: getTiming
@@ -65,6 +76,7 @@ paths:
       requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/AdvisorAsk" } } } }
       responses:
         "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/AdvisorAnswer" } } } }
+        "503": { $ref: "#/components/responses/Busy" }
 
   /inspections:
     post:
@@ -82,6 +94,7 @@ paths:
                 angles: { type: array, items: { $ref: "#/components/schemas/PhotoAngle" } }
       responses:
         "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/InspectionResult" } } } }
+        "503": { $ref: "#/components/responses/Busy" }
 
   /handoffs:
     get:
@@ -223,6 +236,9 @@ components:
     Id: { name: id, in: path, required: true, schema: { type: string } }
 
   responses:
+    Busy:
+      description: The AI is busy or rate-limited and nothing checked is ready yet. Retry.
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
     NotFound:
       description: Not found
       content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
@@ -406,6 +422,14 @@ components:
             reason: { type: string }
         generated_at: { type: string, format: date-time }
         trace_id: { type: string }
+    CustomerActionType: { type: string, enum: [start_self_service, due_date_change] }
+    CustomerAction:
+      type: object
+      required: [type, option]
+      properties:
+        type: { $ref: "#/components/schemas/CustomerActionType" }
+        option: { $ref: "#/components/schemas/OptionType" }
+        detail: { type: string, description: "e.g. the new due date the customer accepted" }
     RecommendationReview:
       type: object
       required: [decision, reviewer]

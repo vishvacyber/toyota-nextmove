@@ -135,21 +135,21 @@ def test_bad_or_money_output_is_rejected(text):
         vision.parse(text, ["front", "rear"])
 
 
-def test_money_output_falls_back_to_canned_maria(monkeypatch):
+def test_money_output_is_busy_not_canned(monkeypatch):
+    # AI only: a rejected model answer is traced as blocked and the app is told to retry (503), never shown canned items.
     monkeypatch.setattr(sdk, "run", fake_vision('[{"angle": "front", "area": "hood", "issue": "Dent", '
                                                 '"severity": "minor", "price": 300}]'))
-    r = post().json()
-    assert [i["estimated_charge"] for i in r["items"]] == [150, 250, 0] and r["total_estimated_charge"] == 400
-    assert "wasn't available" in r["disclaimer"]
+    r = post()
+    assert r.status_code == 503 and "try again" in r.json()["detail"]
     from agents import traces
     t = traces.MEMORY[-1]
-    assert t.agent.root == "inspector" and t.model == "fallback:canned" and t.guardian.verdict.value == "block"
+    assert t.agent.root == "inspector" and t.guardian.verdict.value == "block" and t.action.status.value == "blocked"
 
 
-def test_timeout_falls_back_standard_for_non_persona(monkeypatch):
+def test_timeout_is_busy(monkeypatch):
     monkeypatch.setattr(sdk, "run", fake_vision(exc=sdk.SdkUnavailable("TimeoutError")))
-    r = asyncio.run(vision.inspect("CUST-JAMES", [("front", "image/png", PNG)]))
-    assert r.items == [] and r.total_estimated_charge == scenarios.CFG["fees"]["wear_estimate"]
+    with pytest.raises(sdk.Busy):
+        asyncio.run(vision.inspect("CUST-JAMES", [("front", "image/png", PNG)]))
     assert "CUST-JAMES" not in scenarios.WEAR
 
 

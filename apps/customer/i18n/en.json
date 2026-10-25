@@ -7,7 +7,6 @@
   "your_vehicle": "Your vehicle",
   "monthly_payment": "Monthly payment",
   "miles": "{miles} miles",
-  "tap_to_reveal": "Tap to reveal",
   "loading": "Loading…",
   "error": "Something went wrong. Please try again.",
   "language": "Language",
@@ -131,7 +130,7 @@
   "act_self_service": "Start self-service",
   "act_self_service_body": "Start “{option}” online, at your own pace.",
   "confirm_self_service": "Start self-service now?",
-  "self_service_started": "Started. Next, finish it online or with your Toyota dealer.",
+  "self_service_started": "Started and recorded with TFS. Finish it online or with your Toyota dealer.",
   "act_claim": "Claim an offer",
   "confirm_claim": "Claim this offer?",
   "offer_claimed": "Offer claimed. It's saved to your account.",
@@ -157,7 +156,7 @@
   "hardship_specialist": "A TFS specialist decides this. Request a callback.",
   "accept_due_date": "Accept due-date change",
   "confirm_due_date": "Accept “{option}”?",
-  "due_date_accepted": "Accepted: {option}. Request a callback and a TFS specialist makes it official.",
+  "due_date_accepted": "Recorded with TFS: {option}. A specialist confirms the new date on your callback.",
   "request_callback": "Request a callback",
   "request_callback_body": "A TFS specialist calls you about a deferral or extension. Only they can approve those.",
   "inspection_title": "Photo pre-inspection",
@@ -252,5 +251,9 @@
   "continue_phone_body": "Scan with your phone camera to pick up right here. Your session on this kiosk will reset on its own.",
   "qr_alt": "QR code that opens NextMove on your phone",
   "slow_advisor": "Getting a live answer. This can take up to 20 seconds.",
-  "slow_inspection": "Live photo check. This takes about 10 seconds."
+  "slow_inspection": "Live photo check. This takes about 10 seconds.",
+  "ai_busy": "NextMove is busy right now. Your answer will be ready in a moment.",
+  "retry": "Try again",
+  "writing_explanation": "NextMove is writing your explanation…",
+  "ai_busy_photos": "Photo analysis is busy right now. Your photos are still here: tap Get estimate to try again."
 }

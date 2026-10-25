@@ -1,12 +1,13 @@
 """Orchestrator: routes a customer question to Advisor or Hardship, runs it on the SDK, puts the answer through the
-Guardian, falls back when needed, and writes the trace. Deterministic code; only the agents it calls use the LLM."""
+Guardian (one send-back on `revise`) and writes the trace. AI only: if nothing checked is ready, it raises Busy and the
+app offers a retry. Deterministic code; only the agents it calls use the LLM."""
 
 import re
 import time
 import uuid
 from datetime import UTC, datetime
 
-from agents import fallback, guardian, recommend, sdk, traces
+from agents import guardian, recommend, sdk, traces
 from agents.autonomy import AGENT_TOOLS, gate
 from agents.prompts import PROMPTS
 from app.models import (
@@ -21,6 +22,7 @@ from app.models import (
     NumbersUsedItem,
     Session,
     Situation,
+    Status8,
     Surface,
     ToolCall,
     Verdict,
@@ -77,13 +79,6 @@ def prompt(c: Customer, message: str, language: str, session: list[str], feedbac
     return "\n\n".join(lines)
 
 
-def template_answer(c: Customer) -> tuple[str, list[ToolCall]]:
-    r = recommend.recommendation(c)
-    out = call("run_scenario", {"customer_id": c.id})
-    return f"{r.headline}. {recommend.template_why(r.recommended, r.baseline)}", \
-        [ToolCall(tool="run_scenario", input={"customer_id": c.id}, output=out, duration_ms=0)]
-
-
 async def ask(req: AdvisorAsk) -> AdvisorAnswer:
     if not req.session_id:   # first question starts a session; clients send it back on later turns
         req = req.model_copy(update={"session_id": f"SES-{uuid.uuid4().hex[:10].upper()}"})
@@ -106,7 +101,7 @@ async def ask(req: AdvisorAsk) -> AdvisorAnswer:
             try:
                 run = await sdk.run(system, prompt(c, message, lang, session, feedback), AGENT_TOOLS[agent])
             except sdk.SdkUnavailable as e:
-                plan.append(f"SDK unavailable ({e}): served pre-generated answer")
+                plan.append(f"SDK unavailable: {e}")
                 text = ""
                 break
             text, calls, model = finish(run.text, run.tool_calls, lang), run.tool_calls, run.model
@@ -116,15 +111,13 @@ async def ask(req: AdvisorAsk) -> AdvisorAnswer:
             feedback = "; ".join(ch.detail or ch.name.value for ch in v.checks if not ch.passed)
             plan.append(f"Guardian {v.verdict.value} (attempt {attempt + 1}): {feedback}")
         if not text or guardian.check(text, outputs(calls), message)[0].verdict != Verdict.pass_:
-            fb = fallback.answer(c.id, message)
-            if fb:
-                text = fb.get("answer_es", fb["answer"]) if lang == "es" else fb["answer"]
-                calls = [ToolCall.model_validate(t) for t in fb["tool_calls"]]
-                model, version = "fallback:pregenerated", f"{version}+fallback"
-            else:
-                text, calls = template_answer(c)
-                text, model, version = finish(text, calls), "fallback:template", f"{version}+fallback"
-            plan.append(f"Served {model}")
+            plan.append("No checked answer: asked the customer to retry")
+            verdict = guardian.check(text, outputs(calls), message)[0] if text else guardian.check("", [])[0]
+            traces.write(AgentTrace(id=trace_id(), agent=AgentName(agent), customer_id=c.id, session_id=req.session_id,
+                                    started_at=started, duration_ms=round((time.monotonic() - t0) * 1000), plan=plan,
+                                    tool_calls=calls, guardian=verdict, model=model, prompt_version=version,
+                                    action=Action(type="answer", autonomy_level=AutonomyLevel.L1, status=Status8.blocked)))
+            raise sdk.Busy("NextMove is busy right now. Please try again in a moment.")
 
     verdict, matches = guardian.check(text, outputs(calls), message)
     if verdict.verdict != Verdict.pass_:
@@ -161,4 +154,4 @@ async def ask(req: AdvisorAsk) -> AdvisorAnswer:
         answer=text, guardian=verdict, trace_id=tid, session_id=req.session_id,
         numbers_used=[NumbersUsedItem(label=m.label, value=m.value, source_tool=m.source_tool) for m in matches]
         if verdict.verdict == Verdict.pass_ else [],
-        suggested_actions=[recommend.recommendation(c).action])
+        suggested_actions=[recommend.next_action(recommend.pick(c.situation, recommend.scenario_set(c)))])

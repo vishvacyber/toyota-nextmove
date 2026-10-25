@@ -85,6 +85,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/customers/{id}/actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description The customer confirms a self-service action (L3, their own tap). Recorded in the audit log. */
+        post: operations["recordCustomerAction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/customers/{id}/timing": {
         parameters: {
             query?: never;
@@ -585,6 +602,14 @@ export interface components {
             generated_at: string;
             trace_id?: string;
         };
+        /** @enum {string} */
+        CustomerActionType: "start_self_service" | "due_date_change";
+        CustomerAction: {
+            type: components["schemas"]["CustomerActionType"];
+            option: components["schemas"]["OptionType"];
+            /** @description e.g. the new due date the customer accepted */
+            detail?: string;
+        };
         RecommendationReview: {
             /** @enum {string} */
             decision: "approve" | "override";
@@ -966,6 +991,15 @@ export interface components {
         };
     };
     responses: {
+        /** @description The AI is busy or rate-limited and nothing checked is ready yet. Retry. */
+        Busy: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
         /** @description Not found */
         NotFound: {
             headers: {
@@ -1073,6 +1107,7 @@ export interface operations {
                 };
             };
             404: components["responses"]["NotFound"];
+            503: components["responses"]["Busy"];
         };
     };
     reviewRecommendation: {
@@ -1098,6 +1133,40 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["AuditEntry"];
                 };
+            };
+        };
+    };
+    recordCustomerAction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["CustomerId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerAction"];
+            };
+        };
+        responses: {
+            /** @description Recorded */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditEntry"];
+                };
+            };
+            404: components["responses"]["NotFound"];
+            /** @description Option not eligible for this customer */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -1169,6 +1238,7 @@ export interface operations {
                     "application/json": components["schemas"]["AdvisorAnswer"];
                 };
             };
+            503: components["responses"]["Busy"];
         };
     };
     createInspection: {
@@ -1197,6 +1267,7 @@ export interface operations {
                     "application/json": components["schemas"]["InspectionResult"];
                 };
             };
+            503: components["responses"]["Busy"];
         };
     };
     listHandoffs: {

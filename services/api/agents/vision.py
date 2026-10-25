@@ -2,8 +2,8 @@
 angle, area, position, issue, severity, box. Every charge comes from the engine table `[inspection.charges]` (rule 1);
 any model output that mentions money is rejected. Photos stay in memory for the call and are never stored.
 
-Fallback when the SDK fails, is slow or its output is rejected: canned items for the demo persona (config), else the
-standard wear estimate with no items. Both are labelled.
+AI only, no canned results: when the SDK fails, is slow or its output is rejected, the trace records why and the
+API answers 503 so the app can offer a retry.
 """
 
 import base64
@@ -31,7 +31,7 @@ from app.models import (
 )
 from engine import scenarios
 from engine.scenarios import CFG
-from tools.actions import STORE, new_id, now
+from tools.actions import keep, new_id, now
 
 INS = CFG["inspection"]
 CHARGES: dict[str, dict[str, float]] = INS["charges"]
@@ -39,14 +39,8 @@ KEYS = {"angle", "area", "position", "issue", "severity", "box"}
 MONEY_KEY = re.compile(r"charge|cost|price|fee|amount|usd|dollar|estimate", re.IGNORECASE)
 MONEY_TEXT = re.compile(r"[$€£]|\busd\b|dollar|\d+\s*(?:bucks|cents)", re.IGNORECASE)
 PROMPT_VERSION = "inspector@v1"
-DISCLAIMER = {
-    "vision": "Estimate from your photos only. Charges come from NextMove's standard wear table, not the photo model. "
-              "Final charges are set at the official lease-end inspection.",
-    "canned": "Photo analysis wasn't available just now, so this shows the sample pre-inspection for this vehicle. "
-              "Estimate only. Final charges are set at the official lease-end inspection.",
-    "standard": "Photo analysis wasn't available just now. This is the standard wear estimate, not a review of your "
-                "photos. Final charges are set at the official lease-end inspection.",
-}
+DISCLAIMER = ("Estimate from your photos only. Charges come from NextMove's standard wear table, not the photo model. "
+              "Final charges are set at the official lease-end inspection.")
 SYSTEM = f"""You inspect photos of a leased car for lease-end wear and damage. Report only damage you can see.
 Reply with ONLY a JSON array, no prose. Each item: {{"angle": one of the photo angles given, "area": one of
 {sorted(CHARGES)}, "position": optional, one of {INS["positions"]}, "issue": a short description (under 8 words),
@@ -108,15 +102,14 @@ def label(it: dict) -> str:
     return f"{it['position'].replace('_', ' ')} {text}".capitalize() if it.get("position") else text.capitalize()
 
 
-def result(customer_id: str, items: list[dict], source: str) -> InspectionResult:
+def result(customer_id: str, items: list[dict]) -> InspectionResult:
     rows = [Item(angle=PhotoAngle(it["angle"]), area=label(it), issue=it["issue"], severity=Severity(it["severity"]),
                  estimated_charge=charge(it["area"], it["severity"]), box=it.get("box")) for it in items]
-    total = sum(r.estimated_charge for r in rows) if source != "standard" else CFG["fees"]["wear_estimate"]
+    total = sum(r.estimated_charge for r in rows)
     r = InspectionResult(id=new_id("INS"), customer_id=customer_id, items=rows, total_estimated_charge=total,
-                         is_estimate=True, disclaimer=DISCLAIMER[source], created_at=now())
-    STORE["inspections"].append(r)
-    if source != "standard":
-        scenarios.WEAR[customer_id] = total   # the return option now uses this estimate instead of the flat one
+                         is_estimate=True, disclaimer=DISCLAIMER, created_at=now())
+    keep("inspections", r)
+    scenarios.WEAR[customer_id] = total   # the return option now uses this estimate instead of the flat one
     return r
 
 
@@ -133,28 +126,27 @@ async def inspect(customer_id: str, photos: list[tuple[str, str, bytes]]) -> Ins
     """photos: (angle, media_type, bytes), in memory only."""
     started, t0 = datetime.now(UTC), time.monotonic()
     angles = [a for a, _, _ in photos]
-    model, reason, raw = sdk.MODEL, None, ""
+    model, reason, raw, r = sdk.MODEL, None, "", None
     try:
         run = await sdk.run(SYSTEM, blocks(photos), [], timeout=INS["timeout_s"], max_turns=1)
         model, raw = run.model, run.text
-        items, source = parse(run.text, angles), "vision"
+        r = result(customer_id, parse(run.text, angles))
     except (sdk.SdkUnavailable, Rejected) as e:
         reason = f"{type(e).__name__}: {e}"
-        canned = INS.get("canned", {}).get(customer_id)
-        items, source = (canned, "canned") if canned else ([], "standard")
-    r = result(customer_id, items, source)
-    ok = not isinstance(reason, str) or not reason.startswith("Rejected")
+    ok = r is not None
     traces.write(AgentTrace(
         id=f"TR-{new_id('VIS')}", agent=AgentName("inspector"), customer_id=customer_id, started_at=started,
         duration_ms=round((time.monotonic() - t0) * 1000),
         plan=[f"Identify wear in {len(photos)} photos ({', '.join(angles)})", "Price items from the engine wear table"],
         tool_calls=[ToolCall(tool="vision", input={"angles": angles},   # photos themselves are never logged or stored
-                             output={"source": source, "items": len(r.items), "reason": reason, "chars": len(raw)},
+                             output={"items": len(r.items) if r else 0, "reason": reason, "chars": len(raw)},
                              duration_ms=round((time.monotonic() - t0) * 1000))],
         guardian=GuardianVerdict(verdict=Verdict.pass_ if ok else Verdict.block, checks=[Check(
             name=Name.numbers_match_tools, passed=ok,
             detail="Charges come from the engine table; model output had no money" if ok else reason)]),
-        action=Action(type="inspection_estimate", autonomy_level=AutonomyLevel.L1, status=Status8.executed),
-        model=model if source == "vision" else f"fallback:{source}",
-        prompt_version=PROMPT_VERSION if source == "vision" else f"{PROMPT_VERSION}+fallback"))
+        action=Action(type="inspection_estimate", autonomy_level=AutonomyLevel.L1,
+                      status=Status8.executed if ok else Status8.blocked),
+        model=model, prompt_version=PROMPT_VERSION))
+    if r is None:
+        raise sdk.Busy("Photo analysis isn't available right now. Please try again.")
     return r
