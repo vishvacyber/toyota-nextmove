@@ -1,4 +1,4 @@
-// One entry per console page (drives the sidebar). Pages without their own route render generically from their endpoints via app/[...slug]; C1 built /, /queue, /customers; C2 built /review, /live, /deal-packets, /approvals; C3 built /proof, /profit, /offers, /market.
+// One entry per console page (drives the sidebar). Pages without their own route render generically from their endpoints via app/[...slug]; C1 built /, /queue, /customers; C2 built /review, /live, /deal-packets, /approvals; C3 built /proof, /profit, /offers, /market; C4 built /traces, /responsible-ai, /studio.
 export type NavPage = { slug: string; title: string; group: string; endpoints: string[] };
 
 export const NAV: NavPage[] = [

@@ -41,6 +41,17 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **"Leader" on a simulation** is the variant with the highest API `expected_profit`; a comparison, not a calculation.
 - **Market Intel fetches all six models** (one `/market/{model}` each). Each card's footer shows the quote's `source` and `as_of`; comps and recalls link to their `source_url`.
 
+## Stage C4 (console)
+- **Traces are live over Supabase Realtime Broadcast**: channel `traces`, event `created`, payload a full contract `AgentTrace` (as B3 sends). The C2 seed + subscribe logic is now a shared `useRealtimeList` (`lib/realtime.ts`), used by both the handoff inbox and the trace panel; items are de-duplicated by `id` (`upsertById`).
+- **Trace drill-in is an in-page selection**, not a `/traces/{id}` route: the contract has no single-trace endpoint, and live traces only exist in the list.
+- **The customer filter calls `GET /traces?customer_id=`** and also filters live events on the page, since the channel carries every customer's traces.
+- **L4 actions always display as "Escalated to human"**, whatever `action.status` says (`actionStatus` in `lib/trust.ts`). A Guardian `block` gets a red border and a "Blocked by Guardian" badge.
+- **Dev-only "Simulate trace" / "Simulate blocked trace"** broadcast a synthetic Recall Notifier trace on `traces`, to prove the panel before the console uses the real API (C5). No seeded trace is a block, so the second button shows that state.
+- **Studio template tool presets** (SPEC §4 tool names): Recall Notifier = get_customer, get_recalls, find_dealer, book_appointment, log_decision; Lease-end Nudge = get_customer, run_scenario, get_market_value, get_timing, log_decision; Rate-drop Alert = get_customer, run_scenario, check_eligibility, create_offer_draft, log_decision; Custom = none. All are editable before create.
+- **Studio agents created or deployed are kept in page state** over the fetched list (same as C3 offers); the status after deploy comes from `DeployResult.passed`. The "Template to deployed in X s" readout is a display-only stopwatch for the < 60 s check.
+- **Model and prompt versions** are the distinct `(agent, model, prompt_version)` triples from `GET /traces`, plus each Studio agent's `prompt_version`; `fallback:` models get a Fallback badge.
+- **Fairness highlights only the API's `flagged` groups**; the console computes no gap itself.
+
 ## Stage K1 (customer app)
 - **Signed-in customer lives in `?id=CUST-…`** on `/app` and `/kiosk`. That URL is also the QR deep link, so there's no auth state to store. Sign-out (and the kiosk's 60s idle reset) goes back to the bare path, which shows sign-in. IDs are upper-cased, and `CUST-` is added if it's missing.
 - **No camera QR scanning** in K1: the phone's own camera opens the deep link. `BarcodeDetector` isn't available on desktop Safari or Firefox, so it would need a fallback anyway.

@@ -1,46 +1,19 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { RealtimeChannel } from "@supabase/supabase-js";
+import { useCallback } from "react";
 import type { Handoff } from "@nextmove/contracts";
 import { api } from "@nextmove/contracts/client";
-import { supabase } from "./supabase";
-import { upsertHandoff } from "./upsert";
+import { useRealtimeList } from "./realtime";
 
-export type Realtime = "connecting" | "live" | "offline";
+export type { Realtime } from "./realtime";
+
+const EVENTS = ["created", "updated"] as const;
 
 /**
  * Handoff inbox shared with the customer app (K2) over Supabase Realtime Broadcast:
  * channel `handoffs`, event `created` / `updated`, payload = full contract Handoff.
  */
 export function useHandoffs() {
-  const [handoffs, setHandoffs] = useState<Handoff[]>([]);
-  const [error, setError] = useState<Error>();
-  const [realtime, setRealtime] = useState<Realtime>(supabase ? "connecting" : "offline");
-  const channel = useRef<RealtimeChannel | null>(null);
-  const upsert = useCallback((h: Handoff) => setHandoffs((list) => upsertHandoff(list, h)), []);
-
-  useEffect(() => {
-    api<Handoff[]>("/handoffs").then((seed) => setHandoffs((list) => seed.reduce(upsertHandoff, list)), setError);
-    if (!supabase) return;
-    let active = true; // dev mode mounts twice; the first channel's late CLOSED must not mark us offline
-    // self: true so the tab that broadcasts sees its own event, same as every other tab.
-    const ch = supabase
-      .channel("handoffs", { config: { broadcast: { self: true } } })
-      .on("broadcast", { event: "created" }, ({ payload }) => upsert(payload as Handoff))
-      .on("broadcast", { event: "updated" }, ({ payload }) => upsert(payload as Handoff))
-      .subscribe((status) => active && setRealtime(status === "SUBSCRIBED" ? "live" : "offline"));
-    channel.current = ch;
-    return () => {
-      active = false;
-      channel.current = null;
-      void supabase?.removeChannel(ch);
-    };
-  }, [upsert]);
-
-  const broadcast = useCallback((event: "created" | "updated", h: Handoff) => {
-    upsert(h);
-    void channel.current?.send({ type: "broadcast", event, payload: h });
-  }, [upsert]);
+  const { items: handoffs, error, realtime, broadcast } = useRealtimeList<Handoff>("/handoffs", "handoffs", EVENTS);
 
   const claim = useCallback(async (h: Handoff, by: string) => {
     let claimed: Handoff;
@@ -54,5 +27,5 @@ export function useHandoffs() {
     broadcast("updated", claimed);
   }, [broadcast]);
 
-  return { handoffs, error, realtime, claim, broadcast };
+  return { handoffs, error, realtime, claim, broadcast: broadcast as (event: (typeof EVENTS)[number], h: Handoff) => void };
 }
