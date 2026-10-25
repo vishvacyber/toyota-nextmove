@@ -180,3 +180,16 @@ export const handlers = [
     return HttpResponse.json(result);
   }),
 ];
+
+/**
+ * `NEXT_PUBLIC_API_MOCKING`: "enabled" mocks every endpoint. A comma list of path prefixes (e.g. "/kpis,/fairness")
+ * mocks only those, so pages can move to the real API one at a time. "disabled" is handled by MockProvider.
+ */
+export function activeHandlers(setting = "enabled") {
+  if (setting === "enabled") return handlers;
+  const keep = setting.split(",").map((s) => s.trim()).filter(Boolean);
+  return handlers.filter((h) => {
+    const path = "path" in h.info ? String(h.info.path) : "";
+    return keep.some((p) => path.replace(/^\*/, "").startsWith(p));
+  });
+}

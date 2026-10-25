@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
 import { setupServer } from "msw/node";
-import { handlers } from "./handlers";
+import { activeHandlers, handlers } from "./handlers";
 
 const server = setupServer(...handlers);
 before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -76,4 +76,11 @@ test("personas resolve with the right recommendation", async () => {
 test("kpi mock moves with adoption rate", async () => {
   const k = (a: number) => fetch(`${API}/kpis?adoption_rate=${a}`).then((r) => r.json());
   assert.ok((await k(0.9)).nextmove.retention_rate > (await k(0.3)).nextmove.retention_rate);
+});
+
+test("activeHandlers keeps only the listed path prefixes", () => {
+  assert.equal(activeHandlers("enabled").length, handlers.length);
+  assert.equal(activeHandlers(undefined).length, handlers.length);
+  const kpis = activeHandlers("/kpis, /fairness").map((h) => ("path" in h.info ? String(h.info.path) : ""));
+  assert.deepEqual(kpis.sort(), ["*/fairness", "*/kpis"]);
 });

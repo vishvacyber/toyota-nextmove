@@ -163,3 +163,7 @@ Simplest option that satisfies the spec, per CLAUDE.md.
   - `reason` and `script` still use only engine numbers and pass the Guardian.
 - **`python-multipart`** is now a direct dependency (it was already in the lock through `mcp`).
 - **Live spend:** 2 SDK vision calls (7.9 s direct, 7.5 s over HTTP) and 0 SerpApi calls.
+
+## Before Stage 5 (shared)
+- **Per-path mock switch:** `NEXT_PUBLIC_API_MOCKING` takes `enabled`, `disabled`, or a comma list of path prefixes that stay mocked (`activeHandlers()` in `packages/contracts/mocks/handlers.ts`). This lets C5/K5 move pages to the real API one at a time. A prefix covers its sub-paths (`/customers` also mocks `/customers/{id}/timing`). This changes mock infrastructure only, not the frozen contract.
+- **CORS** allows any `localhost` / `127.0.0.1` port in dev, so parallel lane servers can reach the API. Real origins get listed when the frontends deploy.

@@ -44,7 +44,8 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="Toyota NextMove API", version="0.1.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],
+    # shortcut: any localhost port, so parallel dev servers work; list real origins when the frontends deploy.
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
     allow_methods=["*"],
     allow_headers=["*"],
 )
