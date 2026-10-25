@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ToyotaLogo } from "@nextmove/tokens";
+import { TfsLogo } from "@nextmove/tokens";
 import { HERO_MODELS, PHOTOS, sized } from "@/lib/cars";
 import { useI18n } from "@/lib/i18n";
 
@@ -35,7 +35,7 @@ export function Attract({ onStart }: { onStart: () => void }) {
         </motion.div>
       </AnimatePresence>
       <div className="absolute left-8 top-8 flex items-center gap-3 text-white">
-        <ToyotaLogo className="h-8 w-auto" />
+        <TfsLogo className="h-12 w-auto" />
         <span className="border-l border-white/40 pl-3 text-lg font-medium tracking-wide">NextMove</span>
       </div>
       {/* The whole screen is the button; its label is the call to action. */}

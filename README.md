@@ -735,7 +735,7 @@ services/api          FastAPI
   ├─ migrations/      Supabase SQL
   └─ tests/           pytest suite
 packages/contracts    openapi.yaml (frozen contract), generated TS types, MSW mocks
-packages/tokens       design tokens (Toyota red accent) + Toyota logo
+packages/tokens       design tokens (Toyota red accent) + Toyota Financial Services logo
 docs/                 SPEC.md, BUILD_PLAN.md, DECISIONS.md
 ```
 
