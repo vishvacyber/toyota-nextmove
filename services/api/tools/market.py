@@ -70,19 +70,18 @@ def quote(model: str, year: int | None = None, region: str | None = None) -> Mar
         low, high = round(value * (1 - m["band"])), round(value * (1 + m["band"]))
     trend = market.parse_trend(lk.get(q.trends()) or {}, model)
     recalls = market.parse_recalls(lk.get(q.recalls(model)) or {}, model)
-    video = market.top_video(lk.get(q.youtube(model, year)) or {})
-    transcript = lk.get(q.transcript(video["id"])) if video else None
+    reviews = market.review_summary(lk.get(q.youtube(model, year)) or {})
     found, _ = dealers(region, lk)
     return MarketQuote(model=model, year=year, estimated_value=value, low=low, high=high, comps=comps,
                        trend=Trend(**trend) if trend else None, recalls=[Recall(**x) for x in recalls],
-                       reviews_summary=market.review_excerpt(video, transcript) if transcript else None,
+                       reviews_summary=reviews,
                        dealers=found, source=lk.source, as_of=lk.as_of, cached=lk.cached)
 
 
 @tool()
 def get_market_value(args: MarketIn) -> MarketQuote:
     """Market value for a model-year from cached SerpApi comps (median, low, high), plus demand trend, recalls,
-    a YouTube review excerpt and nearby dealers. Source and as-of included."""
+    the top YouTube review titles and nearby dealers. Source and as-of included."""
     return quote(args.model.value, args.year, args.region.value if args.region else None)
 
 

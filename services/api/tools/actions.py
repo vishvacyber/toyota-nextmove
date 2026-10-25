@@ -41,6 +41,18 @@ def now() -> datetime:
     return datetime.now(UTC)
 
 
+# Seed offers (same as the console mocks): a lease-end A/B pair and a draft, so Offer Studio and fairness have data.
+STORE["offers"] = [Offer.model_validate({**o, "created_at": CFG["as_of"]}) for o in [
+    {"id": "OFR-LEASE-RATE", "name": "Lease-end loyalty: 0.5% off", "rule": "lease_end AND days_to_maturity <= 90",
+     "target_situation": "lease_end", "incentive": {"type": "rate_reduction", "value": 0.5}, "status": "active"},
+    {"id": "OFR-LEASE-CASH", "name": "Lease-end loyalty: $500 cash", "rule": "lease_end AND days_to_maturity <= 90",
+     "target_situation": "lease_end", "incentive": {"type": "cash", "value": 500}, "status": "active",
+     "variant_of": "OFR-LEASE-RATE"},
+    {"id": "OFR-HYBRID", "name": "Hybrid switch credit", "rule": "positive_equity AND powertrain = gas",
+     "target_situation": "positive_equity", "incentive": {"type": "loyalty_credit", "value": 750}, "status": "draft"},
+]]
+
+
 class AppointmentIn(BaseModel):
     customer_id: str
     dealer_id: str
@@ -83,6 +95,7 @@ class DecisionIn(BaseModel):
     autonomy_level: AutonomyLevel
     customer_id: str | None = None
     detail: str | None = None
+    override_reason: str | None = None
     trace_id: str | None = None
 
 

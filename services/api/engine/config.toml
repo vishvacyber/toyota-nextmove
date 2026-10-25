@@ -172,3 +172,29 @@ position = "front_right"
 issue = "Light curb rash"
 severity = "minor"
 box = [0.3, 0.3, 0.4, 0.4]
+
+[simulation]
+# 24-month portfolio simulation (sim/simulate.py, GET /kpis). Expected values over all customers: no random draws, so
+# the same assumptions always give the same KPIs. Synthetic coefficients; each line says why it is set where it is.
+months = 24
+adoption_rate = 0.6            # default share of customers who act on NextMove outreach (mock / Proof slider default)
+outreach_lead_days = 90        # default days of notice before the decision (Sentinel's lease-end window)
+hardship_uptake = 0.5          # default share of stressed customers who take the hardship path
+reach_tau_days = 60            # reach = 1 − exp(−lead/τ): 30 d ≈ 39%, 90 d ≈ 78%, 180 d ≈ 95% decide after outreach
+# Month a non-maturing customer makes their decision (refinance away, trade elsewhere...). Maturity within 24 months wins.
+event_month = { lease_end = 3, mileage_overage = 9, positive_equity = 8, rate_drop = 6, early_payoff = 4, life_event = 6, payment_stress = 3, ev_switch = 10 }
+# Share who stay with TFS at that decision without NextMove (industry-style lease/loan return-to-brand rates).
+baseline_retention = { lease_end = 0.52, mileage_overage = 0.48, positive_equity = 0.55, rate_drop = 0.45, early_payoff = 0.4, life_event = 0.5, payment_stress = 0.5, ev_switch = 0.45, none = 0.5 }
+roll_rate_per_risk = 0.1       # 24-month chance of serious delinquency = risk_score × this (current accounts)
+stress_roll_rate = 0.6         # past-due accounts roll to serious delinquency far more often
+calls_per_decision = 1.5       # inbound calls a customer makes around a lease/loan decision
+calls_per_stressed = 3.0       # inbound calls from a past-due account over the horizon
+calls_per_customer = 0.3       # routine calls everyone makes (payoff quotes, address changes)
+self_service_deflection = 0.5  # decision calls avoided when the customer acts on outreach in the app
+hardship_call_deflection = 0.6 # stressed-account calls avoided on the hardship path
+cost_per_call = 9.0            # $ per handled call
+cost_per_outreach = 0.4        # $ per proactive digital touch
+fairness_threshold = 0.05      # flag a group whose rate is more than 5 points off its dimension's overall rate
+
+[simulation.offers]
+w_incentive_per_1k = 0.6       # log-odds of accepting per $1,000 of incentive value (diminishing via the logistic)

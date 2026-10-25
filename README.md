@@ -66,6 +66,14 @@ cd services/api && SUPABASE_URL=... SUPABASE_SERVICE_KEY=... uv run python -m si
 - `POST /deal-packets` / `GET /deal-packets`: engine scenario + eligibility, sent to a cached dealer (in memory).
 - `GET /opportunities`: `expected_value` and `retention_odds` come from `engine/nba.py` (weights in `[nba]`).
 
+## API: proof + trust (B5)
+- Also filled in from the contract: `GET /customers?q=`, `GET /customers/{id}`, `GET/POST /handoffs`, `PATCH /handoffs/{id}` (broadcasts `created`/`updated` on `handoffs`), `GET /sessions`, `POST /customers/{id}/recommendation/review`. `tests/test_contract_routes.py` fails if a contract operation has no route.
+- `GET /kpis?adoption_rate=&outreach_lead_days=&hardship_uptake=`: 24-month baseline vs NextMove over all 1,200 customers (`sim/simulate.py`, coefficients in `[simulation]`). Deterministic, ~2 ms per call.
+- `GET /fairness`: recommendation and offer rates by region and credit tier, flagged past `simulation.fairness_threshold`.
+- `GET /audit`: `log_decision` entries (deal packets, alert approvals, Studio deploys) plus one entry per agent trace.
+- `GET/POST /offers`, `POST /offers/{id}/simulate`: the offer and its `variant_of` A/B variants, scored with NBA odds and margins. `rule` is parsed (`days_to_maturity <= 90 AND powertrain = gas`) and limits the audience.
+- `GET/POST /studio/agents`, `POST /studio/agents/{id}/deploy`: the deploy gate runs a tool-policy check, the persona evals (committed fallbacks + Guardian) and prompt-injection tests. It makes no SDK calls unless `STUDIO_GATE_LIVE=1`, which adds the 3 persona cases on the live model. A failed gate leaves the agent `failed`.
+
 ## Contract
 
 `packages/contracts/openapi.yaml` is the source of truth. After editing it, run `pnpm gen` to regenerate the TS types and the API's Pydantic models.
