@@ -10,8 +10,9 @@ export function ContinueOnPhone({ customerId }: { customerId: string }) {
   const [url, setUrl] = useState<string>();
 
   function open() {
-    // shortcut: the kiosk's own origin; a real kiosk needs an origin phones can reach (DECISIONS K5).
-    setUrl(`${location.origin}/app?id=${encodeURIComponent(customerId)}`);
+    // A laptop kiosk runs on localhost, which a phone can't open, so NEXT_PUBLIC_PHONE_URL can point at the public site.
+    const base = process.env.NEXT_PUBLIC_PHONE_URL || location.origin;
+    setUrl(`${base}/app?id=${encodeURIComponent(customerId)}`);
     dialog.current?.showModal();
   }
 
