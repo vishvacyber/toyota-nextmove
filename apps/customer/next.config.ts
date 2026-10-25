@@ -1,4 +1,17 @@
+import path from "node:path";
+import { loadEnvConfig } from "@next/env";
 import type { NextConfig } from "next";
 
-const config: NextConfig = { transpilePackages: ["@nextmove/contracts", "@nextmove/tokens"], agentRules: false };
+// Keys live in the repo-root .env.local; expose only the public Supabase pair to the browser (never the service key).
+// forceReload: Next already loaded (and cached) the app folder's env before reading this file.
+loadEnvConfig(path.resolve(process.cwd(), "../.."), process.env.NODE_ENV !== "production", undefined, true);
+
+const config: NextConfig = {
+  transpilePackages: ["@nextmove/contracts", "@nextmove/tokens"],
+  agentRules: false,
+  env: {
+    NEXT_PUBLIC_SUPABASE_URL: process.env.SUPABASE_URL ?? "",
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY ?? "",
+  },
+};
 export default config;

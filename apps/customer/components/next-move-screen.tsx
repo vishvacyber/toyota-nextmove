@@ -1,15 +1,18 @@
 "use client";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
-import type { Customer, Recommendation, Scenario } from "@nextmove/contracts";
+import type { Customer, Recommendation } from "@nextmove/contracts";
 import { useApi } from "@nextmove/contracts/client";
+import { Card, Row, ScenarioCard } from "@/components/cards";
+import { DecideAct, HandoffBanner } from "@/components/decide-act";
 import { Private } from "@/components/private";
 import { SignIn } from "@/components/sign-in";
 import { TopBar } from "@/components/top-bar";
 import { useI18n, type Key } from "@/lib/i18n";
+import { useHandoffChannel } from "@/lib/realtime";
 
-const STEPS = ["step_situation", "step_next_move", "step_why"] as const;
+const STEPS = ["step_situation", "step_next_move", "step_why", "step_act"] as const;
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /** Shared by /app and /kiosk: the kiosk only changes the shell around it. The signed-in customer lives in `?id=`, which is also the QR deep link. */
@@ -41,6 +44,8 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
   const customer = useApi<Customer>(`/customers/${encodeURIComponent(id)}`);
   const rec = useApi<Recommendation>(`/customers/${encodeURIComponent(id)}/recommendation`);
   const [step, setStep] = useState(0);
+  // Lives here, not in the act step, so status survives step changes; unmount (sign-out, kiosk reset) closes it.
+  const handoffChannel = useHandoffChannel();
   const heading = useRef<HTMLHeadingElement>(null);
   const moved = useRef(false);
   useEffect(() => {
@@ -81,6 +86,7 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
           ))}
         </ol>
       </nav>
+      <HandoffBanner channel={handoffChannel} />
 
       <h1 ref={heading} tabIndex={-1} className="mt-8 text-4xl font-semibold tracking-tight outline-none sm:text-5xl">{t(STEPS[step])}</h1>
       <AnimatePresence mode="wait">
@@ -93,8 +99,9 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
           className="mt-6"
         >
           {step === 0 && <SituationStep c={c} r={r} />}
-          {step === 1 && <NextMoveStep r={r} />}
+          {step === 1 && <NextMoveStep r={r} onAct={() => setStep(3)} />}
           {step === 2 && <WhyStep r={r} />}
+          {step === 3 && <DecideAct c={c} r={r} channel={handoffChannel} />}
         </motion.div>
       </AnimatePresence>
 
@@ -109,24 +116,6 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
         )}
       </div>
     </main>
-  );
-}
-
-function Card({ title, children, className = "" }: { title: string; children: ReactNode; className?: string }) {
-  return (
-    <section className={`rounded-3xl bg-surface p-6 ${className}`}>
-      <h2 className="text-sm font-medium uppercase tracking-wide text-muted">{title}</h2>
-      <div className="mt-3">{children}</div>
-    </section>
-  );
-}
-
-function Row({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="flex items-baseline justify-between gap-4 border-t border-line py-3 first:border-t-0">
-      <dt className="text-muted">{label}</dt>
-      <dd className="text-right font-semibold tabular-nums">{children}</dd>
-    </div>
   );
 }
 
@@ -193,28 +182,7 @@ function SituationStep({ c, r }: { c: Customer; r: Recommendation }) {
   );
 }
 
-function ScenarioCard({ s, recommended, children }: { s: Scenario; recommended?: boolean; children?: ReactNode }) {
-  const { t, money } = useI18n();
-  return (
-    <article className={`flex h-full flex-col rounded-3xl p-6 ${recommended ? "border-2 border-accent bg-bg shadow-xl shadow-accent/10" : "border border-line bg-surface"} ${s.eligible ? "" : "opacity-60"}`}>
-      {recommended && <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{t("recommended")}</p>}
-      {/* Option labels are English-only until the Advisor returns localized text (B3). */}
-      <h3 className={`font-semibold ${recommended ? "mt-2 text-2xl" : "mt-6 text-lg"}`}>{s.label}</h3>
-      {s.target_vehicle && <p className="text-sm text-muted">{s.target_vehicle.year} {s.target_vehicle.model} {s.target_vehicle.trim}</p>}
-      <p className="mt-4 text-sm text-muted">{t("monthly_payment")}</p>
-      <p className={`font-semibold tabular-nums ${recommended ? "text-4xl" : "text-2xl"}`}><Private>{money(s.monthly_payment)}</Private></p>
-      <dl className="mt-4 text-sm">
-        <Row label={s.horizon_months ? t("total_cost_months", { months: s.horizon_months }) : t("total_cost")}><Private>{money(s.total_cost)}</Private></Row>
-        <Row label={t("equity")}><Private>{money(s.equity)}</Private></Row>
-        <Row label={t("fees")}><Private>{money(s.fees)}</Private></Row>
-      </dl>
-      {!s.eligible && s.ineligible_reason && <p className="mt-3 text-sm text-muted">{s.ineligible_reason}</p>}
-      <div className="mt-auto">{children}</div>
-    </article>
-  );
-}
-
-function NextMoveStep({ r }: { r: Recommendation }) {
+function NextMoveStep({ r, onAct }: { r: Recommendation; onAct: () => void }) {
   const { t } = useI18n();
   // Guardian rule: a blocked recommendation never reaches the customer.
   if (r.guardian.verdict === "block") return <p role="status" className="text-xl">{t("under_review")}</p>;
@@ -226,7 +194,7 @@ function NextMoveStep({ r }: { r: Recommendation }) {
           <motion.div key={s.option} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease, delay: 0.08 * i }}>
             <ScenarioCard s={s} recommended={i === 0}>
               {i === 0 && (
-                <button type="button" className="mt-6 w-full rounded-full bg-accent px-6 py-3 font-semibold text-on-accent transition hover:brightness-110">
+                <button type="button" onClick={onAct} className="mt-6 w-full rounded-full bg-accent px-6 py-3 font-semibold text-on-accent transition hover:brightness-110">
                   {r.action.label}
                 </button>
               )}
