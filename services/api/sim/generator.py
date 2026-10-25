@@ -33,9 +33,9 @@ def day(offset: int) -> str:
 
 
 def personas() -> list[Customer]:
-    """Maria, James, Priya: identical to packages/contracts/mocks/fixtures.ts."""
+    """Vishwaa, Sameera, Hung: identical to packages/contracts/mocks/fixtures.ts."""
     return [Customer.model_validate(p) for p in [
-        {"id": "CUST-MARIA", "first_name": "Maria", "last_name": "Alvarez", "email": "maria.a@example.test", "phone": "555-0101",
+        {"id": "CUST-VISHWAA2026", "first_name": "Vishwaa", "last_name": "", "email": "vishwaa.a@example.test", "phone": "555-0101",
          "region": "South", "credit_tier": "A", "preferred_language": "en", "pay_frequency": "semimonthly", "next_payday": day(7),
          "vehicle": {"vin": "SYN2T3RAV4MARIA001", "model": "RAV4", "year": 2024, "trim": "XLE", "powertrain": "gas",
                      "color": "Blueprint", "odometer_miles": 41200, "mpg": 30},
@@ -45,7 +45,7 @@ def personas() -> list[Customer]:
                       "payments_made": 33, "days_past_due": 0, "status": "current", "due_day": 22},
          "payment_history": [{"date": "2026-09-22", "amount": 389, "status": "paid"}, {"date": "2026-10-22", "amount": 389, "status": "paid"}],
          "life_events": [], "risk_score": 0.08, "situation": "lease_end", "synthetic": True},
-        {"id": "CUST-JAMES", "first_name": "James", "last_name": "Carter", "email": "james.c@example.test", "phone": "555-0102",
+        {"id": "CUST-SAMEERA2026", "first_name": "Sameera", "last_name": "", "email": "sameera.c@example.test", "phone": "555-0102",
          "region": "West", "credit_tier": "A", "preferred_language": "en", "pay_frequency": "biweekly", "next_payday": day(4),
          "vehicle": {"vin": "SYN4T1CAMRYJAMES02", "model": "Camry", "year": 2022, "trim": "SE", "powertrain": "gas",
                      "color": "Midnight Black", "odometer_miles": 48900, "mpg": 28},
@@ -54,7 +54,7 @@ def personas() -> list[Customer]:
                       "status": "current", "due_day": 15},
          "payment_history": [{"date": "2026-09-15", "amount": 496, "status": "paid"}, {"date": "2026-10-15", "amount": 496, "status": "paid"}],
          "life_events": ["longer_commute"], "risk_score": 0.05, "situation": "positive_equity", "synthetic": True},
-        {"id": "CUST-PRIYA", "first_name": "Priya", "last_name": "Shah", "email": "priya.s@example.test", "phone": "555-0103",
+        {"id": "CUST-HUNG2026", "first_name": "Hung", "last_name": "", "email": "hung.s@example.test", "phone": "555-0103",
          "region": "Midwest", "credit_tier": "B", "preferred_language": "en", "pay_frequency": "biweekly", "next_payday": day(6),
          "vehicle": {"vin": "SYNJTDPRIUSPRIYA03", "model": "Prius", "year": 2023, "trim": "LE", "powertrain": "hybrid",
                      "color": "Wind Chill Pearl", "odometer_miles": 31500, "mpg": 57},

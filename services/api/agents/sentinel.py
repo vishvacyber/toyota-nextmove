@@ -58,7 +58,7 @@ def scan() -> list[Opportunity]:
             retention_odds=nba_["retention_odds"], days_to_maturity=days,
             script=recommend.headline(c, rec), reason=reason(c, rec),
             priority=1 if c.situation in URGENT else 2 if rec.option.value != "do_nothing" else 3))
-    personas = {"CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"}   # demo personas lead their priority band
+    personas = {"CUST-VISHWAA2026", "CUST-SAMEERA2026", "CUST-HUNG2026"}   # demo personas lead their priority band
     return sorted(out, key=lambda o: (o.priority, o.customer_id not in personas, -o.expected_value))
 
 

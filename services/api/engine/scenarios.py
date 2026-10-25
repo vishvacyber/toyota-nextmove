@@ -71,11 +71,14 @@ def real_msrp(model: str, trim: str, year: int, base: bool = False) -> dict | No
 
 
 def new_price(model: str) -> tuple[float, str]:
-    """Price of the upgrade target (next model year), and where it came from."""
+    """Price of the upgrade target, and where it came from: next model year's MSRP, or this year's while next year's
+    isn't published yet (pre-release searches only carry guesses)."""
     cat = CFG["catalog"][model]
-    m = real_msrp(model, cat.get("msrp_trim", cat["trim"]), TODAY.year + 1)
-    return (m["price"], f"MSRP from {m['source']}, as of {m['as_of']}") if m else \
-        (cat["price"], "list price from the NextMove catalog (synthetic)")
+    trim = cat.get("msrp_trim", cat["trim"])
+    for year in (TODAY.year + 1, TODAY.year):
+        if m := real_msrp(model, trim, year):
+            return m["price"], f"{year} MSRP from {m['source']}, as of {m['as_of']}"
+    return cat["price"], "Toyota list price (NextMove catalog)"
 
 
 def base_msrp(model: str) -> float:
@@ -438,7 +441,7 @@ def _run(req: ScenarioRequest, c: Customer, o: Overrides) -> ScenarioSet:
             out.append(Scenario(option=option, label=option.value.replace("_", " ").capitalize(), eligible=False,
                                 ineligible_reason=reason, monthly_payment=0, total_cost=0, equity=0, fees=0, assumptions=[]))
     return ScenarioSet(customer_id=c.id, scenarios=out, as_of=AS_OF, assumptions=[
-        market_note(c.vehicle), "Synthetic data. Estimates only, not a credit decision.",
+        market_note(c.vehicle), "Estimates only, not a credit decision.",
         "Lease options are valued at lease end and exclude the remaining lease payments, which every option shares."
         if c.contract.type == "lease" else "Totals are out-of-pocket over each option's horizon.",
     ])

@@ -6,7 +6,7 @@ import { Action, FollowUpAction, recordAction } from "@/components/decide-act";
 import { useI18n } from "@/lib/i18n";
 import type { HandoffChannel } from "@/lib/realtime";
 
-/** Payment stress (Priya): options come from the recommendation's scenarios. Only the due-date change is the customer's to accept; deferral and extension are credit decisions (L4) for a TFS specialist. */
+/** Payment stress (Hung): options come from the recommendation's scenarios. Only the due-date change is the customer's to accept; deferral and extension are credit decisions (L4) for a TFS specialist. */
 export function Hardship({ c, r, channel }: { c: Customer; r: Recommendation; channel: HandoffChannel }) {
   const { t } = useI18n();
   const [accepted, setAccepted] = useState(false);

@@ -1,4 +1,5 @@
 "use client";
+import { Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { InspectionResult } from "@nextmove/contracts";
 import { api, isBusy } from "@nextmove/contracts/client";
@@ -97,7 +98,7 @@ export function Inspection({ customerId }: { customerId: string }) {
     return (
       <Card title={t("inspection_title")}>
         <div className="flex flex-wrap items-center gap-3">
-          {result.is_estimate && <span className="rounded-full bg-accent px-3 py-1 text-sm font-semibold text-on-accent">{t("estimate")}</span>}
+          {result.is_estimate && <span className="rounded-lg bg-accent px-3 py-1 text-sm font-semibold text-on-accent">{t("estimate")}</span>}
           <p className="text-2xl font-semibold">{t("inspection_total")} <>{money(result.total_estimated_charge)}</></p>
         </div>
         <p role="note" className="mt-2 text-muted">{result.disclaimer}</p>
@@ -146,9 +147,9 @@ export function Inspection({ customerId }: { customerId: string }) {
                 type="button"
                 onClick={() => setI(k)}
                 aria-current={k === i ? "step" : undefined}
-                className={`rounded-full px-4 py-2 text-sm font-semibold ${k === i ? "bg-accent text-on-accent" : photos[a] ? "bg-fg text-bg" : "border border-line"}`}
+                className={`rounded-lg px-4 py-2 text-sm font-semibold ${k === i ? "bg-accent text-on-accent" : photos[a] ? "bg-fg text-bg" : "border border-line"}`}
               >
-                {photos[a] ? "✓ " : ""}{t(`angle_${a}` as Key)}
+                {photos[a] && <Check aria-hidden className="mr-1 inline h-4 w-4" />}{t(`angle_${a}` as Key)}
               </button>
             </li>
           ))}
@@ -170,13 +171,13 @@ export function Inspection({ customerId }: { customerId: string }) {
         <div className="mt-4 flex flex-wrap gap-3">
           {camera === "on"
             ? <>
-              <button type="button" onClick={snap} className="rounded-full bg-accent px-6 py-3 font-semibold text-on-accent">{t("take_photo")}</button>
-              <button type="button" onClick={stopCamera} className="rounded-full border border-line px-6 py-3 font-semibold">{t("stop_camera")}</button>
+              <button type="button" onClick={snap} className="rounded-lg bg-accent px-6 py-3 font-semibold text-on-accent">{t("take_photo")}</button>
+              <button type="button" onClick={stopCamera} className="rounded-lg border border-line px-6 py-3 font-semibold">{t("stop_camera")}</button>
             </>
             : camera === "off" && typeof navigator !== "undefined" && "mediaDevices" in navigator && (
-              <button type="button" onClick={startCamera} className="rounded-full border border-line px-6 py-3 font-semibold">{t("use_camera")}</button>
+              <button type="button" onClick={startCamera} className="rounded-lg border border-line px-6 py-3 font-semibold">{t("use_camera")}</button>
             )}
-          <label className="inline-flex cursor-pointer items-center rounded-full border border-line px-6 py-3 font-semibold focus-within:ring-2 focus-within:ring-accent">
+          <label className="inline-flex cursor-pointer items-center rounded-lg border border-line px-6 py-3 font-semibold focus-within:ring-2 focus-within:ring-accent">
             {t("choose_photo")}
             <input
               type="file"
@@ -187,7 +188,7 @@ export function Inspection({ customerId }: { customerId: string }) {
             />
           </label>
           {i < ANGLES.length - 1 && (
-            <button type="button" onClick={() => setI(i + 1)} className="rounded-full px-6 py-3 font-semibold text-muted">{t("skip_angle")}</button>
+            <button type="button" onClick={() => setI(i + 1)} className="rounded-lg px-6 py-3 font-semibold text-muted">{t("skip_angle")}</button>
           )}
         </div>
       </section>
@@ -198,7 +199,7 @@ export function Inspection({ customerId }: { customerId: string }) {
           type="button"
           disabled={!count || phase === "busy"}
           onClick={submit}
-          className="rounded-full bg-accent px-8 py-3 font-semibold text-on-accent disabled:opacity-50"
+          className="rounded-lg bg-accent px-8 py-3 font-semibold text-on-accent disabled:opacity-50"
         >
           {phase === "busy" ? t("analyzing") : t("get_estimate")}
         </button>

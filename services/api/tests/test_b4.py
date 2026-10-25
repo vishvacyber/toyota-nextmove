@@ -14,7 +14,7 @@ from engine import nba, scenarios, timing
 from tools import actions
 from tools.customer import customer
 
-PERSONAS = ["CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"]
+PERSONAS = ["CUST-VISHWAA2026", "CUST-SAMEERA2026", "CUST-HUNG2026"]
 PNG = b"\x89PNG\r\n\x1a\nfake"
 
 
@@ -37,21 +37,21 @@ def test_acting_now_beats_waiting_for_every_persona(cid):
 
 
 def test_lease_fees_start_after_maturity_and_loan_late_fees_grow():
-    maria = timing.timing(customer("CUST-MARIA")).months   # lease ends in 90 days
-    assert all(m.fees == 0 for m in maria[:4]) and 0 < maria[4].fees < maria[5].fees < maria[6].fees
-    priya = timing.timing(customer("CUST-PRIYA")).months   # past due: another $50 every month unresolved
-    assert [m.fees for m in priya] == [50 * (1 + i) for i in range(7)]
+    vishwaa = timing.timing(customer("CUST-VISHWAA2026")).months   # lease ends in 90 days
+    assert all(m.fees == 0 for m in vishwaa[:4]) and 0 < vishwaa[4].fees < vishwaa[5].fees < vishwaa[6].fees
+    hung = timing.timing(customer("CUST-HUNG2026")).months   # past due: another $50 every month unresolved
+    assert [m.fees for m in hung] == [50 * (1 + i) for i in range(7)]
 
 
 def test_loan_waiting_costs_depreciation_plus_interest():
-    t = timing.timing(customer("CUST-JAMES"))
+    t = timing.timing(customer("CUST-SAMEERA2026"))
     assert t.months[3].equity > t.months[0].equity           # paying down the loan builds equity...
-    assert t.months[3].net_position < t.months[0].net_position   # ...but with his own payments
+    assert t.months[3].net_position < t.months[0].net_position   # ...but with their own payments
     assert "value loss" in t.summary and "interest" in t.summary
 
 
 def test_months_from_now_matches_timing_rows():
-    c = customer("CUST-JAMES")
+    c = customer("CUST-SAMEERA2026")
     ss = scenarios.run(ScenarioRequest(customer_id=c.id, options=[OptionType.keep], overrides=Overrides(months_from_now=3)), c)
     assert ss.scenarios[0].equity == timing.timing(c).months[3].equity
     assert ss.scenarios[0].horizon_months == scenarios.remaining_months(c) - 3
@@ -61,9 +61,9 @@ def test_months_from_now_matches_timing_rows():
 
 def test_timing_endpoint_and_bad_months_from_now():
     client = TestClient(app)
-    assert client.get("/customers/CUST-JAMES/timing").json()["best_month_offset"] == 0
+    assert client.get("/customers/CUST-SAMEERA2026/timing").json()["best_month_offset"] == 0
     assert client.get("/customers/NOPE/timing").status_code == 404
-    bad = {"customer_id": "CUST-JAMES", "overrides": {"months_from_now": -1}}
+    bad = {"customer_id": "CUST-SAMEERA2026", "overrides": {"months_from_now": -1}}
     assert client.post("/scenarios", json=bad).status_code == 422
 
 
@@ -81,7 +81,7 @@ def test_true_cost_on_every_option_that_keeps_a_car(cid):
 
 
 def test_upgrade_states_co2_saved():
-    c = customer("CUST-JAMES")
+    c = customer("CUST-SAMEERA2026")
     ss = scenarios.run(ScenarioRequest(customer_id=c.id, options=[OptionType.upgrade, OptionType.keep]), c)
     up, keep = ss.scenarios
     saved = keep.true_cost.co2_kg_per_year - up.true_cost.co2_kg_per_year
@@ -104,7 +104,7 @@ GOOD = json.dumps([{"angle": "front", "area": "front_bumper", "issue": "Scuff", 
                    {"angle": "rear", "area": "tire", "issue": "Fine", "severity": "none"}])
 
 
-def post(cid="CUST-MARIA", n=2, angles=("front", "rear"), ctype="image/png", data=PNG):
+def post(cid="CUST-VISHWAA2026", n=2, angles=("front", "rear"), ctype="image/png", data=PNG):
     files = [("photos", (f"{i}.png", data, ctype)) for i in range(n)]
     return TestClient(app).post("/inspections", data={"customer_id": cid, "angles": list(angles)}, files=files)
 
@@ -116,8 +116,8 @@ def test_vision_items_are_charged_from_the_engine_table(monkeypatch):
     assert [i["area"] for i in r["items"]] == ["Front bumper", "Rear left door"]   # "none" severity dropped
     assert [i["estimated_charge"] for i in r["items"]] == [ch["front_bumper"]["moderate"], ch["door"]["minor"]]
     assert r["total_estimated_charge"] == 450 and r["is_estimate"] is True and "Estimate" in r["disclaimer"]
-    assert scenarios.WEAR["CUST-MARIA"] == 450
-    ret = scenarios.run(ScenarioRequest(customer_id="CUST-MARIA", options=[OptionType.return_]), customer("CUST-MARIA"))
+    assert scenarios.WEAR["CUST-VISHWAA2026"] == 450
+    ret = scenarios.run(ScenarioRequest(customer_id="CUST-VISHWAA2026", options=[OptionType.return_]), customer("CUST-VISHWAA2026"))
     assert ret.scenarios[0].fees == 2450 + 350 + 450 and any("photo pre-inspection" in a for a in ret.scenarios[0].assumptions)
 
 
@@ -149,8 +149,8 @@ def test_money_output_is_busy_not_canned(monkeypatch):
 def test_timeout_is_busy(monkeypatch):
     monkeypatch.setattr(sdk, "run", fake_vision(exc=sdk.SdkUnavailable("TimeoutError")))
     with pytest.raises(sdk.Busy):
-        asyncio.run(vision.inspect("CUST-JAMES", [("front", "image/png", PNG)]))
-    assert "CUST-JAMES" not in scenarios.WEAR
+        asyncio.run(vision.inspect("CUST-SAMEERA2026", [("front", "image/png", PNG)]))
+    assert "CUST-SAMEERA2026" not in scenarios.WEAR
 
 
 def test_only_the_result_is_stored_never_the_photo(monkeypatch):
@@ -159,7 +159,7 @@ def test_only_the_result_is_stored_never_the_photo(monkeypatch):
     assert PNG not in json.dumps([r.model_dump(mode="json") for r in actions.STORE["inspections"]]).encode()
     from agents import traces
     assert "image" not in traces.MEMORY[-1].model_dump_json()
-    latest = actions.inspect_photos(actions.InspectionIn(customer_id="CUST-MARIA"))
+    latest = actions.inspect_photos(actions.InspectionIn(customer_id="CUST-VISHWAA2026"))
     assert latest.total_estimated_charge == 450   # the tool returns the latest pre-inspection
 
 
@@ -173,13 +173,13 @@ def test_bad_uploads(monkeypatch, kw, code):
 
 # ---- deal packets ----
 
-def test_james_upgrade_deal_packet():
+def test_sameera_upgrade_deal_packet():
     client = TestClient(app)
-    res = client.post("/deal-packets", json={"customer_id": "CUST-JAMES", "option": "upgrade"})
+    res = client.post("/deal-packets", json={"customer_id": "CUST-SAMEERA2026", "option": "upgrade"})
     assert res.status_code == 201
     p = res.json()
     assert p["status"] == "sent" and p["target_vehicle"]["model"] == "Camry" and p["target_vehicle"]["powertrain"] == "hybrid"
-    assert p["vehicle"]["vin"] == customer("CUST-JAMES").vehicle.vin and p["dealer"]["name"]
+    assert p["vehicle"]["vin"] == customer("CUST-SAMEERA2026").vehicle.vin and p["dealer"]["name"]
     assert p["scenario"]["option"] == "upgrade" and p["scenario"]["true_cost"]
     assert p["eligibility"][0] == "Upgrade: every eligibility rule passed"
     assert client.get("/deal-packets").json()[0]["id"] == p["id"]
@@ -188,8 +188,8 @@ def test_james_upgrade_deal_packet():
 
 def test_deal_packet_errors():
     client = TestClient(app)
-    assert client.post("/deal-packets", json={"customer_id": "CUST-JAMES", "option": "buyout"}).status_code == 422
-    assert client.post("/deal-packets", json={"customer_id": "CUST-JAMES", "option": "upgrade",
+    assert client.post("/deal-packets", json={"customer_id": "CUST-SAMEERA2026", "option": "buyout"}).status_code == 422
+    assert client.post("/deal-packets", json={"customer_id": "CUST-SAMEERA2026", "option": "upgrade",
                                               "dealer_id": "nope"}).status_code == 404
     assert client.post("/deal-packets", json={"customer_id": "NOPE", "option": "upgrade"}).status_code == 404
 
@@ -206,7 +206,7 @@ def test_nba_is_deterministic_bounded_and_explained():
 
 
 def test_nba_rises_with_equity_and_falls_with_past_due():
-    c = customer("CUST-JAMES")
+    c = customer("CUST-SAMEERA2026")
     s = recommend.pick(c.situation, recommend.scenario_set(c))
     more = c.model_copy(update={"contract": c.contract.model_copy(update={"payoff_amount": 5000})})
     late = c.model_copy(update={"contract": c.contract.model_copy(update={"days_past_due": 45})})
@@ -229,4 +229,4 @@ def test_opportunities_use_nba_and_reasons_pass_guardian():
         v, _ = guardian.check(f"{o.script}. {o.reason}. {guardian.DISCLOSURE}", [("run_scenario", recommend.scenario_set(c).model_dump(mode="json")),
                                                             ("engine_facts", scenarios.facts(c))])
         assert v.verdict.value == "pass", (cid, v)
-    assert opps["CUST-PRIYA"].expected_value > 0 and opps["CUST-JAMES"].next_best_action == OptionType.upgrade
+    assert opps["CUST-HUNG2026"].expected_value > 0 and opps["CUST-SAMEERA2026"].next_best_action == OptionType.upgrade

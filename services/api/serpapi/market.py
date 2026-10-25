@@ -36,6 +36,7 @@ def parse_comps(resp: dict, model: str, year: int) -> list[dict]:
 
 PRICE = r"\$\s?(\d{2,3},?\d{3})(?!\d)"
 LIST_NEXT = re.compile(r"[.,;]?\s*\$\s?\d")
+DEALER_PRICE = re.compile(r"dealer price|your price|you pay|for sale|only \$|mi away", re.IGNORECASE)   # a listing, not MSRP
 STARTS_AT = re.compile(r"(?:msrp|starts? at|starting (?:msrp|price|at)|base price)[^$]{0,40}" + PRICE, re.IGNORECASE)
 
 
@@ -54,8 +55,8 @@ def parse_msrp(resp: dict, trim: str, base: bool = False, model: str = "", low: 
             continue   # a dealer's specific car (options, markup) or a different model (Grand Highlander) isn't MSRP
         for score, rx in ((3, by_trim), (2, STARTS_AT if base else None)):
             m = rx.search(text) if rx else None
-            if m and LIST_NEXT.match(text, m.end()):
-                m = None   # "$36,425. $34,725": a cut-off list of several trims, not this trim's price
+            if m and (LIST_NEXT.match(text, m.end()) or DEALER_PRICE.search(text, m.start(), m.end() + 20)):
+                m = None   # a cut-off list of several trims ("$36,425. $34,725"), or a dealer's asking price
             price = int(m.group(1).replace(",", "")) if m else 0
             if low <= price <= high:
                 cand = (score + (0.5 if "toyota.com" in r.get("link", "") else 0),

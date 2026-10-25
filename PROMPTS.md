@@ -30,7 +30,7 @@ Keep it concise. Then stop and wait for my approval.
 Implement Stage 0 from docs/SPEC.md (B0 + C0 + K0 foundations):
 - pnpm monorepo: apps/console, apps/customer, services/api, packages/contracts, packages/tokens.
 - packages/contracts/openapi.yaml covering every entity and endpoint in SPEC §6–7; generate TS types (openapi-typescript).
-- Mock fixtures for Maria, James, Priya + 20 extra customers in packages/contracts/mocks.
+- Mock fixtures for Vishwaa, Sameera, Hung + 20 extra customers in packages/contracts/mocks.
 - MSW wired in both Next.js apps serving those mocks for every endpoint.
 - FastAPI skeleton with health route and Pydantic models matching the contract.
 - Shared tokens (Toyota red accent, neutrals, type scale), synthetic-data badge component.
@@ -55,7 +55,7 @@ Implement B2: each tool in SPEC §4 as a function and exposed via an MCP server.
 
 ### B3 — Agents
 ```
-Implement B3: Orchestrator, Advisor, Sentinel, Hardship, Market Intel, Guardian using Claude tool use. Guardian blocks any number not present in tool output. Autonomy levels enforced. Every run writes AgentTrace to Supabase `traces` channel. POST /agents/advisor/ask, GET /customers/{id}/recommendation, GET /opportunities, GET /traces. Add eval cases for the 3 personas. Done when Advisor answers "What should I do at lease end?" for Maria end to end with a trace and Guardian pass.
+Implement B3: Orchestrator, Advisor, Sentinel, Hardship, Market Intel, Guardian using Claude tool use. Guardian blocks any number not present in tool output. Autonomy levels enforced. Every run writes AgentTrace to Supabase `traces` channel. POST /agents/advisor/ask, GET /customers/{id}/recommendation, GET /opportunities, GET /traces. Add eval cases for the 3 personas. Done when Advisor answers "What should I do at lease end?" for Vishwaa end to end with a trace and Guardian pass.
 ```
 
 ### B4 — Value features
@@ -74,7 +74,7 @@ Implement B5: 24-month simulation baseline vs. NextMove over all customers with 
 
 ### C1 — Core portfolio
 ```
-Implement C1 in apps/console using shadcn/ui: Command Center (KPI cards, maturity pipeline 90/60/30, trend charts), Opportunity Queue (TanStack table: next-best-action, $ value, retention odds, script, filters), Customer 360 (profile, contract, equity, risk, timeline, current recommendation). Mocks only. Done when an advisor can find Maria, James, Priya and see why each is queued.
+Implement C1 in apps/console using shadcn/ui: Command Center (KPI cards, maturity pipeline 90/60/30, trend charts), Opportunity Queue (TanStack table: next-best-action, $ value, retention odds, script, filters), Customer 360 (profile, contract, equity, risk, timeline, current recommendation). Mocks only. Done when an advisor can find Vishwaa, Sameera, Hung and see why each is queued.
 ```
 
 ### C2 — Act + connect
@@ -108,12 +108,12 @@ Implement K1 in apps/customer (shared by /app and /kiosk): sign in by ID / QR / 
 
 ### K2 — Decide + act
 ```
-Implement K2: what-if sliders (live recalculation via /scenarios), best-time-to-move chart, true cost + CO2 comparison, action center (self-service start, book follow-up, claim offer, send deal packet), talk-to-a-person handoff with live status. Done when James goes from recommendation to deal packet sent.
+Implement K2: what-if sliders (live recalculation via /scenarios), best-time-to-move chart, true cost + CO2 comparison, action center (self-service start, book follow-up, claim offer, send deal packet), talk-to-a-person handoff with live status. Done when Sameera goes from recommendation to deal packet sent.
 ```
 
 ### K3 — AI experiences
 ```
-Implement K3: photo pre-inspection (guided camera capture of 6 angles, upload, results with marked items + estimated charges labelled as estimate), Advisor chat + voice (Web Speech API, English and Spanish, streams answers with numbers used), alerts inbox with consent controls, hardship flow for Priya. Done when Maria gets an estimate and Priya completes hardship.
+Implement K3: photo pre-inspection (guided camera capture of 6 angles, upload, results with marked items + estimated charges labelled as estimate), Advisor chat + voice (Web Speech API, English and Spanish, streams answers with numbers used), alerts inbox with consent controls, hardship flow for Hung. Done when Vishwaa gets an estimate and Hung completes hardship.
 ```
 
 ### K4 — 3D Showroom

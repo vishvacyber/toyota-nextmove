@@ -1,4 +1,5 @@
 "use client";
+import { Check, X } from "lucide-react";
 import { useState } from "react";
 import type { components, DeployResult, StudioAgent } from "@nextmove/contracts";
 import { api, useApi } from "@nextmove/contracts/client";
@@ -24,7 +25,7 @@ function Gate({ title, rows }: { title: string; rows: DeployResult["eval_results
       <ul className="space-y-1">
         {rows.map((r) => (
           <li key={r.case} className={cn("flex gap-2", !r.passed && "text-destructive")}>
-            <span aria-hidden>{r.passed ? "✓" : "✕"}</span>
+            {r.passed ? <Check aria-hidden className="size-3.5" /> : <X aria-hidden className="size-3.5" />}
             <span><span className="sr-only">{r.passed ? "Passed: " : "Failed: "}</span>{r.case}{r.detail && <span className="text-muted-foreground"> · {r.detail}</span>}</span>
           </li>
         ))}

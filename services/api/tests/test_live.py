@@ -36,9 +36,14 @@ class FakeGemini:
         await asyncio.Event().wait()
 
 
+async def no_voice(text):
+    return None
+
+
 @pytest.fixture
 def gemini(monkeypatch):
     monkeypatch.setenv("GEMINI_API_KEY", "test")
+    monkeypatch.setattr(live, "speak", no_voice)   # never reach Gemini TTS from a test
     fake = {}
 
     def use(*script):
@@ -67,16 +72,16 @@ def checked(call):
 
 
 def test_tool_answer_passes_guardian_and_is_traced(gemini):
-    pay = customer("CUST-JAMES").contract.monthly_payment
-    g = gemini({"toolCall": {"functionCalls": [{"id": "1", "name": "get_customer", "args": {"customer_id": "CUST-JAMES"}}]}},
+    pay = customer("CUST-SAMEERA2026").contract.monthly_payment
+    g = gemini({"toolCall": {"functionCalls": [{"id": "1", "name": "get_customer", "args": {"customer_id": "CUST-SAMEERA2026"}}]}},
                said(f"Your payment today is ${pay:,.2f}."), DONE)
-    with TestClient(app) as api, api.websocket_connect("/voice/CUST-JAMES") as ws:
+    with TestClient(app) as api, api.websocket_connect("/voice/CUST-SAMEERA2026") as ws:
         c = until(ws, checked)
         line = c["lines"][-1]
         assert line["role"] == "agent" and line["guardian"]["verdict"] == "pass"
         reply = next(m["toolResponse"] for m in g.sent if "toolResponse" in m)["functionResponses"][0]
         assert reply["name"] == "get_customer" and "contract" in reply["response"]
-        assert g.sent[0]["setup"]["model"].startswith("models/") and "CUST-JAMES" in json.dumps(g.sent[0])
+        assert g.sent[0]["setup"]["model"].startswith("models/") and "CUST-SAMEERA2026" in json.dumps(g.sent[0])
         ws.send_json({"type": "hangup"})
     ended = live.CALLS[c["id"]]
     assert ended.status == "ended" and ended.trace_id
@@ -84,7 +89,7 @@ def test_tool_answer_passes_guardian_and_is_traced(gemini):
 
 def test_invented_number_is_flagged_and_corrected(gemini):
     g = gemini(said("Your new payment would be $123.45 a month."), DONE)
-    with TestClient(app) as api, api.websocket_connect("/voice/CUST-JAMES") as ws:
+    with TestClient(app) as api, api.websocket_connect("/voice/CUST-SAMEERA2026") as ws:
         c = until(ws, checked)
         assert c["lines"][-1]["guardian"]["verdict"] == "block"
         ws.send_json({"type": "hangup"})
@@ -93,7 +98,7 @@ def test_invented_number_is_flagged_and_corrected(gemini):
 
 def test_undeclared_tool_is_refused(gemini):
     g = gemini({"toolCall": {"functionCalls": [{"id": "1", "name": "log_decision", "args": {}}]}}, said("Okay."), DONE)
-    with TestClient(app) as api, api.websocket_connect("/voice/CUST-JAMES") as ws:
+    with TestClient(app) as api, api.websocket_connect("/voice/CUST-SAMEERA2026") as ws:
         until(ws, checked)
         ws.send_json({"type": "hangup"})
     reply = next(m["toolResponse"] for m in g.sent if "toolResponse" in m)["functionResponses"][0]
@@ -102,7 +107,7 @@ def test_undeclared_tool_is_refused(gemini):
 
 def test_takeover_hands_the_call_to_a_rep(gemini):
     gemini(said("Hi, how can I help?"), DONE)
-    with TestClient(app) as api, api.websocket_connect("/voice/CUST-MARIA") as ws:
+    with TestClient(app) as api, api.websocket_connect("/voice/CUST-VISHWAA2026") as ws:
         c = until(ws, checked)
         assert api.post(f"/calls/{c['id']}/messages", json={"text": "hi"}).status_code == 409   # AI still on the call
         r = api.post(f"/calls/{c['id']}/takeover", json={"employee": "Alex"})
@@ -117,13 +122,13 @@ def test_takeover_hands_the_call_to_a_rep(gemini):
         assert c["lines"][-1]["text"] == "Thanks, my email is [email]"   # rule 6: masked
         ws.send_json({"type": "hangup"})
     h = actions.STORE["handoffs"][-1]
-    assert h.customer_id == "CUST-MARIA" and h.status == "claimed" and h.claimed_by == "Alex"
+    assert h.customer_id == "CUST-VISHWAA2026" and h.status == "claimed" and h.claimed_by == "Alex"
     assert api.get("/calls").json()[0]["id"] == c["id"]
 
 
 def test_gemini_down_tells_the_caller_and_hands_off():
     before = len(actions.STORE["handoffs"])   # no GEMINI_API_KEY in tests
-    with TestClient(app) as api, api.websocket_connect("/voice/CUST-PRIYA?lang=es&surface=app") as ws:
+    with TestClient(app) as api, api.websocket_connect("/voice/CUST-HUNG2026?lang=es&surface=app") as ws:
         c = until(ws, lambda c: any(x["role"] == "system" for x in c["lines"]))
         assert c["surface"] == "app" and "specialist" in c["lines"][-1]["text"]
         ws.send_json({"type": "hangup"})
@@ -136,12 +141,66 @@ def test_unknown_customer_is_refused():
         ws.receive_json()
 
 
-def test_guest_call_gets_estimate_tools_only(gemini):
+def ident(name, car, i="9"):
+    return {"toolCall": {"functionCalls": [{"id": i, "name": "identify_customer", "args": {"name": name, "vehicle_model": car}}]}}
+
+
+def replies(g):
+    return [r for m in g.sent if "toolResponse" in m for r in m["toolResponse"]["functionResponses"]]
+
+
+def test_caller_is_identified_by_name_and_car_then_pinned_to_that_account(gemini):
+    g = gemini({"toolCall": {"functionCalls": [{"id": "1", "name": "get_customer", "args": {"customer_id": "CUST-VISHWAA2026"}}]}},
+               ident("Vishwaa", "Camry", "2"), ident("vishwaa", "RAV4 hybrid", "3"),
+               {"toolCall": {"functionCalls": [{"id": "4", "name": "get_customer", "args": {"customer_id": "CUST-SAMEERA2026"}}]}},
+               said("Thanks, I found your account."), DONE)
+    with TestClient(app) as api, api.websocket_connect("/voice/GUEST") as ws:
+        while (m := ws.receive_json())["type"] != "identified":
+            pass
+        assert m == {"type": "identified", "customer_id": "CUST-VISHWAA2026", "first_name": "Vishwaa"}
+        c = until(ws, checked)
+        assert c["customer_id"] == "CUST-VISHWAA2026"
+        ws.send_json({"type": "hangup"})
+    r = replies(g)
+    assert "Not verified" in r[0]["response"]["error"]                    # no account data before verification
+    assert r[1]["response"]["verified"] is False                           # right name, wrong car
+    assert r[2]["response"] == {"verified": True, "customer_id": "CUST-VISHWAA2026"}
+    assert r[3]["response"]["id"] == "CUST-VISHWAA2026"                    # asked for someone else: pinned to the caller
+    traced = live.CALLS[c["id"]]
+    assert traced.status == "ended"
+    assert "Vishwaa" not in json.dumps([m for m in g.sent if "toolResponse" in m])
+
+
+def test_identify_locks_after_three_tries(gemini):
+    g = gemini(*[ident("Vishwaa", "Tacoma", str(i)) for i in range(4)], said("Let me get a specialist."), DONE)
+    with TestClient(app) as api, api.websocket_connect("/voice/GUEST") as ws:
+        until(ws, checked)
+        ws.send_json({"type": "hangup"})
+    assert "Too many attempts" in replies(g)[3]["response"]["reason"]
+
+
+def test_rep_message_is_spoken_with_a_natural_voice(gemini, monkeypatch):
+    async def voiced(text):
+        return b"\x01\x00" * 2400
+    gemini(said("Hi, how can I help?"), DONE)
+    monkeypatch.setattr(live, "speak", voiced)
+    with TestClient(app) as api, api.websocket_connect("/voice/CUST-SAMEERA2026") as ws:
+        c = until(ws, checked)
+        api.post(f"/calls/{c['id']}/takeover", json={"employee": "Alex"})
+        api.post(f"/calls/{c['id']}/messages", json={"text": "Hi, I'm Alex."})
+        while (m := ws.receive())["type"] == "websocket.send" and m.get("bytes") is None:
+            pass
+        assert m["bytes"] == b"\x01\x00" * 2400
+        ws.send_json({"type": "hangup"})
+
+
+def test_guest_setup_declares_identify_and_hides_the_name(gemini):
     g = gemini(said("Hi! I can price a new Toyota for you."), DONE)
     with TestClient(app) as api, api.websocket_connect("/voice/GUEST") as ws:
         c = until(ws, checked)
-        r = api.post(f"/calls/{c['id']}/takeover", json={"employee": "Alex"})
-        assert r.status_code == 200   # no account, so no handoff record, but a rep can still join
+        assert api.post(f"/calls/{c['id']}/takeover", json={"employee": "Alex"}).status_code == 200   # a rep can still join
         ws.send_json({"type": "hangup"})
-    names = [f["name"] for f in g.sent[0]["setup"]["tools"][0]["functionDeclarations"]]
-    assert names == live.GUEST_TOOLS and "Customer ID" not in json.dumps(g.sent[0])
+    setup = g.sent[0]["setup"]
+    names = [f["name"] for f in setup["tools"][0]["functionDeclarations"]]
+    assert "identify_customer" in names and "estimate_payment" in names and "Customer ID" not in json.dumps(setup)
+    assert setup["generationConfig"]["speechConfig"]["voiceConfig"]["prebuiltVoiceConfig"]["voiceName"] == live.AGENT_VOICE

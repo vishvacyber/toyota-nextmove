@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import { Smartphone } from "lucide-react";
 import { encode } from "uqr";
 import { useI18n } from "@/lib/i18n";
 
@@ -20,10 +21,10 @@ export function ContinueOnPhone({ path, takeHome = false }: { path: string; take
   const qr = url ? encode(url, { border: 2 }) : undefined;
   return (
     <>
-      <button type="button" onClick={open} className="min-h-14 rounded-full border border-line px-6 py-3 font-semibold">
-        📱 {t(takeHome ? "take_home" : "continue_phone")}
+      <button type="button" onClick={open} className="btn-outline">
+        <Smartphone aria-hidden className="h-5 w-5" /> {t(takeHome ? "take_home" : "continue_phone")}
       </button>
-      <dialog ref={dialog} aria-labelledby="phone-title" className="m-auto max-w-md rounded-3xl bg-bg p-8 text-fg backdrop:bg-fg/40">
+      <dialog ref={dialog} aria-labelledby="phone-title" className="m-auto max-w-md rounded-2xl bg-bg p-8 text-fg backdrop:bg-fg/40">
         <h2 id="phone-title" className="text-2xl font-semibold">{t(takeHome ? "take_home" : "continue_phone")}</h2>
         <p className="mt-2 text-muted">{t(takeHome ? "take_home_body" : "continue_phone_body")}</p>
         {qr && (
@@ -36,7 +37,7 @@ export function ContinueOnPhone({ path, takeHome = false }: { path: string; take
         )}
         <p className="mt-4 break-all text-center text-sm text-muted">{url}</p>
         <form method="dialog" className="mt-6">
-          <button className="w-full rounded-full bg-accent px-6 py-3 font-semibold text-on-accent">{t("close")}</button>
+          <button className="w-full rounded-lg bg-accent px-6 py-3 font-semibold text-on-accent">{t("close")}</button>
         </form>
       </dialog>
     </>

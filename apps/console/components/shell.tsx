@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
-import { SyntheticBadge } from "@nextmove/tokens";
+import { ToyotaLogo } from "@nextmove/tokens";
 import { CommandMenu } from "@/components/command-menu";
 import { Button } from "@/components/ui/button";
 import { NAV } from "@/lib/nav";
@@ -25,8 +25,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <aside className="w-56 shrink-0 border-r bg-sidebar text-sidebar-foreground">
-        <div className="px-4 py-4 text-sm font-semibold">
-          <span className="text-primary">Toyota</span> NextMove
+        <div className="flex items-center gap-2 px-4 py-4 text-sm font-semibold">
+          <ToyotaLogo className="h-5 w-auto" /> <span className="border-l pl-2">NextMove</span>
         </div>
         <nav aria-label="Console" className="space-y-4 px-2 pb-4">
           {groups.map((g) => (
@@ -54,12 +54,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </nav>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <div role="note" className="bg-primary px-6 py-1 text-center text-xs font-medium text-primary-foreground">
-          Synthetic data only. Demo customers, no real people or accounts.
-        </div>
         <header className="flex items-center justify-end gap-3 border-b px-6 py-3">
           <div className="mr-auto"><CommandMenu /></div>
-          <SyntheticBadge />
           <label className="flex items-center gap-2 text-sm">
             <span className="text-muted-foreground">Role</span>
             <select

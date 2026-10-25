@@ -14,7 +14,7 @@ from tools import REGISTRY, ToolError, actions, call
 from tools.mcp_server import server
 
 SPEC_TOOLS = {"get_customer", "run_scenario", "check_eligibility", "get_market_value", "find_dealer", "get_recalls",
-              "book_appointment", "create_offer_draft", "handoff_to_human", "log_decision", "inspect_photos", "get_timing", "estimate_payment"}
+              "book_appointment", "create_offer_draft", "handoff_to_human", "log_decision", "inspect_photos", "get_timing", "estimate_payment", "identify_customer"}
 
 
 def test_registry_has_the_12_spec_tools_with_schemas():
@@ -24,9 +24,9 @@ def test_registry_has_the_12_spec_tools_with_schemas():
 
 
 def test_get_customer_masks_pii():
-    out = call("get_customer", {"customer_id": "CUST-MARIA"})
+    out = call("get_customer", {"customer_id": "CUST-VISHWAA2026"})
     assert out["first_name"] == "[masked]" and out["email"] is None and out["phone"] is None
-    assert "Maria" not in str(out) and "Alvarez" not in str(out)
+    assert "Vishwaa" not in str(out)
     assert out["contract"]["residual_value"] == 22450
 
 
@@ -36,14 +36,14 @@ def test_unknown_customer_is_a_tool_error():
 
 
 def test_run_scenario_matches_engine():
-    out = models.ScenarioSet.model_validate(call("run_scenario", {"customer_id": "CUST-JAMES", "options": ["upgrade"]}))
-    c = customers_by_id()["CUST-JAMES"]
+    out = models.ScenarioSet.model_validate(call("run_scenario", {"customer_id": "CUST-SAMEERA2026", "options": ["upgrade"]}))
+    c = customers_by_id()["CUST-SAMEERA2026"]
     assert out.scenarios[0].equity == scenarios.equity(c)
 
 
 def test_check_eligibility():
-    assert call("check_eligibility", {"customer_id": "CUST-PRIYA", "option": "due_date_change"})["eligible"] is True
-    out = call("check_eligibility", {"customer_id": "CUST-MARIA", "option": "refinance"})
+    assert call("check_eligibility", {"customer_id": "CUST-HUNG2026", "option": "due_date_change"})["eligible"] is True
+    out = call("check_eligibility", {"customer_id": "CUST-VISHWAA2026", "option": "refinance"})
     assert out["eligible"] is False and out["reason"]
 
 
@@ -79,28 +79,28 @@ def test_find_dealer_and_recalls():
 
 
 def test_action_tools_respect_autonomy():
-    appt = call("book_appointment", {"customer_id": "CUST-MARIA", "dealer_id": "DLR-01", "at": "2026-11-02T15:00:00Z",
+    appt = call("book_appointment", {"customer_id": "CUST-VISHWAA2026", "dealer_id": "DLR-01", "at": "2026-11-02T15:00:00Z",
                                      "purpose": "Lease-end inspection"})
     assert appt["status"] == "pending_approval" and REGISTRY["book_appointment"].autonomy == "L3"
     offer = models.Offer.model_validate(call("create_offer_draft", {"name": "Loyalty", "rule": "lease_end",
                                                                     "incentive": {"type": "cash", "value": 500}}))
     assert offer.status == "draft"
-    h = models.Handoff.model_validate(call("handoff_to_human", {"customer_id": "CUST-PRIYA", "reason": "Hardship",
+    h = models.Handoff.model_validate(call("handoff_to_human", {"customer_id": "CUST-HUNG2026", "reason": "Hardship",
                                                                 "surface": "app"}))
     assert h.status == "waiting"
     a = models.AuditEntry.model_validate(call("log_decision", {"actor": "advisor", "action": "recommend_buyout",
-                                                              "autonomy_level": "L1", "customer_id": "CUST-MARIA"}))
+                                                              "autonomy_level": "L1", "customer_id": "CUST-VISHWAA2026"}))
     assert actions.STORE["audit"][-1].id == a.id
 
 
 def test_inspect_photos_without_photos_is_the_standard_estimate(monkeypatch):
     monkeypatch.setitem(actions.STORE, "inspections", [])
-    r = models.InspectionResult.model_validate(call("inspect_photos", {"customer_id": "CUST-MARIA"}))
+    r = models.InspectionResult.model_validate(call("inspect_photos", {"customer_id": "CUST-VISHWAA2026"}))
     assert r.is_estimate and r.items == [] and r.total_estimated_charge == scenarios.CFG["fees"]["wear_estimate"]
     assert "No photo pre-inspection yet" in r.disclaimer
 
 
-@pytest.mark.parametrize("cid", ["CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"])
+@pytest.mark.parametrize("cid", ["CUST-VISHWAA2026", "CUST-SAMEERA2026", "CUST-HUNG2026"])
 def test_get_timing_shape(cid):
     t = models.TimingPlan.model_validate(call("get_timing", {"customer_id": cid}))
     assert t.months[0].month_offset == 0 and 0 <= t.best_month_offset < len(t.months)
@@ -109,17 +109,17 @@ def test_get_timing_shape(cid):
 
 def test_personas_still_tell_their_story_with_comps():
     c = customers_by_id()
-    maria, james = c["CUST-MARIA"], c["CUST-JAMES"]
+    vishwaa, sameera = c["CUST-VISHWAA2026"], c["CUST-SAMEERA2026"]
     assert scenarios.comp_value("RAV4", 2024) and scenarios.comp_value("Camry", 2022)   # values come from comps
-    assert scenarios.equity(maria) > 0 and scenarios.equity(james) > 5000
-    assert "SerpApi" in scenarios.market_note(maria.vehicle) and "as of" in scenarios.market_note(maria.vehicle)
+    assert scenarios.equity(vishwaa) > 0 and scenarios.equity(sameera) > 5000
+    assert "SerpApi" in scenarios.market_note(vishwaa.vehicle) and "as of" in scenarios.market_note(vishwaa.vehicle)
 
 
 def test_mcp_server_lists_and_calls_tools():
     async def run():
         async with Client(server) as mcp:
             tools = (await mcp.list_tools()).tools
-            ok = await mcp.call_tool("run_scenario", {"customer_id": "CUST-MARIA", "options": ["buyout"]})
+            ok = await mcp.call_tool("run_scenario", {"customer_id": "CUST-VISHWAA2026", "options": ["buyout"]})
             bad = await mcp.call_tool("get_customer", {"customer_id": "CUST-NOPE"})
             return tools, ok, bad
     tools, ok, bad = asyncio.run(run())
@@ -140,3 +140,13 @@ def test_market_endpoint(model):
 def test_new_id_is_unique_across_restarts():
     # A per-process counter restarted at 0001 and collided with traces already in Supabase.
     assert len({actions.new_id("TR") for _ in range(1000)}) == 1000
+
+
+def test_identify_customer_tolerates_spoken_spellings_but_needs_the_car():
+    def who(name, car):
+        return call("identify_customer", {"name": name, "vehicle_model": car})
+    assert who("Vishwa", "RAV four") == {"verified": True, "customer_id": "CUST-VISHWAA2026"}   # speech-to-text spelling
+    assert who("Samira", "Camry")["customer_id"] == "CUST-SAMEERA2026"
+    assert who("cust-hung2026", "Prius")["customer_id"] == "CUST-HUNG2026"
+    assert who("Vishwaa", "Camry")["verified"] is False                                         # wrong car
+    assert set(who("Vishwaa", "RAV4")) == {"verified", "customer_id"}                         # never account details

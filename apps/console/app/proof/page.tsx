@@ -53,7 +53,7 @@ export default function Proof() {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-semibold">Proof <MockBadge path="/kpis" /></h1>
-          <p className="text-sm text-muted-foreground">Baseline vs NextMove across the synthetic portfolio. Move an assumption to re-run the simulation.</p>
+          <p className="text-sm text-muted-foreground">Baseline vs NextMove across the portfolio. Move an assumption to re-run the simulation.</p>
         </div>
         {k && <p className="text-xs text-muted-foreground">{kpiSource(k)} · as of {asOf(k.as_of)}</p>}
       </div>
@@ -85,7 +85,7 @@ export default function Proof() {
               </label>
             ))}
             <p className="text-xs text-muted-foreground md:col-span-3">
-              Each slider re-runs the 24-month simulation over all 1,200 synthetic customers.
+              Each slider re-runs the 24-month simulation over all 1,200 customers.
             </p>
           </CardContent>
         </Card>

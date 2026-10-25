@@ -28,7 +28,7 @@ export default function LiveActivity() {
 
   // Dev only: creates a real handoff, the same call the kiosk makes.
   function simulate() {
-    api<Handoff>("/handoffs", { method: "POST", body: JSON.stringify({ customer_id: "CUST-MARIA", reason: "Talk to a person about lease buyout", surface: "kiosk" }) })
+    api<Handoff>("/handoffs", { method: "POST", body: JSON.stringify({ customer_id: "CUST-VISHWAA2026", reason: "Talk to a person about lease buyout", surface: "kiosk" }) })
       .then((h) => broadcast("created", h), (e: Error) => toast(`Couldn't create handoff: ${e.message}`, true));
   }
 

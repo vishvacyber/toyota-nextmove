@@ -2,6 +2,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
+import { ArrowLeftRight, Calculator, Scale, UserRound } from "lucide-react";
 import type { Customer, Recommendation } from "@nextmove/contracts";
 import { isBusy, useApi } from "@nextmove/contracts/client";
 import { Card, Row, ScenarioCard } from "@/components/cards";
@@ -47,12 +48,12 @@ export function NextMoveScreen({ customerId }: { customerId?: string }) {
         >
           {customerId
             ? <Flow id={customerId} onSignOut={() => router.push(pathname)} />
-            : kiosk && !tool ? <KioskHome onPick={setTool} />
+            : kiosk && !tool ? <KioskHome onPick={setTool} onSignIn={(id) => router.push(`${pathname}?id=${encodeURIComponent(id)}`)} />
               : kiosk && tool !== "account" && tool ? <WalkIn key={tool} mode={tool} onBack={() => setTool(null)} />
                 : (
                   <>
                     {kiosk && (
-                      <button type="button" onClick={() => setTool(null)} className="mx-6 min-h-12 rounded-full border border-line px-6 font-semibold">
+                      <button type="button" onClick={() => setTool(null)} className="mx-6 min-h-12 rounded-lg border border-line px-6 font-semibold">
                         ← {t("back")}
                       </button>
                     )}
@@ -66,36 +67,36 @@ export function NextMoveScreen({ customerId }: { customerId?: string }) {
 }
 
 const TILES = [
-  ["account", "🔑", "tile_account", "tile_account_body"],
-  ["estimate", "💵", "walk_estimate", "tile_estimate_body"],
-  ["trade", "🔁", "walk_trade", "tile_trade_body"],
-  ["compare", "⚖️", "walk_compare", "tile_compare_body"],
+  ["account", UserRound, "tile_account", "tile_account_body"],
+  ["estimate", Calculator, "walk_estimate", "tile_estimate_body"],
+  ["trade", ArrowLeftRight, "walk_trade", "tile_trade_body"],
+  ["compare", Scale, "walk_compare", "tile_compare_body"],
 ] as const;
 
 /** Kiosk home: what someone standing in the dealership came to do, with or without an account. */
-function KioskHome({ onPick }: { onPick: (m: Mode | "account") => void }) {
+function KioskHome({ onPick, onSignIn }: { onPick: (m: Mode | "account") => void; onSignIn: (id: string) => void }) {
   const { t } = useI18n();
   return (
     <main className="mx-auto max-w-6xl px-6 pb-16 pt-6">
       <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">{t("kiosk_home_title")}</h1>
       <p className="mt-2 text-lg text-muted">{t("kiosk_home_body")}</p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        {TILES.map(([mode, icon, title, body], i) => (
+        {TILES.map(([mode, Icon, title, body], i) => (
           <motion.button key={mode} type="button" onClick={() => onPick(mode)}
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease, delay: 0.06 * i }}
-            className="min-h-40 rounded-3xl border border-line bg-surface p-6 text-left transition hover:border-accent">
-            <span aria-hidden className="text-4xl">{icon}</span>
+            className="min-h-40 rounded-2xl border border-line bg-surface p-6 text-left transition hover:border-accent">
+            <Icon aria-hidden className="h-9 w-9 text-accent" strokeWidth={1.75} />
             <span className="mt-3 block text-2xl font-semibold">{t(title)}</span>
             <span className="mt-1 block text-muted">{t(body)}</span>
           </motion.button>
         ))}
       </div>
-      <section aria-labelledby="talk-title" className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-fg p-6 text-bg">
+      <section aria-labelledby="talk-title" className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-fg p-6 text-bg">
         <div>
           <h2 id="talk-title" className="text-2xl font-semibold">{t("tile_talk")}</h2>
           <p className="opacity-75">{t("tile_talk_body")}</p>
         </div>
-        <TalkButton />
+        <TalkButton onSignIn={onSignIn} />
       </section>
     </main>
   );
@@ -125,7 +126,7 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-12">
         <p role="alert" className="text-xl">{t("ai_busy")}</p>
-        <button type="button" onClick={rec.retry} className="mt-6 rounded-full bg-accent px-6 py-3 font-semibold text-on-accent">{t("retry")}</button>
+        <button type="button" onClick={rec.retry} className="mt-6 rounded-lg bg-accent px-6 py-3 font-semibold text-on-accent">{t("retry")}</button>
       </main>
     );
   }
@@ -133,7 +134,7 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-12">
         <p role="alert" className="text-xl">{t("not_found", { id })}</p>
-        <button type="button" onClick={onSignOut} className="mt-6 rounded-full bg-accent px-6 py-3 font-semibold text-on-accent">{t("try_another")}</button>
+        <button type="button" onClick={onSignOut} className="mt-6 rounded-lg bg-accent px-6 py-3 font-semibold text-on-accent">{t("try_another")}</button>
       </main>
     );
   }
@@ -155,16 +156,16 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
         </div>
       </div>
       <nav aria-label={t("steps")} className="mt-4">
-        <ol className="flex gap-2 overflow-x-auto rounded-full bg-surface p-1">
+        <ol className="flex gap-2 overflow-x-auto rounded-lg bg-surface p-1">
           {STEPS.map((k, i) => (
             <li key={k} className="flex-1">
               <button
                 type="button"
                 onClick={() => setStep(i)}
                 aria-current={step === i ? "step" : undefined}
-                className={`relative w-full whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors ${step === i ? "text-on-accent" : "text-muted hover:text-fg"}`}
+                className={`relative w-full whitespace-nowrap rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${step === i ? "text-on-accent" : "text-muted hover:text-fg"}`}
               >
-                {step === i && <motion.span layoutId="step-pill" className="absolute inset-0 rounded-full bg-accent" transition={{ duration: 0.35, ease }} />}
+                {step === i && <motion.span layoutId="step-pill" className="absolute inset-0 rounded-md bg-accent" transition={{ duration: 0.35, ease }} />}
                 <span className="relative">{i + 1}. {t(k)}</span>
               </button>
             </li>
@@ -195,10 +196,10 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
 
       <div className="mt-10 flex justify-between gap-4">
         {step > 0
-          ? <button type="button" onClick={() => setStep(step - 1)} className="rounded-full border border-line px-6 py-3 font-semibold">{t("back")}</button>
+          ? <button type="button" onClick={() => setStep(step - 1)} className="rounded-lg border border-line px-6 py-3 font-semibold">{t("back")}</button>
           : <span />}
         {step < STEPS.length - 1 && (
-          <button type="button" onClick={() => setStep(step + 1)} className="rounded-full bg-accent px-8 py-3 font-semibold text-on-accent transition hover:brightness-110">
+          <button type="button" onClick={() => setStep(step + 1)} className="rounded-lg bg-accent px-8 py-3 font-semibold text-on-accent transition hover:brightness-110">
             {t(STEPS[step + 1])} →
           </button>
         )}
@@ -222,7 +223,7 @@ function SituationStep({ c, r }: { c: Customer; r: Recommendation }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, ease }}
         aria-labelledby="detected"
-        className="rounded-3xl bg-fg p-6 text-bg md:col-span-2"
+        className="rounded-2xl bg-fg p-6 text-bg md:col-span-2"
       >
         <h2 id="detected" className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">{t("detected_situation")}</h2>
         <p className="mt-2 text-3xl font-semibold">{t(`sit_${r.situation}` as Key)}</p>
@@ -285,12 +286,12 @@ function NextMoveStep({ r, onAct, onExplore }: { r: Recommendation; onAct: () =>
           <motion.div key={s.option} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease, delay: 0.08 * i }}>
             <ScenarioCard s={s} recommended={i === 0}>
               {i === 0 && (
-                <button type="button" onClick={onAct} className="mt-6 w-full rounded-full bg-accent px-6 py-3 font-semibold text-on-accent transition hover:brightness-110">
+                <button type="button" onClick={onAct} className="mt-6 w-full rounded-lg bg-accent px-6 py-3 font-semibold text-on-accent transition hover:brightness-110">
                   {r.action.label}
                 </button>
               )}
               {s.target_vehicle && (
-                <button type="button" onClick={() => onExplore(s.option)} className={`${i === 0 ? "mt-3" : "mt-6"} w-full rounded-full border border-line px-6 py-3 font-semibold`}>
+                <button type="button" onClick={() => onExplore(s.option)} className={`${i === 0 ? "mt-3" : "mt-6"} w-full rounded-lg border border-line px-6 py-3 font-semibold`}>
                   {t("explore_showroom")}
                 </button>
               )}
@@ -311,7 +312,7 @@ function WhyStep({ r }: { r: Recommendation }) {
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {/* The explanation quotes dollar amounts, so it gets the kiosk privacy blur too. */}
-      <section aria-labelledby="why-text" className="rounded-3xl border-2 border-accent p-6 md:col-span-2">
+      <section aria-labelledby="why-text" className="rounded-2xl border-2 border-accent p-6 md:col-span-2">
         <h2 id="why-text" className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">{r.recommended.label}</h2>
         <p className="mt-3 text-xl leading-relaxed sm:text-2xl"><>{r.why}</></p>
       </section>

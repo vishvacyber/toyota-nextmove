@@ -139,3 +139,14 @@ def test_parse_msrp_prefers_the_trim_price_and_skips_dealer_inventory():
     assert parse_msrp(resp, "LE", base=True)["price"] == 29700            # "starts at", no comma
     assert parse_msrp({"organic_results": [{"link": "https://www.toyota.com/grandhighlander/",
                                             "snippet": "Grand Highlander LE MSRP $42,260"}]}, "LE", True, "Highlander") is None
+
+
+def test_parse_msrp_skips_dealer_asking_prices():
+    from serpapi.market import parse_msrp
+    resp = {"organic_results": [
+        {"link": "https://www.edmunds.com/toyota/highlander-hybrid/2026/", "title": "2026 Toyota Highlander Hybrid XLE Specs",
+         "snippet": "XLE 4dr SUV Dealer price: $56,770 8 mi away; XLE 4dr SUV · $56,955. 8 mi away"},
+        {"link": "https://www.toyota.com/tacoma/", "title": "2026 Tacoma", "snippet": "TRD Sport i-FORCE MAX $47,335 Base MSRP"},
+    ]}
+    assert parse_msrp(resp, "Hybrid XLE", model="Highlander") is None
+    assert parse_msrp(resp, "TRD Sport i-FORCE MAX", model="Tacoma")["price"] == 47335

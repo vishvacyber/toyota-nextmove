@@ -2,7 +2,13 @@
 
 Browser socket (/voice/{customer_id}): binary frames are mic PCM16 at 16 kHz in, model audio PCM16 at 24 kHz out;
 text frames are JSON: in `{"type": "hangup"}` / `{"type": "customer", "text"}` (speech-to-text after a takeover);
-out `{"type": "call", "call"}` on every change, `{"type": "interrupted"}`, `{"type": "say", "text"}` (rep message).
+out `{"type": "call", "call"}` on every change, `{"type": "interrupted"}`, `{"type": "identified", "customer_id",
+"first_name"}` when the caller is verified, and `{"type": "say", "text"}` only when a rep message couldn't be voiced
+(rep messages are normally spoken with Gemini TTS and sent as audio frames).
+
+Accounts: a caller who isn't signed in can say their name (or customer ID) and which Toyota they drive; the
+identify_customer tool must match both. Until then account tools are refused; after, every account tool is pinned to
+the verified customer ID, so the model can't reach anyone else's account.
 
 Rules: numbers only from tools (rule 1). Speech can't be held back for review, so the Guardian checks each finished
 agent turn right away (rule 2 for voice, see DECISIONS): a failed turn is flagged here and in the console, and the
@@ -11,12 +17,15 @@ model is told to correct itself out loud. The key stays on the server; only the 
 
 import asyncio
 import base64
+import io
 import json
 import logging
 import os
 import time
+import wave
 from datetime import UTC, datetime
 
+import httpx
 import websockets
 from fastapi import WebSocket, WebSocketDisconnect
 
@@ -39,14 +48,19 @@ from app.models import (
     ToolCall,
     Verdict,
 )
+from sim.generator import customers_by_id
 from tools import ToolError, actions, call, store
 
 log = logging.getLogger("nextmove.live")
 URL = "wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent"
-TOOLS = [*AGENT_TOOLS["advisor"], "handoff_to_human"]
-GUEST = "GUEST"   # a kiosk walk-in with no account: estimates and market data only, nothing about any customer
-GUEST_TOOLS = ["estimate_payment", "get_market_value", "find_dealer", "get_recalls"]
+TOOLS = list(dict.fromkeys([*AGENT_TOOLS["advisor"], "handoff_to_human", "estimate_payment", "identify_customer"]))
+ACCOUNT_TOOLS = {"get_customer", "run_scenario", "check_eligibility", "get_timing", "book_appointment", "handoff_to_human"}
+GUEST = "GUEST"   # a caller not signed in: estimates and market data until they're identified
+MAX_TRIES = 3     # identify attempts per call
+AGENT_VOICE, REP_VOICE = "Aoede", "Charon"   # two natural Gemini voices, so callers can tell the AI from the rep
+TTS_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 CALLS: dict[str, Call] = {}
+TRIES: dict[str, int] = {}
 SOCKETS: dict[str, WebSocket] = {}   # call id → the customer's socket
 AI: dict[str, asyncio.Task] = {}     # call id → the Gemini side, cancelled on takeover
 connect = websockets.connect         # tests swap in a fake Gemini
@@ -60,19 +74,25 @@ def now() -> datetime:
     return datetime.now(UTC)
 
 
-def tools_for(customer_id: str) -> list[str]:
-    return GUEST_TOOLS if customer_id == GUEST else TOOLS
+def tts_model() -> str:
+    return os.environ.get("GEMINI_TTS_MODEL") or "gemini-3.8-flash-tts"   # checked live: ~3.5 s, 24 kHz mono
+
+
+def voice(name: str) -> dict:
+    return {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": name}}}
 
 
 def setup(customer_id: str, lang: str) -> dict:
-    who = ("The caller is a walk-in guest with no account: help them price new Toyotas and their trade-in with "
-           "estimate_payment, and offer that a specialist can join." if customer_id == GUEST else f"Customer ID: {customer_id}")
+    who = ("The caller isn't signed in. For anything about their own lease or loan, first ask their first name (or "
+           "customer ID) and which Toyota they drive, then call identify_customer; never discuss an account before it's "
+           "verified. Anyone can get new-car prices and a trade-in estimate with estimate_payment."
+           if customer_id == GUEST else f"Customer ID: {customer_id} (signed in on the kiosk).")
     return {"setup": {
         "model": f"models/{model()}",
-        "generationConfig": {"responseModalities": ["AUDIO"]},
+        "generationConfig": {"responseModalities": ["AUDIO"], "speechConfig": voice(AGENT_VOICE)},
         "systemInstruction": {"parts": [{"text": f"{PROMPTS['advisor'][1]}\n{VOICE}\n{who}\n"
                                                  f"Speak {'Spanish' if lang == 'es' else 'English'}."}]},
-        "tools": [{"functionDeclarations": gemini.declarations(tools_for(customer_id))}],
+        "tools": [{"functionDeclarations": gemini.declarations(TOOLS)}],
         "inputAudioTranscription": {}, "outputAudioTranscription": {}}}
 
 
@@ -119,9 +139,17 @@ async def ai(c: Call, ws: WebSocket, g, calls: list[ToolCall]) -> None:
             replies = []
             for fc in tc["functionCalls"]:
                 name, args, t0 = fc["name"], fc.get("args") or {}, time.monotonic()
-                if name not in tools_for(c.customer_id):   # only declared registry tools may run
+                if name not in TOOLS:   # only declared registry tools may run
                     out = {"error": f"Tool {name} is not available"}
+                elif name == "identify_customer":
+                    out = await identify(c, ws, args)
+                    args = {**args, "name": "[masked]"}   # rule 6: the spoken name stays out of traces
+                elif name in ACCOUNT_TOOLS and c.customer_id == GUEST:
+                    out = {"error": "Not verified yet: ask the caller's first name and which Toyota they drive, then "
+                                    "call identify_customer."}
                 else:
+                    if name in ACCOUNT_TOOLS:   # pinned to the verified caller, whatever ID the model passed
+                        args = {**args, "customer_id": c.customer_id}
                     if name == "handoff_to_human":   # the model only says why; code fills who and where
                         args = {"customer_id": c.customer_id, "surface": c.surface.value,
                                 "reason": str(args.get("reason") or "Customer asked for a person on a voice call")}
@@ -157,6 +185,44 @@ async def ai(c: Call, ws: WebSocket, g, calls: list[ToolCall]) -> None:
                 await g.send(say(f"[Guardian] Your last answer failed the compliance check: {why}. "
                                  "Briefly correct it; use only numbers your tools returned."))
             await publish(c)
+
+
+async def identify(c: Call, ws: WebSocket, args: dict) -> dict:
+    if c.customer_id != GUEST:
+        return {"verified": True, "customer_id": c.customer_id}
+    TRIES[c.id] = TRIES.get(c.id, 0) + 1
+    if TRIES[c.id] > MAX_TRIES:
+        return {"verified": False, "reason": "Too many attempts on this call; offer to bring in a specialist"}
+    try:
+        out = await asyncio.to_thread(call, "identify_customer", args)
+    except (ToolError, ValueError) as e:
+        return {"verified": False, "reason": str(e)}
+    if out.get("verified"):
+        c.customer_id = out["customer_id"]
+        add(c, CallRole.system, "Caller verified by name and vehicle.")
+        await ws.send_json({"type": "identified", "customer_id": c.customer_id,
+                            "first_name": customers_by_id()[c.customer_id].first_name})
+        await publish(c)
+    return out
+
+
+async def speak(text: str) -> bytes | None:
+    """A rep's typed message as natural speech (Gemini TTS): PCM16 24 kHz like the agent's audio, or None on failure."""
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            res = await client.post(TTS_URL.format(model=tts_model()), headers={"x-goog-api-key": os.environ["GEMINI_API_KEY"]},
+                                    json={"contents": [{"parts": [{"text": f"Say warmly and naturally: {text}"}]}],
+                                          "generationConfig": {"responseModalities": ["AUDIO"], "speechConfig": voice(REP_VOICE)}})
+            res.raise_for_status()
+            part = res.json()["candidates"][0]["content"]["parts"][0]["inlineData"]
+        data = base64.b64decode(part["data"])
+        if "wav" in part["mimeType"]:
+            with wave.open(io.BytesIO(data)) as w:
+                data = w.readframes(w.getnframes())
+        return data
+    except (KeyError, IndexError, ValueError, httpx.HTTPError, wave.Error) as e:
+        log.warning("rep voice unavailable: %s", type(e).__name__)
+        return None
 
 
 async def run_ai(c: Call, ws: WebSocket, lang: str, calls: list[ToolCall], upstream: asyncio.Queue) -> None:
@@ -249,10 +315,15 @@ async def take_over(c: Call, employee: str) -> Call:
 
 
 async def rep_says(c: Call, text: str) -> Call:
+    """The caption goes out at once; the rep's voice follows a few seconds later (browser voice if TTS fails)."""
     add(c, CallRole.employee, text)
-    if ws := SOCKETS.get(c.id):
-        await ws.send_json({"type": "say", "text": text})
     await publish(c)
+    if ws := SOCKETS.get(c.id):
+        audio = await speak(text)
+        try:
+            await (ws.send_bytes(audio) if audio else ws.send_json({"type": "say", "text": text}))
+        except (RuntimeError, WebSocketDisconnect):
+            pass
     return c
 
 

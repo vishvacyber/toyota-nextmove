@@ -531,7 +531,7 @@ export interface components {
         PhotoAngle: "front" | "rear" | "left" | "right" | "interior" | "wheels";
         /** @description Synthetic customer. No protected attributes by design. */
         Customer: {
-            /** @example CUST-MARIA */
+            /** @example CUST-VISHWAA2026 */
             id: string;
             first_name: string;
             last_name: string;

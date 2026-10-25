@@ -9,7 +9,7 @@ import re
 import httpx
 
 from app.models import AgentTrace
-from tools.store import supabase
+from tools.store import current, supabase
 
 log = logging.getLogger("nextmove.traces")
 MEMORY: list[AgentTrace] = []
@@ -69,7 +69,7 @@ def list_traces(customer_id: str | None = None, limit: int = 100) -> list[AgentT
         try:
             res = httpx.get(f"{db[0]}/rest/v1/traces", params=params, headers=db[1], timeout=3)
             res.raise_for_status()
-            return [AgentTrace.model_validate(r["trace"]) for r in res.json()]
+            return [AgentTrace.model_validate(r["trace"]) for r in res.json() if current(r["trace"])]
         except (httpx.HTTPError, ValueError) as e:
             log.warning("traces read from memory: %s", type(e).__name__)
     rows = [t for t in MEMORY if customer_id in (None, t.customer_id)]

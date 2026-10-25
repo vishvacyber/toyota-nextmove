@@ -154,8 +154,8 @@ def test_offer_rule_narrows_targeting():
     rows = simulate.rows()
     assert gas == sum(r.situation.value == "positive_equity" and r.facts["powertrain"] == "gas" for r in rows)
     assert 0 < gas < sum(r.situation.value == "positive_equity" for r in rows)
-    james = next(r for r in rows if r.id == "CUST-JAMES")
-    assert all(simulate.scenarios.OPS[op](james.facts[f], v) for f, op, v in simulate.parse_rule("positive_equity AND powertrain = gas"))
+    sameera = next(r for r in rows if r.id == "CUST-SAMEERA2026")
+    assert all(simulate.scenarios.OPS[op](sameera.facts[f], v) for f, op, v in simulate.parse_rule("positive_equity AND powertrain = gas"))
     assert simulate.parse_rule("equity >= $10,000 AND payment_stress = false") == \
         (("equity", "gte", 10000.0), ("payment_stress", "eq", False))
 
@@ -231,11 +231,11 @@ def test_live_gate_sends_back_once_and_names_failed_checks(monkeypatch, fixes_it
 
 def test_customers_list_search_and_get():
     assert len(api.get("/customers").json()) == 1200
-    found = api.get("/customers", params={"q": "maria"}).json()
-    assert [c["id"] for c in found if c["id"].startswith("CUST-M")] == ["CUST-MARIA"]
-    assert [c["id"] for c in api.get("/customers", params={"q": "cust-priya"}).json()] == ["CUST-PRIYA"]
-    j = api.get("/customers/CUST-JAMES").json()
-    assert j["first_name"] == "James" and j["synthetic"] is True
+    found = api.get("/customers", params={"q": "vishwaa"}).json()
+    assert [c["id"] for c in found if c["id"].startswith("CUST-V")] == ["CUST-VISHWAA2026"]
+    assert [c["id"] for c in api.get("/customers", params={"q": "cust-hung"}).json()] == ["CUST-HUNG2026"]
+    j = api.get("/customers/CUST-SAMEERA2026").json()
+    assert j["first_name"] == "Sameera" and j["synthetic"] is True
     assert api.get("/customers/CUST-NOPE").status_code == 404
 
 
@@ -243,7 +243,7 @@ def test_handoffs_create_list_claim_broadcast(monkeypatch):
     from agents import traces
     sent = []
     monkeypatch.setattr(traces, "broadcast", lambda ch, ev, payload: sent.append((ch, ev, payload)) or True)
-    r = api.post("/handoffs", json={"customer_id": "CUST-PRIYA", "reason": "Callback about deferral", "surface": "kiosk"})
+    r = api.post("/handoffs", json={"customer_id": "CUST-HUNG2026", "reason": "Callback about deferral", "surface": "kiosk"})
     assert r.status_code == 201
     h = r.json()
     assert h["status"] == "waiting" and api.get("/handoffs").json()[0]["id"] == h["id"]
@@ -259,14 +259,14 @@ def test_sessions_from_advisor_asks(monkeypatch):
     from tests.test_agents import engine_text, fake_run
     monkeypatch.setattr(sdk, "run", fake_run(engine_text))
     for _ in range(2):
-        a = api.post("/agents/advisor/ask", json={"customer_id": "CUST-MARIA", "message": "What should I do at lease end?",
+        a = api.post("/agents/advisor/ask", json={"customer_id": "CUST-VISHWAA2026", "message": "What should I do at lease end?",
                                                   "session_id": "SES-B5", "surface": "kiosk", "language": "en"}).json()
     s = next(x for x in api.get("/sessions").json() if x["id"] == "SES-B5")
-    assert s["customer_id"] == "CUST-MARIA" and s["surface"] == "kiosk" and s["last_trace_id"] == a["trace_id"]
+    assert s["customer_id"] == "CUST-VISHWAA2026" and s["surface"] == "kiosk" and s["last_trace_id"] == a["trace_id"]
 
 
 def test_recommendation_review_approve_and_override():
-    url = "/customers/CUST-JAMES/recommendation/review"
+    url = "/customers/CUST-SAMEERA2026/recommendation/review"
     assert api.post(url, json={"decision": "override", "reviewer": "EMP-ADVISOR-1"}).status_code == 422
     assert api.post(url, json={"decision": "approve", "reviewer": "advisor"}).status_code == 409
     e = api.post(url, json={"decision": "override", "reviewer": "EMP-ADVISOR-1", "override_option": "refinance",
@@ -274,11 +274,11 @@ def test_recommendation_review_approve_and_override():
     assert e["action"] == "override_recommendation" and e["override_reason"] == "Customer wants to keep the Camry"
     assert "employee chose refinance" in e["detail"] and e["autonomy_level"] == "L3"
     assert any(x["id"] == e["id"] for x in api.get("/audit").json())
-    rec = api.get("/customers/CUST-JAMES/recommendation").json()
+    rec = api.get("/customers/CUST-SAMEERA2026/recommendation").json()
     assert rec["review"] == {"status": "overridden", "by": "EMP-ADVISOR-1", "reason": "Customer wants to keep the Camry"}
     assert rec["recommended"]["option"] == "upgrade"   # a review never changes the engine's numbers
     api.post(url, json={"decision": "approve", "reviewer": "EMP-ADVISOR-1"})
-    assert api.get("/customers/CUST-JAMES/recommendation").json()["review"]["status"] == "approved"
+    assert api.get("/customers/CUST-SAMEERA2026/recommendation").json()["review"]["status"] == "approved"
 
 
 def test_reviews_summary_is_readable_titles_with_source():

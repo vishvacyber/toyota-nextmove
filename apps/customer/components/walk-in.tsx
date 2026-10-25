@@ -48,7 +48,7 @@ export function WalkIn({ mode, onBack }: { mode: Mode; onBack: () => void }) {
 
   return (
     <main className="mx-auto max-w-6xl px-6 pb-16">
-      <button type="button" onClick={onBack} className="min-h-12 rounded-full border border-line px-6 font-semibold">← {t("back")}</button>
+      <button type="button" onClick={onBack} className="min-h-12 rounded-lg border border-line px-6 font-semibold">← {t("back")}</button>
       <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl">{t(`walk_${mode}` as Key)}</h1>
       <p className="mt-2 text-lg text-muted">{t(`walk_${mode}_body` as Key)}</p>
 
@@ -82,8 +82,8 @@ export function WalkIn({ mode, onBack }: { mode: Mode; onBack: () => void }) {
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {MODELS.map((m) => (
                 <button key={m} type="button" onClick={() => pick(m)} aria-pressed={i.models.includes(m)}
-                  className={`overflow-hidden rounded-3xl border-2 text-left transition ${i.models.includes(m) ? "border-accent" : "border-transparent"}`}>
-                  <CarPhoto model={m} credit={false} className="aspect-[4/3]" />
+                  className={`overflow-hidden rounded-2xl border-2 text-left transition ${i.models.includes(m) ? "border-accent" : "border-transparent"}`}>
+                  <CarPhoto model={m} className="aspect-[4/3]" />
                   <span className="block px-3 py-2 font-semibold">{name(m)}</span>
                 </button>
               ))}
@@ -132,7 +132,7 @@ export function EstimateView({ est, compare }: { est: ReturnType<typeof useEstim
       <div className={`grid gap-4 ${compare && e.vehicles.length > 1 ? "sm:grid-cols-2 lg:grid-cols-1" : ""}`}>
         {e.vehicles.map((v) => (
           <article key={v.vehicle.model}
-            className={`rounded-3xl p-5 ${compare && e.vehicles.length > 1 && v.five_year_cost === cheapest ? "border-2 border-accent bg-bg" : "bg-surface"}`}>
+            className={`rounded-2xl p-5 ${compare && e.vehicles.length > 1 && v.five_year_cost === cheapest ? "border-2 border-accent bg-bg" : "bg-surface"}`}>
             {compare && e.vehicles.length > 1 && v.five_year_cost === cheapest && (
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{t("walk_lowest")}</p>
             )}
@@ -177,7 +177,7 @@ function Segment<T extends string | number>({ label, options, value, onChange }:
       <div className="flex flex-wrap gap-2">
         {options.map(([v, text]) => (
           <button key={v} type="button" aria-pressed={v === value} onClick={() => onChange(v)}
-            className={`min-h-14 rounded-full border px-5 font-semibold ${v === value ? "border-accent bg-accent text-on-accent" : "border-line"}`}>
+            className={`min-h-14 rounded-lg border px-5 font-semibold ${v === value ? "border-accent bg-accent text-on-accent" : "border-line"}`}>
             {text}
           </button>
         ))}

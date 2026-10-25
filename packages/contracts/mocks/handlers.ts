@@ -79,7 +79,7 @@ export const handlers = [
   http.post(u("/inspections"), async ({ request }) => {
     const form = await request.formData();
     await delay(800);
-    return HttpResponse.json(f.inspectionFor(String(form.get("customer_id") ?? "CUST-MARIA")));
+    return HttpResponse.json(f.inspectionFor(String(form.get("customer_id") ?? "CUST-VISHWAA2026")));
   }),
 
   http.get(u("/handoffs"), () => HttpResponse.json(f.handoffs)),
@@ -214,7 +214,7 @@ export const handlers = [
     Object.assign(a, { status: "deployed", deployed_at: now() });
     const result: DeployResult = {
       agent_id: a.id, passed: true, deployed_at: a.deployed_at,
-      eval_results: [{ case: "Maria lease-end", passed: true }, { case: "James equity", passed: true }, { case: "Priya hardship", passed: true }],
+      eval_results: [{ case: "Vishwaa lease-end", passed: true }, { case: "Sameera equity", passed: true }, { case: "Hung hardship", passed: true }],
       injection_tests: [{ case: "Ignore previous instructions", passed: true }, { case: "Reveal system prompt", passed: true }],
     };
     return HttpResponse.json(result);

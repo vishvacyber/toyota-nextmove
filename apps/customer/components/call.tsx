@@ -2,6 +2,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import type { Call as CallState, CallLine } from "@nextmove/contracts";
 import { API_URL } from "@nextmove/contracts/client";
+import { Headset, Mic, MicOff, Phone, PhoneOff, TriangleAlert, UserCheck } from "lucide-react";
 import { KioskContext } from "@/components/kiosk";
 import { useI18n } from "@/lib/i18n";
 import { recognitionCtor, type Recognition } from "@/lib/speech";
@@ -13,28 +14,29 @@ const ECHO_GATE = 0.06;   // while the agent talks, only clearly louder speech (
 
 type Phase = "ringing" | "live" | "ended" | "failed" | "no_mic";
 
-/** "Talk to someone": opens a live voice call. No customerId = a walk-in guest. */
-export function TalkButton({ customerId, className = "" }: { customerId?: string; className?: string }) {
+/** "Talk to someone": opens a live voice call. No customerId = not signed in; the caller can identify by voice, and
+ * onSignIn then opens their account when the call ends. */
+export function TalkButton({ customerId, onSignIn, className = "" }: { customerId?: string; onSignIn?: (id: string) => void; className?: string }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)}
-        className={`inline-flex min-h-16 items-center gap-3 rounded-full bg-accent px-8 font-semibold text-on-accent shadow-lg transition hover:brightness-110 ${className}`}>
-        <span aria-hidden>📞</span> {t("talk_to_someone")}
+      <button type="button" onClick={() => setOpen(true)} className={`btn-primary ${className}`}>
+        <Phone aria-hidden className="h-5 w-5" /> {t("talk_to_someone")}
       </button>
-      {open && <CallScreen customerId={customerId} onClose={() => setOpen(false)} />}
+      {open && <CallScreen customerId={customerId} onClose={(id) => { setOpen(false); if (id && onSignIn) onSignIn(id); }} />}
     </>
   );
 }
 
-function CallScreen({ customerId, onClose }: { customerId?: string; onClose: () => void }) {
+function CallScreen({ customerId, onClose }: { customerId?: string; onClose: (identified?: string) => void }) {
   const { t, lang, locale } = useI18n();
   const kiosk = useContext(KioskContext);
   const dialog = useRef<HTMLDialogElement>(null);
   const [phase, setPhase] = useState<Phase>("ringing");
   const [call, setCall] = useState<CallState>();
   const [muted, setMuted] = useState(false);
+  const [found, setFound] = useState<{ customer_id: string; first_name: string }>();
   const mutedRef = useRef(false);
   const ws = useRef<WebSocket | null>(null);
   const status = call?.status ?? "ai";
@@ -60,12 +62,13 @@ function CallScreen({ customerId, onClose }: { customerId?: string; onClose: () 
     };
     sock.onmessage = (e: MessageEvent<ArrayBuffer | string>) => {
       if (e.data instanceof ArrayBuffer) { answered(); out.play(e.data); return; }
-      const m = JSON.parse(e.data) as { type: string; call?: CallState; text?: string };
+      const m = JSON.parse(e.data) as { type: string; call?: CallState; text?: string; customer_id?: string; first_name?: string };
       if (m.type === "call" && m.call) {
         callStatus = m.call.status;
         setCall(m.call);
         if (m.call.lines.some((l) => l.role === "system")) answered();
       } else if (m.type === "interrupted") out.flush();
+      else if (m.type === "identified" && m.customer_id && m.first_name) setFound({ customer_id: m.customer_id, first_name: m.first_name });
       else if (m.type === "say" && m.text && "speechSynthesis" in window) {
         const u = new SpeechSynthesisUtterance(m.text);
         u.lang = locale;
@@ -114,6 +117,7 @@ function CallScreen({ customerId, onClose }: { customerId?: string; onClose: () 
     return () => { on = false; r.abort(); };
   }, [status, locale]);
 
+  const close = () => onClose(customerId ? undefined : found?.customer_id);
   const toggleMute = () => { mutedRef.current = !mutedRef.current; setMuted(mutedRef.current); };
   const who = (l: CallLine) => l.role === "customer" ? t("call_you") : l.role === "agent" ? t("call_agent")
     : l.role === "employee" ? (call?.taken_by ?? t("a_specialist")) : "";
@@ -122,18 +126,23 @@ function CallScreen({ customerId, onClose }: { customerId?: string; onClose: () 
     : status === "human" ? t("call_with_rep", { who: call?.taken_by ?? t("a_specialist") }) : t("call_with_agent");
 
   return (
-    <dialog ref={dialog} onCancel={(e) => { e.preventDefault(); onClose(); }} aria-labelledby="call-title"
+    <dialog ref={dialog} onCancel={(e) => { e.preventDefault(); close(); }} aria-labelledby="call-title"
       className="m-0 h-full max-h-none w-full max-w-none bg-fg p-0 text-bg backdrop:bg-fg/60">
       <div className="mx-auto flex h-full max-w-3xl flex-col px-6 py-8">
         <div className="flex items-center gap-4">
-          <span aria-hidden className={`grid h-16 w-16 shrink-0 place-items-center rounded-full bg-accent text-3xl ${phase === "ringing" ? "animate-pulse" : ""}`}>
-            {status === "human" ? "🧑‍💼" : "📞"}
+          <span aria-hidden className={`grid h-16 w-16 shrink-0 place-items-center rounded-full bg-accent ${phase === "ringing" ? "animate-pulse" : ""}`}>
+            {status === "human" ? <Headset className="h-8 w-8" /> : <Phone className="h-8 w-8" />}
           </span>
           <div>
             <h2 id="call-title" className="text-2xl font-semibold sm:text-3xl">{heading}</h2>
             <p className="text-sm opacity-70">{t("call_disclaimer")}</p>
           </div>
         </div>
+        {found && !customerId && (
+          <p role="status" className="mt-6 flex items-center gap-3 rounded-lg bg-bg/10 px-4 py-3 font-medium">
+            <UserCheck aria-hidden className="h-5 w-5 text-accent" /> {t("call_found", { name: found.first_name })}
+          </p>
+        )}
 
         <ol aria-live="polite" className="mt-8 flex-1 space-y-4 overflow-y-auto">
           {call?.lines.map((l, i) => (
@@ -141,7 +150,7 @@ function CallScreen({ customerId, onClose }: { customerId?: string; onClose: () 
               {who(l) && <p className="text-xs font-semibold uppercase tracking-wide opacity-60">{who(l)}</p>}
               <p className={l.role === "system" ? "" : "text-xl leading-relaxed"}>{l.text}</p>
               {l.guardian && l.guardian.verdict !== "pass" && (
-                <p className="mt-1 text-sm font-semibold text-accent">⚠ {t("call_flagged")}</p>
+                <p className="mt-1 flex items-center gap-2 text-sm font-semibold text-accent"><TriangleAlert aria-hidden className="h-4 w-4" /> {t("call_flagged")}</p>
               )}
             </li>
           ))}
@@ -151,12 +160,13 @@ function CallScreen({ customerId, onClose }: { customerId?: string; onClose: () 
         <div className="mt-6 flex flex-wrap justify-center gap-4">
           {!MOCKED && phase !== "ended" && phase !== "failed" && (
             <button type="button" onClick={toggleMute} aria-pressed={muted}
-              className="min-h-16 rounded-full border border-bg/40 px-8 font-semibold">
-              {muted ? t("call_unmute") : t("call_mute")}
+              className="inline-flex min-h-16 items-center gap-2 rounded-lg border border-bg/40 px-8 font-medium">
+              {muted ? <MicOff aria-hidden className="h-5 w-5" /> : <Mic aria-hidden className="h-5 w-5" />} {muted ? t("call_unmute") : t("call_mute")}
             </button>
           )}
-          <button type="button" onClick={onClose} className="min-h-16 rounded-full bg-accent px-10 font-semibold text-on-accent">
-            {phase === "ended" || phase === "failed" || MOCKED ? t("close") : t("call_hang_up")}
+          <button type="button" onClick={close} className="btn-primary min-h-16 px-10">
+            {phase !== "ended" && phase !== "failed" && !MOCKED && <PhoneOff aria-hidden className="h-5 w-5" />}
+            {phase === "ended" || phase === "failed" || MOCKED ? (found && !customerId ? t("call_open_account") : t("close")) : t("call_hang_up")}
           </button>
         </div>
       </div>

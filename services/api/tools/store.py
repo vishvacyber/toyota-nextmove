@@ -33,6 +33,15 @@ def save(kind: str, id: str, data: dict) -> bool:
         return False
 
 
+# The demo accounts were renamed (Maria/James/Priya → Vishwaa/Sameera/Hung). Rows saved under the old ids stay in
+# Supabase untouched but are never loaded, so nothing on screen links to a customer that no longer exists.
+RETIRED = {"CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"}
+
+
+def current(data: dict) -> bool:
+    return data.get("customer_id") not in RETIRED
+
+
 def load(kind: str) -> list[dict]:
     """Rows of one kind, oldest first. Empty when Supabase is unavailable or the table doesn't exist yet."""
     db = supabase()
@@ -42,7 +51,7 @@ def load(kind: str) -> list[dict]:
         res = httpx.get(f"{db[0]}/rest/v1/{TABLE}", headers=db[1], timeout=5,
                         params={"kind": f"eq.{kind}", "select": "data", "order": "updated_at.asc", "limit": "10000"})
         res.raise_for_status()
-        return [r["data"] for r in res.json()]
+        return [r["data"] for r in res.json() if current(r["data"])]
     except (httpx.HTTPError, ValueError) as e:
         log.warning("%s not loaded from Supabase: %s", kind, type(e).__name__)
         return []

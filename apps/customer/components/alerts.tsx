@@ -44,7 +44,7 @@ export function Alerts({ customerId }: { customerId: string }) {
                 />
                 <span>{t("alert_consent")}</span>
               </label>
-              <button type="button" onClick={() => patch(a, { status: "dismissed" })} className="rounded-full border border-line px-5 py-2 font-semibold">
+              <button type="button" onClick={() => patch(a, { status: "dismissed" })} className="rounded-lg border border-line px-5 py-2 font-semibold">
                 {t("dismiss")}
               </button>
             </div>

@@ -34,10 +34,10 @@ def scripted(*turns):
 
 def test_tool_loop_records_calls_and_returns_text(monkeypatch):
     monkeypatch.setenv("GEMINI_API_KEY", "test")
-    post, seen = scripted([{"functionCall": {"name": "run_scenario", "args": {"customer_id": "CUST-JAMES"}}}],
+    post, seen = scripted([{"functionCall": {"name": "run_scenario", "args": {"customer_id": "CUST-SAMEERA2026"}}}],
                           [{"text": "Upgrade to the Camry SE Hybrid."}])
     monkeypatch.setattr(gemini, "_post", post)
-    run = asyncio.run(gemini.run("sys", "Customer ID: CUST-JAMES", ["get_customer", "run_scenario"]))
+    run = asyncio.run(gemini.run("sys", "Customer ID: CUST-SAMEERA2026", ["get_customer", "run_scenario"]))
     assert run.text == "Upgrade to the Camry SE Hybrid." and run.model == "gemini-test"
     assert [t.tool for t in run.tool_calls] == ["run_scenario"] and "scenarios" in run.tool_calls[0].output
     reply = seen[1]["contents"][-1]["parts"][0]["functionResponse"]

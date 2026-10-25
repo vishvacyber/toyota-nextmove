@@ -1,27 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { SyntheticBadge } from "@nextmove/tokens";
-import { MODELS, PHOTOS } from "@/lib/cars";
+import { ToyotaLogo } from "@nextmove/tokens";
+import { HERO_MODELS, PHOTOS, sized } from "@/lib/cars";
 import { useI18n } from "@/lib/i18n";
 
-/** Kiosk attract loop: real photos of the Toyota line-up, cross-fading. One tap anywhere starts. Reduced motion: one still photo. */
+/** Kiosk attract loop: Toyota's own lifestyle photography, cross-fading. One tap anywhere starts. Reduced motion: one still photo. */
 export function Attract({ onStart }: { onStart: () => void }) {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
   useEffect(() => {
     if (reduce) return;
-    const id = setInterval(() => setI((n) => (n + 1) % MODELS.length), 5000);
+    const id = setInterval(() => setI((n) => (n + 1) % HERO_MODELS.length), 6000);
     return () => clearInterval(id);
   }, [reduce]);
-  const p = PHOTOS[MODELS[i]];
+  const p = PHOTOS[HERO_MODELS[i]];
 
   return (
-    <div className="fixed inset-0 z-40 bg-[#111214] text-white">
+    <div className="fixed inset-0 z-40 bg-black text-white">
       <AnimatePresence initial={false}>
         <motion.div
-          key={p.src}
+          key={p.name}
           aria-hidden
           className="pointer-events-none absolute inset-0"
           initial={{ opacity: 0, scale: 1.04 }}
@@ -30,28 +30,29 @@ export function Attract({ onStart }: { onStart: () => void }) {
           transition={{ duration: 1.2 }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={p.src} alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" />
+          <img src={sized(p.hero!, 2400)} alt="" className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/40" />
         </motion.div>
       </AnimatePresence>
-      <div className="absolute right-6 top-6"><SyntheticBadge lang={lang} /></div>
+      <div className="absolute left-8 top-8 flex items-center gap-3 text-white">
+        <ToyotaLogo className="h-8 w-auto" />
+        <span className="border-l border-white/40 pl-3 text-lg font-medium tracking-wide">NextMove</span>
+      </div>
       {/* The whole screen is the button; its label is the call to action. */}
       <button
         type="button"
         onClick={onStart}
         aria-label={t("attract_tap")}
         aria-describedby="attract-sub"
-        className="absolute inset-0 flex flex-col items-center justify-end gap-4 px-6 pb-20 text-center"
+        className="absolute inset-0 flex flex-col items-start justify-end gap-5 px-10 pb-20 text-left sm:px-16"
       >
-        <span className="text-lg font-semibold"><span className="text-accent">Toyota</span> NextMove</span>
-        <span className="rounded-full bg-accent px-10 py-5 text-3xl font-semibold text-on-accent shadow-xl shadow-accent/20 sm:text-4xl">
+        <span className="max-w-3xl text-5xl font-medium leading-tight tracking-tight sm:text-6xl">{t("attract_title")}</span>
+        <span id="attract-sub" className="max-w-xl text-xl text-white/85">{t("attract_sub")}</span>
+        <span className="mt-2 inline-flex min-h-16 items-center rounded-lg bg-accent px-10 text-2xl font-medium text-on-accent shadow-xl shadow-black/30">
           {t("attract_tap")}
         </span>
-        <span id="attract-sub" className="max-w-xl text-lg text-white/85">{t("attract_sub")}</span>
       </button>
-      <p className="absolute bottom-3 left-4 text-xs text-white/70">
-        {MODELS[i] === "bZ" ? "Toyota bZ4X" : `Toyota ${MODELS[i]}`} · {t("photo_credit", { author: p.author })} {p.license}, Wikimedia Commons
-      </p>
+      <p className="absolute bottom-4 right-6 text-sm text-white/70">{p.name}</p>
     </div>
   );
 }

@@ -5,7 +5,7 @@ export const NAV: NavPage[] = [
   { group: "Portfolio", slug: "", title: "Command Center", endpoints: ["/kpis", "/opportunities"] },
   { group: "Portfolio", slug: "queue", title: "Opportunity Queue", endpoints: ["/opportunities"] },
   { group: "Portfolio", slug: "customers", title: "Customers", endpoints: ["/customers"] },
-  { group: "Act", slug: "review", title: "NextMove Review", endpoints: ["/customers/CUST-MARIA/recommendation"] },
+  { group: "Act", slug: "review", title: "NextMove Review", endpoints: ["/customers/CUST-VISHWAA2026/recommendation"] },
   { group: "Act", slug: "live", title: "Live Activity", endpoints: ["/sessions", "/handoffs"] },
   { group: "Act", slug: "deal-packets", title: "Deal Packets", endpoints: ["/deal-packets"] },
   { group: "Act", slug: "approvals", title: "Alert Approvals", endpoints: ["/alerts?status=pending_approval"] },

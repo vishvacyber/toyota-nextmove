@@ -5,7 +5,7 @@ import { useI18n } from "@/lib/i18n";
 
 export function Card({ title, children, className = "" }: { title: string; children: ReactNode; className?: string }) {
   return (
-    <section className={`rounded-3xl bg-surface p-6 ${className}`}>
+    <section className={`rounded-2xl bg-surface p-6 ${className}`}>
       <h2 className="text-sm font-medium uppercase tracking-wide text-muted">{title}</h2>
       <div className="mt-3">{children}</div>
     </section>
@@ -24,7 +24,7 @@ export function Row({ label, children }: { label: string; children: ReactNode })
 export function ScenarioCard({ s, recommended, children }: { s: Scenario; recommended?: boolean; children?: ReactNode }) {
   const { t, money } = useI18n();
   return (
-    <article className={`flex h-full flex-col rounded-3xl p-6 ${recommended ? "border-2 border-accent bg-bg shadow-xl shadow-accent/10" : "border border-line bg-surface"} ${s.eligible ? "" : "opacity-60"}`}>
+    <article className={`flex h-full flex-col rounded-2xl p-6 ${recommended ? "border-2 border-accent bg-bg shadow-xl shadow-accent/10" : "border border-line bg-surface"} ${s.eligible ? "" : "opacity-60"}`}>
       {recommended && <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{t("recommended")}</p>}
       {/* Option labels are English-only until the Advisor returns localized text (B3). */}
       <h3 className={`font-semibold ${recommended ? "mt-2 text-2xl" : "mt-6 text-lg"}`}>{s.label}</h3>

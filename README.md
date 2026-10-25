@@ -4,7 +4,7 @@
 
 > "Given my situation today, what's the smartest next move for me and my Toyota?"
 
-**Try it now (mock data, no setup):** [Customer App](https://toyota-nextmove-customer.vercel.app) · [Kiosk](https://toyota-nextmove-customer.vercel.app/kiosk) · [James on the phone app](https://toyota-nextmove-customer.vercel.app/app?id=CUST-JAMES) · [Employee Console](https://toyota-nextmove-console.vercel.app)
+**Try it now (mock data, no setup):** [Customer App](https://toyota-nextmove-customer.vercel.app) · [Kiosk](https://toyota-nextmove-customer.vercel.app/kiosk) · [Sameera on the phone app](https://toyota-nextmove-customer.vercel.app/app?id=CUST-SAMEERA2026) · [Employee Console](https://toyota-nextmove-console.vercel.app)
 
 The hosted copies run on recorded mock data. The live engine, agents and realtime run on the demo laptop.
 
@@ -44,9 +44,9 @@ NextMove watches each customer's situation, reaches out at the right moment, com
 
 | Persona | Situation | What NextMove shows (live engine output) |
 | --- | --- | --- |
-| **Maria** | Lease ends in 90 days, 9,800 miles over her allowance | **Buy it.** The buyout keeps **$6,467** of equity; returning it costs **$3,200** in fees. Photo pre-inspection estimates wear charges before the official inspection. |
-| **James** | Loan with positive equity, high fuel spend | **Upgrade to a Camry SE Hybrid** (real **$32,200** MSRP from toyota.com via SerpApi). Payment **$496 → $403/mo**, true monthly cost **$847 → $660**, **1,718 kg less CO2/year**. Acting now is worth **$820** more than waiting 3 months. See it in the showroom, then send a deal packet to the dealer. |
-| **Priya** | Missed a payment after a job change | **Move the due date to the 17th** to match her biweekly payday. Deferral and extension are money decisions, so they go to a **human callback**, never an agent. |
+| **Vishwaa** | Lease ends in 90 days, 9,800 miles over the allowance | **Buy it.** The buyout keeps **$6,467** of equity; returning it costs **$3,200** in fees. Photo pre-inspection estimates wear charges before the official inspection. |
+| **Sameera** | Loan with positive equity, high fuel spend | **Upgrade to a Camry SE Hybrid** (real **$32,200** MSRP from toyota.com via SerpApi). Payment **$496 → $403/mo**, true monthly cost **$847 → $660**, **1,718 kg less CO2/year**. Acting now is worth **$820** more than waiting 3 months. See it in the showroom, then send a deal packet to the dealer. |
+| **Hung** | Missed a payment after a job change | **Move the due date to the 17th** to match the biweekly payday. Deferral and extension are money decisions, so they go to a **human callback**, never an agent. |
 
 **Two surfaces, one brain:**
 - **Customer App:** phone mode and dealership kiosk mode, English and Spanish, voice, a showroom with real car photos.
@@ -61,7 +61,7 @@ NextMove watches each customer's situation, reaches out at the right moment, com
 | Guide | One recommended next step with a single action, plus the alternatives side by side |
 | Value | 24-month simulation over 1,200 customers: retention **54.4% → 68.6%** at 60% adoption, with live assumption sliders |
 | Working prototype | Both surfaces on one live API, with realtime handoffs between them |
-| Synthetic data | 1,200 seeded customers; "Synthetic data" badge on every screen |
+| Generated data | 1,200 seeded customers; no real customer data (no on-screen demo label, by team decision) |
 | Responsible AI | Guardian, autonomy levels, fairness report, audit log with overrides, deploy gate |
 | Reimagine CX | Proactive alerts, voice EN/ES, dealership kiosk, photo pre-inspection, showroom with real photos, AI-written explanations |
 | Reusable agent platform | Agent Studio: templates, tool registry, guardrails, traces, evals. A Recall Notifier deploys from a template in about 12 s |
@@ -115,7 +115,7 @@ flowchart LR
 2. **Guardian runs before any agent output reaches a customer.** Every number must exist in that run's tool output; otherwise the answer is sent back or blocked.
 3. **Autonomy levels:** L1 read = automatic; L2 draft = automatic and visible in the console; L3 customer-facing = consent or employee approval; L4 money or credit decision = never an agent.
 4. **No protected attributes** anywhere in data or engine.
-5. **Synthetic data only**, labelled on every screen.
+5. **Generated data only**, never real customer data.
 6. **PII masking:** customer IDs, not names, go to the model; PII is masked in logs.
 7. **Secrets live only in `.env.local`** (gitignored).
 8. **Mock first:** both frontends work fully on MSW mocks generated from the same contract.
@@ -127,7 +127,7 @@ flowchart LR
 | Layer | Technology |
 | --- | --- |
 | Console | Next.js 16 (App Router), TypeScript, shadcn/ui, Tailwind 4, TanStack Table, Recharts, Framer Motion |
-| Customer App | Next.js 16 PWA, TypeScript, Tailwind 4, Framer Motion, real Wikimedia Commons photos (CC-licensed, credited), Web Speech API, `uqr` (on-device QR) |
+| Customer App | Next.js 16 PWA, TypeScript, Tailwind 4, Framer Motion, official Toyota imagery and logo from toyota.com (sponsor permission), lucide icons, Web Speech API, `uqr` (on-device QR) |
 | API | Python 3.12, FastAPI, Pydantic v2 (generated from the contract), pytest, ruff, uv |
 | AI | Gemini (primary, REST + function calling) and the Claude Agent SDK (backup, subscription login), both locked to our tool registry; MCP server for the tools |
 | Data and realtime | Supabase Postgres (SerpApi cache, traces) and Realtime Broadcast (`handoffs`, `traces`) |
@@ -197,7 +197,7 @@ sequenceDiagram
   API-->>C: shown + read aloud
 ```
 
-The browser never sees the Gemini key. Speech can't be held for review, so the Guardian checks each finished agent turn immediately; a failed turn is flagged on screen and in the console, and the agent is told to correct itself (see DECISIONS). Walk-in guests can call too, with estimate and market tools only.
+A caller who isn't signed in can say their first name (or customer ID) and which Toyota they drive; the `identify_customer` tool must match both, and from then on every account tool is pinned to that customer. A rep's typed messages are spoken in a natural Gemini TTS voice. The browser never sees the Gemini key. Speech can't be held for review, so the Guardian checks each finished agent turn immediately; a failed turn is flagged on screen and in the console, and the agent is told to correct itself (see DECISIONS). Walk-in guests can call too, with estimate and market tools only.
 
 ### Advisor question (agent flow)
 
@@ -304,7 +304,7 @@ Deterministic code, not an LLM. For every agent answer it checks:
 | `numbers_match_tools` | Every number in the answer must appear in that run's tool output (with formatting tolerance). An invented number fails. |
 | `tone` | No pressure or guarantees, in English and Spanish |
 | `consent` | No promises of actions the customer hasn't agreed to |
-| `disclosures` | Estimates are labelled as estimates; synthetic-data disclosure |
+| `disclosures` | Estimates are labelled as estimates |
 | `fairness` | No protected attributes in the answer |
 | `prompt_injection` | Customer messages that try to override instructions are caught |
 
@@ -339,7 +339,7 @@ New agents deploy only if they pass: a tool-policy check, the three persona eval
 
 ## Results: proof of value
 
-24-month simulation over all 1,200 synthetic customers, baseline vs NextMove, at the default assumptions (60% adoption, 90-day outreach lead, 50% hardship uptake). Deterministic and seeded: the same inputs always give the same numbers.
+24-month simulation over all 1,200 generated customers, baseline vs NextMove, at the default assumptions (60% adoption, 90-day outreach lead, 50% hardship uptake). Deterministic and seeded: the same inputs always give the same numbers.
 
 | KPI | Baseline | NextMove | Change |
 | --- | ---: | ---: | ---: |
@@ -464,7 +464,7 @@ All 34 operations of the contract are implemented, plus the `/voice/{customer_id
 
 Every number below lives in config, not code: [`services/api/engine/config.toml`](services/api/engine/config.toml) and [`eligibility.toml`](services/api/engine/eligibility.toml). All values are synthetic and documented.
 
-### Synthetic portfolio
+### Generated portfolio
 
 1,200 customers from a fixed seed ([`sim/generator.py`](services/api/sim/generator.py)), with no protected attributes.
 
@@ -480,7 +480,7 @@ Every number below lives in config, not code: [`services/api/engine/config.toml`
 
 ### Demo personas
 
-| | Maria (`CUST-MARIA`) | James (`CUST-JAMES`) | Priya (`CUST-PRIYA`) |
+| | Vishwaa (`CUST-VISHWAA2026`) | Sameera (`CUST-SAMEERA2026`) | Hung (`CUST-HUNG2026`) |
 | --- | --- | --- | --- |
 | Vehicle | 2024 RAV4 XLE, gas, 41,200 mi | 2022 Camry SE, gas, 48,900 mi | 2023 Prius LE, hybrid, 31,500 mi |
 | Contract | Lease, $389/mo, 36 months, 33 paid | Loan, $496/mo at 5.9%, 72 months, 49 paid | Loan, $468/mo at 4.9%, 60 months, 43 paid |
@@ -657,7 +657,7 @@ Minor wheel and interior wear sits inside normal-wear standards, so it's $0. Pho
 | Prove | Proof, Long-term Profit, Offer Studio, Market Intel |
 | Trust | Agent Traces, Responsible AI, Agent Studio |
 
-The console also has Cmd+K search, a role switcher, a dark/light theme, toasts, and a synthetic-data banner.
+The console also has Cmd+K search, a role switcher, a dark/light theme and toasts.
 
 ---
 
@@ -674,7 +674,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 | URL | What |
 | --- | --- |
 | http://localhost:3000/kiosk | Kiosk: tap the attract screen, then a tile or "Talk to someone" |
-| http://localhost:3000/app?id=CUST-JAMES | Phone app, signed in as James |
+| http://localhost:3000/app?id=CUST-SAMEERA2026 | Phone app, signed in as Sameera |
 | http://localhost:3001 | Employee Console |
 | http://localhost:8000/docs | API docs (Swagger) |
 
@@ -688,6 +688,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 | `GEMINI_API_KEY` | API | Gemini, the primary AI ([aistudio.google.com/apikey](https://aistudio.google.com/apikey)) |
 | `GEMINI_MODEL` | API | Gemini model (default `gemini-3.5-flash`) |
 | `GEMINI_LIVE_MODEL` | API | Gemini Live model for voice calls (default `gemini-3.8-live`) |
+| `GEMINI_TTS_MODEL` | API | Gemini TTS model for the rep's voice on calls (default `gemini-3.8-flash-tts`) |
 | `CLAUDE_CONFIG_DIR` | API | Folder holding the Claude subscription login for the backup AI (absolute path) |
 | `NEXT_PUBLIC_API_URL` | frontends | API address (default `http://localhost:8000`) |
 | `NEXT_PUBLIC_API_MOCKING` | frontends | `disabled` (live), `enabled` (all mocks), or a comma list of path prefixes to keep mocked |
@@ -715,7 +716,7 @@ pnpm dev                        # customer :3000, console :3001, API :8000
 
 ### Tests
 
-231 automated tests: 179 API (engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, Gemini provider, live voice calls against a fake Gemini Live, walk-in estimates, MSRP parsing, AI explanations, contract coverage, simulation, persistence), 38 contract (every endpoint has a working mock), 6 console and 8 customer app (audio encoding, take-home links).
+236 automated tests: 184 API (voice sign-in, engine formulas, eligibility, tools, Guardian, autonomy, SDK lockdown, Gemini provider, live voice calls against a fake Gemini Live, walk-in estimates, MSRP parsing, AI explanations, contract coverage, simulation, persistence), 38 contract (every endpoint has a working mock), 6 console and 8 customer app (audio encoding, take-home links).
 
 ---
 
@@ -730,11 +731,11 @@ services/api          FastAPI
   ├─ tools/           12-tool registry + MCP server
   ├─ agents/          orchestrator, advisor, hardship, inspector, sentinel, market intel, guardian, studio
   ├─ serpapi/         cached SerpApi client + offline snapshot
-  ├─ sim/             synthetic generator + 24-month simulation
+  ├─ sim/             portfolio generator + 24-month simulation
   ├─ migrations/      Supabase SQL
   └─ tests/           pytest suite
 packages/contracts    openapi.yaml (frozen contract), generated TS types, MSW mocks
-packages/tokens       design tokens (Toyota red accent) + synthetic-data badge
+packages/tokens       design tokens (Toyota red accent) + Toyota logo
 docs/                 SPEC.md, BUILD_PLAN.md, DECISIONS.md
 ```
 
@@ -785,7 +786,7 @@ Every trade-off is recorded in [docs/DECISIONS.md](docs/DECISIONS.md). The produ
 
 ## Limits and honest notes
 
-- **Synthetic data only.** No real customers, accounts or credit decisions.
+- **Generated data only.** No real customers, accounts or credit decisions; the three demo accounts are the team's own names.
 - **AI providers:** Gemini answers first (API key); the Claude subscription login on the demo laptop is the backup. The public Vercel copies run on mock data, so a few of their numbers differ slightly from the live engine.
 - **AI-native, with honest waiting.** Every explanation is written live and checked by the Guardian; nothing is pre-written. Answers use a fast Claude model, and explanations are cached, so a repeat view is instant. If the model is busy, the app says so and retries rather than showing anything unchecked.
 - **Self-service starts online.** "Start self-service" and the due-date change are recorded with TFS (audit log); a specialist or dealer completes them.

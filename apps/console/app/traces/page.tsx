@@ -1,4 +1,5 @@
 "use client";
+import { Check, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { AgentTrace } from "@nextmove/contracts";
@@ -19,12 +20,12 @@ const EVENTS = ["created"] as const;
 // Dev-only stand-in for a backend trace (real ones arrive from the API on the same channel).
 function simulated(blocked: boolean): AgentTrace {
   return {
-    id: `TR-SIM-${Date.now()}`, agent: "recall_notifier", customer_id: "CUST-JAMES", started_at: new Date().toISOString(), duration_ms: 1840,
+    id: `TR-SIM-${Date.now()}`, agent: "recall_notifier", customer_id: "CUST-SAMEERA2026", started_at: new Date().toISOString(), duration_ms: 1840,
     plan: ["Load customer vehicle", "Check open recalls", "Find nearest dealer", "Draft recall notice"],
     tool_calls: [
-      { tool: "get_customer", input: { customer_id: "CUST-JAMES" }, output: { vin: "SIM-VIN-0001", model: "Camry" }, duration_ms: 40 },
+      { tool: "get_customer", input: { customer_id: "CUST-SAMEERA2026" }, output: { vin: "SIM-VIN-0001", model: "Camry" }, duration_ms: 40 },
       { tool: "get_recalls", input: { model: "Camry", year: 2022 }, output: { open_recalls: 1, source: "simulated" }, duration_ms: 210 },
-      { tool: "find_dealer", input: { customer_id: "CUST-JAMES" }, output: { dealer_id: "DLR-01" }, duration_ms: 95 },
+      { tool: "find_dealer", input: { customer_id: "CUST-SAMEERA2026" }, output: { dealer_id: "DLR-01" }, duration_ms: 95 },
     ],
     guardian: blocked
       ? { verdict: "block", checks: [{ name: "numbers_match_tools", passed: false, detail: "Draft quotes a figure no tool returned" }, { name: "tone", passed: true }, { name: "prompt_injection", passed: true }] }
@@ -145,7 +146,7 @@ export default function Traces() {
                 <ul className="space-y-1">
                   {t.guardian.checks.map((c) => (
                     <li key={c.name} className={cn("flex items-start gap-2", !c.passed && "text-destructive")}>
-                      <span aria-hidden>{c.passed ? "✓" : "✕"}</span>
+                      {c.passed ? <Check aria-hidden className="size-3.5" /> : <X aria-hidden className="size-3.5" />}
                       <span><span className="sr-only">{c.passed ? "Passed: " : "Failed: "}</span>{label(c.name)}{c.detail && <span className="text-muted-foreground"> · {c.detail}</span>}</span>
                     </li>
                   ))}

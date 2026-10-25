@@ -6,7 +6,7 @@ as_of = "2026-10-24T09:00:00Z"   # fixed "today" so results never drift between 
 [market]
 # Value = median of cached SerpApi comps for the model-year (when at least min_comps) − (miles over expected × per_mile_adjust).
 # Fallback without comps: msrp × retention[age] − (miles over expected × per_mile_adjust).
-source = "NextMove depreciation table (synthetic)"
+source = "NextMove valuation model"
 min_comps = 3
 band = 0.06                       # ± range shown on GET /market when there are no comps
 expected_miles_per_year = 12000
@@ -86,8 +86,8 @@ powertrain = "hybrid"
 price = 33500
 mpg = 51
 [catalog.RAV4]
-trim = "XLE Hybrid"
-msrp_trim = "XLE Hybrid"
+trim = "XLE Premium Hybrid"
+msrp_trim = "XLE Premium"          # every RAV4 is a hybrid from 2026, so Toyota lists it as "XLE Premium"
 powertrain = "hybrid"
 price = 36800
 mpg = 41
@@ -101,7 +101,7 @@ mpg = 23
 trim = "XLE Hybrid"
 msrp_trim = "Hybrid XLE"
 powertrain = "hybrid"
-price = 47500
+price = 49115                  # real 2026 MSRP (Kelley Blue Book, via the cached SerpApi search); no clean toyota.com match
 mpg = 35
 [catalog.Prius]
 trim = "XLE"

@@ -14,24 +14,24 @@ const json = (body: unknown) => ({ method: "POST", headers: { "Content-Type": "a
 
 const calls: [string, string, RequestInit?][] = [
   ["GET /health", "/health"],
-  ["GET /customers", "/customers?q=maria"],
-  ["GET /customers/{id}", "/customers/CUST-JAMES"],
-  ["GET /customers/{id}/recommendation", "/customers/CUST-PRIYA/recommendation"],
-  ["POST /customers/{id}/recommendation/review", "/customers/CUST-MARIA/recommendation/review", json({ decision: "override", reviewer: "EMP-1", override_option: "return", reason: "test" })],
-  ["POST /customers/{id}/actions", "/customers/CUST-PRIYA/actions", json({ type: "due_date_change", option: "due_date_change", detail: "the 17th" })],
-  ["GET /customers/{id}/timing", "/customers/CUST-JAMES/timing"],
-  ["POST /scenarios", "/scenarios", json({ customer_id: "CUST-MARIA" })],
-  ["POST /agents/advisor/ask", "/agents/advisor/ask", json({ customer_id: "CUST-MARIA", message: "What should I do at lease end?" })],
-  ["POST /inspections", "/inspections", (() => { const f = new FormData(); f.set("customer_id", "CUST-MARIA"); f.append("photos", new Blob(["x"]), "front.jpg"); return { method: "POST", body: f }; })()],
+  ["GET /customers", "/customers?q=vishwaa"],
+  ["GET /customers/{id}", "/customers/CUST-SAMEERA2026"],
+  ["GET /customers/{id}/recommendation", "/customers/CUST-HUNG2026/recommendation"],
+  ["POST /customers/{id}/recommendation/review", "/customers/CUST-VISHWAA2026/recommendation/review", json({ decision: "override", reviewer: "EMP-1", override_option: "return", reason: "test" })],
+  ["POST /customers/{id}/actions", "/customers/CUST-HUNG2026/actions", json({ type: "due_date_change", option: "due_date_change", detail: "the 17th" })],
+  ["GET /customers/{id}/timing", "/customers/CUST-SAMEERA2026/timing"],
+  ["POST /scenarios", "/scenarios", json({ customer_id: "CUST-VISHWAA2026" })],
+  ["POST /agents/advisor/ask", "/agents/advisor/ask", json({ customer_id: "CUST-VISHWAA2026", message: "What should I do at lease end?" })],
+  ["POST /inspections", "/inspections", (() => { const f = new FormData(); f.set("customer_id", "CUST-VISHWAA2026"); f.append("photos", new Blob(["x"]), "front.jpg"); return { method: "POST", body: f }; })()],
   ["POST /estimate", "/estimate", json({ models: ["Camry", "bZ"], trade_in: { model: "RAV4", year: 2020, odometer_miles: 50000, payoff: 8000 } })],
   ["GET /calls", "/calls"],
   ["POST /calls/{id}/takeover", "/calls/CALL-01/takeover", json({ employee: "Alex" })],
-  ["POST /calls/{id}/messages", "/calls/CALL-01/messages", json({ text: "Hi Maria" })],
+  ["POST /calls/{id}/messages", "/calls/CALL-01/messages", json({ text: "Hi Vishwaa" })],
   ["GET /handoffs", "/handoffs"],
-  ["POST /handoffs", "/handoffs", json({ customer_id: "CUST-PRIYA", reason: "callback", surface: "app" })],
+  ["POST /handoffs", "/handoffs", json({ customer_id: "CUST-HUNG2026", reason: "callback", surface: "app" })],
   ["PATCH /handoffs/{id}", "/handoffs/HO-01", { ...json({ status: "claimed", claimed_by: "EMP-1" }), method: "PATCH" }],
   ["GET /deal-packets", "/deal-packets"],
-  ["POST /deal-packets", "/deal-packets", json({ customer_id: "CUST-JAMES", option: "upgrade" })],
+  ["POST /deal-packets", "/deal-packets", json({ customer_id: "CUST-SAMEERA2026", option: "upgrade" })],
   ["GET /alerts", "/alerts?status=pending_approval"],
   ["PATCH /alerts/{id}", "/alerts/AL-01", { ...json({ status: "approved", actor: "EMP-1" }), method: "PATCH" }],
   ["GET /sessions", "/sessions"],
@@ -72,9 +72,9 @@ for (const [name, path, init] of calls) {
 
 test("personas resolve with the right recommendation", async () => {
   const get = (id: string) => fetch(`${API}/customers/${id}/recommendation`).then((r) => r.json());
-  assert.equal((await get("CUST-MARIA")).recommended.option, "buyout");
-  assert.equal((await get("CUST-JAMES")).recommended.option, "upgrade");
-  assert.equal((await get("CUST-PRIYA")).recommended.option, "due_date_change");
+  assert.equal((await get("CUST-VISHWAA2026")).recommended.option, "buyout");
+  assert.equal((await get("CUST-SAMEERA2026")).recommended.option, "upgrade");
+  assert.equal((await get("CUST-HUNG2026")).recommended.option, "due_date_change");
   assert.equal((await fetch(`${API}/customers`).then((r) => r.json())).length, 23);
 });
 

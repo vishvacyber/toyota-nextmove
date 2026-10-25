@@ -832,7 +832,7 @@ class CallMessage(BaseModel):
 
 
 class Customer(BaseModel):
-    id: Annotated[str, Field(examples=['CUST-MARIA'])]
+    id: Annotated[str, Field(examples=['CUST-VISHWAA2026'])]
     first_name: str
     last_name: str
     email: str | None = None

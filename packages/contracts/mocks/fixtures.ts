@@ -10,8 +10,8 @@ const day = (offset: number) => new Date(TODAY.getTime() + offset * 864e5).toISO
 const ago = (minutes: number) => new Date(Date.parse(AS_OF) - minutes * 6e4).toISOString();
 
 // ---------- personas ----------
-const maria: Customer = {
-  id: "CUST-MARIA", first_name: "Maria", last_name: "Alvarez", email: "maria.a@example.test", phone: "555-0101",
+const vishwaa: Customer = {
+  id: "CUST-VISHWAA2026", first_name: "Vishwaa", last_name: "", email: "vishwaa.a@example.test", phone: "555-0101",
   region: "South", credit_tier: "A", preferred_language: "en", pay_frequency: "semimonthly", next_payday: day(7),
   vehicle: { vin: "SYN2T3RAV4MARIA001", model: "RAV4", year: 2024, trim: "XLE", powertrain: "gas", color: "Blueprint", odometer_miles: 41200, mpg: 30 },
   contract: {
@@ -23,8 +23,8 @@ const maria: Customer = {
   life_events: [], risk_score: 0.08, situation: "lease_end", synthetic: true,
 };
 
-const james: Customer = {
-  id: "CUST-JAMES", first_name: "James", last_name: "Carter", email: "james.c@example.test", phone: "555-0102",
+const sameera: Customer = {
+  id: "CUST-SAMEERA2026", first_name: "Sameera", last_name: "", email: "sameera.c@example.test", phone: "555-0102",
   region: "West", credit_tier: "A", preferred_language: "en", pay_frequency: "biweekly", next_payday: day(4),
   vehicle: { vin: "SYN4T1CAMRYJAMES02", model: "Camry", year: 2022, trim: "SE", powertrain: "gas", color: "Midnight Black", odometer_miles: 48900, mpg: 28 },
   contract: {
@@ -35,8 +35,8 @@ const james: Customer = {
   life_events: ["longer_commute"], risk_score: 0.05, situation: "positive_equity", synthetic: true,
 };
 
-const priya: Customer = {
-  id: "CUST-PRIYA", first_name: "Priya", last_name: "Shah", email: "priya.s@example.test", phone: "555-0103",
+const hung: Customer = {
+  id: "CUST-HUNG2026", first_name: "Hung", last_name: "", email: "hung.s@example.test", phone: "555-0103",
   region: "Midwest", credit_tier: "B", preferred_language: "en", pay_frequency: "biweekly", next_payday: day(6),
   vehicle: { vin: "SYNJTDPRIUSPRIYA03", model: "Prius", year: 2023, trim: "LE", powertrain: "hybrid", color: "Wind Chill Pearl", odometer_miles: 31500, mpg: 57 },
   contract: {
@@ -87,7 +87,7 @@ const extras: Customer[] = FIRST.map((first, i) => {
   } satisfies Customer;
 });
 
-export const customers: Customer[] = [maria, james, priya, ...extras];
+export const customers: Customer[] = [vishwaa, sameera, hung, ...extras];
 
 // ---------- scenarios + recommendations ----------
 const sc = (s: Scenario) => s;
@@ -156,7 +156,7 @@ const guardianPass: Recommendation["guardian"] = {
 
 const personaRecs: Recommendation[] = [
   {
-    customer_id: "CUST-MARIA", situation: "lease_end", headline: "Buying your RAV4 beats returning it",
+    customer_id: "CUST-VISHWAA2026", situation: "lease_end", headline: "Buying your RAV4 beats returning it",
     recommended: mariaBuyout, alternatives: [mariaReturn, mariaNewLease, mariaExtend], baseline: { ...mariaReturn, option: "do_nothing", label: "Do nothing (return at lease end)" },
     why: "Your RAV4 is worth about $27,300 but your buyout price is $22,450. Buying keeps $4,850 of equity and avoids about $2,450 in mileage charges.",
     why_not: [
@@ -167,7 +167,7 @@ const personaRecs: Recommendation[] = [
     guardian: guardianPass, review: { status: "pending" }, generated_at: AS_OF, trace_id: "TR-0001",
   },
   {
-    customer_id: "CUST-JAMES", situation: "positive_equity", headline: "Upgrade to a Camry Hybrid now and pay less each month",
+    customer_id: "CUST-SAMEERA2026", situation: "positive_equity", headline: "Upgrade to a Camry Hybrid now and pay less each month",
     recommended: jamesUpgrade, alternatives: [jamesKeep, jamesTradeIn, jamesRefi], baseline: { ...jamesKeep, option: "do_nothing", label: "Do nothing" },
     why: "You have $11,640 in equity. Applied to a Camry Hybrid, your payment drops from $496 to $422 and your total monthly cost drops from $847 to $684.",
     why_not: [
@@ -178,7 +178,7 @@ const personaRecs: Recommendation[] = [
     guardian: guardianPass, review: { status: "approved", by: "EMP-ADVISOR-1" }, generated_at: AS_OF, trace_id: "TR-0002",
   },
   {
-    customer_id: "CUST-PRIYA", situation: "payment_stress", headline: "Move your due date to match your payday",
+    customer_id: "CUST-HUNG2026", situation: "payment_stress", headline: "Move your due date to match your payday",
     recommended: priyaDueDate, alternatives: [priyaDeferral, priyaExtend], baseline: priyaNothing,
     why: "Your pay schedule changed with your new job. Moving your due date to the 20th lines it up with your payday at no cost.",
     why_not: [
@@ -215,10 +215,10 @@ export function scenariosFor(id: string): Scenario[] {
 export function timingFor(id: string): TimingPlan | undefined {
   const c = customers.find((x) => x.id === id);
   if (!c) return;
-  const equity0 = id === "CUST-JAMES" ? 11640 : id === "CUST-MARIA" ? 4850 : 0;
+  const equity0 = id === "CUST-SAMEERA2026" ? 11640 : id === "CUST-VISHWAA2026" ? 4850 : 0;
   const months = Array.from({ length: 7 }, (_, m) => {
     const equity = Math.max(0, equity0 - m * 210);
-    const fees = id === "CUST-MARIA" && m > 3 ? 2450 + (m - 3) * 312 : 0;
+    const fees = id === "CUST-VISHWAA2026" && m > 3 ? 2450 + (m - 3) * 312 : 0;
     return { month_offset: m, date: day(m * 30), equity, payment: c.contract.monthly_payment, fees, net_position: equity - fees };
   });
   return {
@@ -249,9 +249,9 @@ export const market: Record<Model, MarketQuote> = Object.fromEntries(
 
 // ---------- console data ----------
 export const opportunities: Opportunity[] = [
-  { customer_id: "CUST-MARIA", customer_name: "Maria Alvarez", model: "RAV4", situation: "lease_end", next_best_action: "buyout", expected_value: 1850, retention_odds: 0.78, days_to_maturity: 90, script: "Your RAV4 is worth more than your buyout price. Want to see the numbers?", reason: "Lease ends in 90 days; projected 9,800 miles over", priority: 1 },
-  { customer_id: "CUST-JAMES", customer_name: "James Carter", model: "Camry", situation: "positive_equity", next_best_action: "upgrade", expected_value: 2600, retention_odds: 0.71, script: "You have about $11,600 in equity. A hybrid could lower your monthly cost.", reason: "$11,640 positive equity; high fuel spend", priority: 1 },
-  { customer_id: "CUST-PRIYA", customer_name: "Priya Shah", model: "Prius", situation: "payment_stress", next_best_action: "due_date_change", expected_value: 920, retention_odds: 0.64, script: "We noticed a missed payment. Can we align your due date with your payday?", reason: "Missed Oct payment after job change; 19 days past due", priority: 1 },
+  { customer_id: "CUST-VISHWAA2026", customer_name: "Vishwaa", model: "RAV4", situation: "lease_end", next_best_action: "buyout", expected_value: 1850, retention_odds: 0.78, days_to_maturity: 90, script: "Your RAV4 is worth more than your buyout price. Want to see the numbers?", reason: "Lease ends in 90 days; projected 9,800 miles over", priority: 1 },
+  { customer_id: "CUST-SAMEERA2026", customer_name: "Sameera", model: "Camry", situation: "positive_equity", next_best_action: "upgrade", expected_value: 2600, retention_odds: 0.71, script: "You have about $11,600 in equity. A hybrid could lower your monthly cost.", reason: "$11,640 positive equity; high fuel spend", priority: 1 },
+  { customer_id: "CUST-HUNG2026", customer_name: "Hung", model: "Prius", situation: "payment_stress", next_best_action: "due_date_change", expected_value: 920, retention_odds: 0.64, script: "We noticed a missed payment. Can we align your due date with your payday?", reason: "Missed Oct payment after job change; 19 days past due", priority: 1 },
   ...extras.filter((c) => c.situation !== "none").map((c, i): Opportunity => ({
     customer_id: c.id, customer_name: `${c.first_name} ${c.last_name}`, model: c.vehicle.model, situation: c.situation,
     next_best_action: ({ lease_end: "buyout", rate_drop: "refinance", positive_equity: "upgrade", mileage_overage: "buyout", early_payoff: "pay_extra", ev_switch: "upgrade" } as const)[c.situation as "lease_end"] ?? "keep",
@@ -272,21 +272,21 @@ export const kpiBase: KpiSnapshot = {
 
 export const traces: AgentTrace[] = [
   {
-    id: "TR-0001", agent: "advisor", customer_id: "CUST-MARIA", session_id: "SES-01", started_at: ago(4), duration_ms: 3120,
+    id: "TR-0001", agent: "advisor", customer_id: "CUST-VISHWAA2026", session_id: "SES-01", started_at: ago(4), duration_ms: 3120,
     plan: ["Load contract", "Run lease-end scenarios", "Check market value", "Explain best option"],
     tool_calls: [
-      { tool: "get_customer", input: { customer_id: "CUST-MARIA" }, output: { contract: "LSE-1001" }, duration_ms: 42 },
-      { tool: "run_scenario", input: { customer_id: "CUST-MARIA" }, output: { buyout_total: 22750, return_fees: 3200 }, duration_ms: 118 },
+      { tool: "get_customer", input: { customer_id: "CUST-VISHWAA2026" }, output: { contract: "LSE-1001" }, duration_ms: 42 },
+      { tool: "run_scenario", input: { customer_id: "CUST-VISHWAA2026" }, output: { buyout_total: 22750, return_fees: 3200 }, duration_ms: 118 },
       { tool: "get_market_value", input: { model: "RAV4", year: 2024 }, output: { estimated_value: 27300, source: "SerpApi (cached)" }, duration_ms: 64 },
     ],
     guardian: guardianPass, action: { type: "recommend", autonomy_level: "L1", status: "executed" }, model: "claude-sonnet-5-5", prompt_version: "advisor@v1",
   },
   {
-    id: "TR-0003", agent: "hardship", customer_id: "CUST-PRIYA", started_at: ago(12), duration_ms: 2480,
+    id: "TR-0003", agent: "hardship", customer_id: "CUST-HUNG2026", started_at: ago(12), duration_ms: 2480,
     plan: ["Detect missed payment", "Check hardship eligibility", "Propose policy options", "Escalate deferral to human"],
     tool_calls: [
-      { tool: "check_eligibility", input: { customer_id: "CUST-PRIYA", option: "due_date_change" }, output: { eligible: true }, duration_ms: 35 },
-      { tool: "handoff_to_human", input: { customer_id: "CUST-PRIYA", reason: "deferral approval" }, output: { handoff_id: "HO-02" }, duration_ms: 51 },
+      { tool: "check_eligibility", input: { customer_id: "CUST-HUNG2026", option: "due_date_change" }, output: { eligible: true }, duration_ms: 35 },
+      { tool: "handoff_to_human", input: { customer_id: "CUST-HUNG2026", reason: "deferral approval" }, output: { handoff_id: "HO-02" }, duration_ms: 51 },
     ],
     guardian: guardianPass, action: { type: "handoff", autonomy_level: "L4", status: "escalated" }, model: "claude-sonnet-5-5", prompt_version: "hardship@v1",
   },
@@ -298,20 +298,20 @@ export const traces: AgentTrace[] = [
 ];
 
 export const handoffs: Handoff[] = [
-  { id: "HO-01", customer_id: "CUST-JAMES", reason: "Questions about hybrid trims", surface: "app", status: "waiting", context_summary: "Viewing upgrade recommendation", created_at: ago(3) },
-  { id: "HO-02", customer_id: "CUST-PRIYA", reason: "Deferral approval + callback", surface: "app", status: "waiting", context_summary: "Hardship flow; due-date change accepted", created_at: ago(11) },
+  { id: "HO-01", customer_id: "CUST-SAMEERA2026", reason: "Questions about hybrid trims", surface: "app", status: "waiting", context_summary: "Viewing upgrade recommendation", created_at: ago(3) },
+  { id: "HO-02", customer_id: "CUST-HUNG2026", reason: "Deferral approval + callback", surface: "app", status: "waiting", context_summary: "Hardship flow; due-date change accepted", created_at: ago(11) },
 ];
 
 export const alerts: Alert[] = [
-  { id: "AL-01", customer_id: "CUST-MARIA", type: "lease_end", title: "Your lease ends in 90 days", body: "See whether buying beats returning.", autonomy_level: "L3", status: "pending_approval", consent: true, drafted_by: "sentinel", trace_id: "TR-0004", created_at: ago(55) },
-  { id: "AL-02", customer_id: "CUST-JAMES", type: "positive_equity", title: "You have equity in your Camry", body: "It could lower your monthly cost.", autonomy_level: "L3", status: "sent", consent: true, drafted_by: "sentinel", created_at: ago(2000) },
+  { id: "AL-01", customer_id: "CUST-VISHWAA2026", type: "lease_end", title: "Your lease ends in 90 days", body: "See whether buying beats returning.", autonomy_level: "L3", status: "pending_approval", consent: true, drafted_by: "sentinel", trace_id: "TR-0004", created_at: ago(55) },
+  { id: "AL-02", customer_id: "CUST-SAMEERA2026", type: "positive_equity", title: "You have equity in your Camry", body: "It could lower your monthly cost.", autonomy_level: "L3", status: "sent", consent: true, drafted_by: "sentinel", created_at: ago(2000) },
   { id: "AL-03", customer_id: "CUST-1004", type: "rate_drop", title: "Rates dropped", body: "Refinancing could lower your payment.", autonomy_level: "L2", status: "draft", consent: false, drafted_by: "sentinel", created_at: ago(50) },
 ];
 
 export const dealPackets: DealPacket[] = [];
 export const sessions: Session[] = [
-  { id: "SES-01", customer_id: "CUST-MARIA", surface: "kiosk", started_at: ago(5), current_screen: "next-move", language: "en", last_trace_id: "TR-0001" },
-  { id: "SES-02", customer_id: "CUST-JAMES", surface: "app", started_at: ago(3), current_screen: "showroom", language: "en" },
+  { id: "SES-01", customer_id: "CUST-VISHWAA2026", surface: "kiosk", started_at: ago(5), current_screen: "next-move", language: "en", last_trace_id: "TR-0001" },
+  { id: "SES-02", customer_id: "CUST-SAMEERA2026", surface: "app", started_at: ago(3), current_screen: "showroom", language: "en" },
 ];
 
 export const offers: Offer[] = [
@@ -321,8 +321,8 @@ export const offers: Offer[] = [
 ];
 
 export const audit: AuditEntry[] = [
-  { id: "AU-01", at: ago(30), actor: "EMP-ADVISOR-1", action: "approve_recommendation", customer_id: "CUST-JAMES", autonomy_level: "L3", trace_id: "TR-0002" },
-  { id: "AU-02", at: ago(12), actor: "hardship", action: "escalate_deferral", customer_id: "CUST-PRIYA", autonomy_level: "L4", detail: "Deferral requires human approval", trace_id: "TR-0003" },
+  { id: "AU-01", at: ago(30), actor: "EMP-ADVISOR-1", action: "approve_recommendation", customer_id: "CUST-SAMEERA2026", autonomy_level: "L3", trace_id: "TR-0002" },
+  { id: "AU-02", at: ago(12), actor: "hardship", action: "escalate_deferral", customer_id: "CUST-HUNG2026", autonomy_level: "L4", detail: "Deferral requires human approval", trace_id: "TR-0003" },
 ];
 
 export const fairness: FairnessReport = {
@@ -364,7 +364,7 @@ export const estimateVehicles: Record<Model, components["schemas"]["EstimateVehi
       "mpg": 51.0
     },
     "msrp": 32200.0,
-    "msrp_source": "MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
+    "msrp_source": "2027 MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
     "apr": 7.4,
     "loan_payment": 616.71,
     "lease_payment": 474.97,
@@ -385,28 +385,28 @@ export const estimateVehicles: Record<Model, components["schemas"]["EstimateVehi
       "vin": "SYNNEWRAV4",
       "model": "RAV4",
       "year": 2027,
-      "trim": "XLE Hybrid",
+      "trim": "XLE Premium Hybrid",
       "powertrain": "hybrid",
       "color": "Supersonic Red",
       "odometer_miles": 12,
       "mpg": 41.0
     },
-    "msrp": 36800.0,
-    "msrp_source": "list price from the NextMove catalog (synthetic)",
+    "msrp": 36100.0,
+    "msrp_source": "2026 MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
     "apr": 7.4,
-    "loan_payment": 708.66,
-    "lease_payment": 548.77,
+    "loan_payment": 694.67,
+    "lease_payment": 537.54,
     "lease_term_months": 36,
-    "residual": 22080.0,
+    "residual": 21660.0,
     "true_cost": {
-      "payment": 708.66,
+      "payment": 694.67,
       "fuel": 82.93,
       "maintenance": 45.0,
       "insurance": 150.0,
-      "total_monthly": 986.59,
+      "total_monthly": 972.6,
       "co2_kg_per_year": 2601.0
     },
-    "five_year_cost": 61195.51
+    "five_year_cost": 60355.91
   },
   "Tacoma": {
     "vehicle": {
@@ -419,22 +419,22 @@ export const estimateVehicles: Record<Model, components["schemas"]["EstimateVehi
       "odometer_miles": 12,
       "mpg": 23.0
     },
-    "msrp": 46500.0,
-    "msrp_source": "list price from the NextMove catalog (synthetic)",
+    "msrp": 47335.0,
+    "msrp_source": "2026 MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
     "apr": 7.4,
-    "loan_payment": 902.57,
-    "lease_payment": 704.4,
+    "loan_payment": 919.26,
+    "lease_payment": 717.8,
     "lease_term_months": 36,
-    "residual": 27900.0,
+    "residual": 28401.0,
     "true_cost": {
-      "payment": 902.57,
+      "payment": 919.26,
       "fuel": 147.83,
       "maintenance": 45.0,
       "insurance": 165.0,
-      "total_monthly": 1260.4,
+      "total_monthly": 1277.09,
       "co2_kg_per_year": 4637.0
     },
-    "five_year_cost": 77623.96
+    "five_year_cost": 78625.49
   },
   "Highlander": {
     "vehicle": {
@@ -447,22 +447,22 @@ export const estimateVehicles: Record<Model, components["schemas"]["EstimateVehi
       "odometer_miles": 12,
       "mpg": 35.0
     },
-    "msrp": 47500.0,
-    "msrp_source": "list price from the NextMove catalog (synthetic)",
+    "msrp": 49115.0,
+    "msrp_source": "Toyota list price (NextMove catalog)",
     "apr": 7.4,
-    "loan_payment": 922.56,
-    "lease_payment": 720.45,
+    "loan_payment": 954.84,
+    "lease_payment": 746.36,
     "lease_term_months": 36,
-    "residual": 28500.0,
+    "residual": 29469.0,
     "true_cost": {
-      "payment": 922.56,
+      "payment": 954.84,
       "fuel": 97.14,
       "maintenance": 45.0,
       "insurance": 175.0,
-      "total_monthly": 1239.7,
+      "total_monthly": 1271.99,
       "co2_kg_per_year": 3047.0
     },
-    "five_year_cost": 76381.99
+    "five_year_cost": 78319.07
   },
   "Prius": {
     "vehicle": {
@@ -476,7 +476,7 @@ export const estimateVehicles: Record<Model, components["schemas"]["EstimateVehi
       "mpg": 57.0
     },
     "msrp": 32200.0,
-    "msrp_source": "MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
+    "msrp_source": "2027 MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
     "apr": 7.4,
     "loan_payment": 616.71,
     "lease_payment": 474.97,
@@ -504,7 +504,7 @@ export const estimateVehicles: Record<Model, components["schemas"]["EstimateVehi
       "mpg": 114.0
     },
     "msrp": 34980.0,
-    "msrp_source": "MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
+    "msrp_source": "2027 MSRP from SerpApi Google Search, www.toyota.com, as of 2026-10-25",
     "apr": 7.4,
     "loan_payment": 672.28,
     "lease_payment": 519.57,
@@ -523,7 +523,7 @@ export const estimateVehicles: Record<Model, components["schemas"]["EstimateVehi
 };
 
 export const calls: Call[] = [{
-  id: "CALL-01", customer_id: "CUST-MARIA", surface: "kiosk", status: "ended", started_at: ago(25), ended_at: ago(22),
+  id: "CALL-01", customer_id: "CUST-VISHWAA2026", surface: "kiosk", status: "ended", started_at: ago(25), ended_at: ago(22),
   trace_id: "TR-0004",
   lines: [
     { role: "agent", text: "Hi, thanks for calling Toyota Financial Services. How can I help with your Toyota today?", at: ago(25),

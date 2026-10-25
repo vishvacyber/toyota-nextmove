@@ -1,5 +1,6 @@
 "use client";
 import { useContext, useEffect, useState, type ReactNode } from "react";
+import { Check } from "lucide-react";
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { components, Customer, CustomerAction, DealPacket, Handoff, Offer, Recommendation, ScenarioRequest, ScenarioSet, TimingPlan } from "@nextmove/contracts";
 import { api, useApi } from "@nextmove/contracts/client";
@@ -192,7 +193,7 @@ export function Action({ title, body, primary, confirmText, run, children }: {
       {body && <div className="mt-1 text-muted">{body}</div>}
       <div className="mt-auto pt-4" aria-live="polite">
         {phase === "idle" && (
-          <button type="button" onClick={() => setPhase("confirm")} className={`w-full rounded-full px-6 py-3 font-semibold ${primary ? "bg-accent text-on-accent hover:brightness-110" : "border border-line"}`}>
+          <button type="button" onClick={() => setPhase("confirm")} className={`w-full rounded-lg px-6 py-3 font-semibold ${primary ? "bg-accent text-on-accent hover:brightness-110" : "border border-line"}`}>
             {title}
           </button>
         )}
@@ -202,16 +203,16 @@ export function Action({ title, body, primary, confirmText, run, children }: {
             <p className="font-medium">{confirmText}</p>
             {phase === "error" && <p role="alert" className="mt-2 text-accent">{t("error")}</p>}
             <div className="mt-3 flex gap-3">
-              <button type="button" disabled={phase === "busy"} onClick={confirm} className="flex-1 rounded-full bg-accent px-6 py-3 font-semibold text-on-accent disabled:opacity-60">
+              <button type="button" disabled={phase === "busy"} onClick={confirm} className="flex-1 rounded-lg bg-accent px-6 py-3 font-semibold text-on-accent disabled:opacity-60">
                 {phase === "busy" ? t("sending") : t("confirm")}
               </button>
-              <button type="button" disabled={phase === "busy"} onClick={() => setPhase("idle")} className="flex-1 rounded-full border border-line px-6 py-3 font-semibold">
+              <button type="button" disabled={phase === "busy"} onClick={() => setPhase("idle")} className="flex-1 rounded-lg border border-line px-6 py-3 font-semibold">
                 {t("cancel")}
               </button>
             </div>
           </div>
         )}
-        {phase === "done" && <div role="status" className="rounded-xl bg-surface p-4 font-semibold">✓ {result}</div>}
+        {phase === "done" && <div role="status" className="flex items-start gap-2 rounded-xl bg-surface p-4 font-semibold"><Check aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-accent" /> <span>{result}</span></div>}
       </div>
     </article>
   );

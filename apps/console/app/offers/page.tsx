@@ -117,7 +117,7 @@ export default function OfferStudio() {
         <Card aria-live="polite">
           <CardHeader>
             <CardTitle>Simulation · {offers.find((o) => o.id === sim.offer_id)?.name ?? sim.offer_id}</CardTitle>
-            <CardDescription>Source: offer simulation over the synthetic portfolio · {sim.customers_targeted.toLocaleString()} customers targeted · {sim.variants.length > 1 ? `${sim.variants.length} variants (A/B)` : "no variants yet; add one to A/B test"}</CardDescription>
+            <CardDescription>Source: offer simulation over the portfolio · {sim.customers_targeted.toLocaleString()} customers targeted · {sim.variants.length > 1 ? `${sim.variants.length} variants (A/B)` : "no variants yet; add one to A/B test"}</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 lg:grid-cols-2">
             <Table>

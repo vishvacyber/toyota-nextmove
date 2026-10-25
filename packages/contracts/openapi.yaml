@@ -316,7 +316,7 @@ components:
       description: Synthetic customer. No protected attributes by design.
       required: [id, first_name, last_name, region, credit_tier, preferred_language, pay_frequency, vehicle, contract, payment_history, life_events, risk_score, situation, synthetic]
       properties:
-        id: { type: string, example: CUST-MARIA }
+        id: { type: string, example: CUST-VISHWAA2026 }
         first_name: { type: string }
         last_name: { type: string }
         email: { type: string }

@@ -7,7 +7,7 @@ CITY = {"South": ("Austin, TX", 30.2672, -97.7431), "West": ("Los Angeles, CA", 
 TREND_MODELS = ["RAV4", "Camry", "Prius", "Tacoma", "Highlander"]   # Google Trends compares at most 5 terms
 
 
-# The 3 demo personas' cars, plus James's Camry Hybrid upgrade target (Camry is hybrid-only from 2025).
+# The 3 demo personas' cars, plus Sameera's Camry Hybrid upgrade target (Camry is hybrid-only from 2025).
 PERSONA_VEHICLES = [("RAV4", 2024, "South"), ("Camry", 2022, "West"), ("Camry", 2027, "West"), ("Prius", 2023, "Midwest")]
 
 

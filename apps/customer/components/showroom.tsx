@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Customer, MarketQuote, Recommendation } from "@nextmove/contracts";
 import { useApi } from "@nextmove/contracts/client";
-import { SyntheticBadge } from "@nextmove/tokens";
 import { CarPhoto } from "@/components/car-photo";
 import { Card } from "@/components/cards";
 import { useI18n, type Key } from "@/lib/i18n";
@@ -11,7 +10,7 @@ import { FEATURES, trims, type Feature } from "@/lib/showroom";
 /** Showroom over the flow: a real photo of each trim's model, its price from the engine's scenario, what each part
  * does, and what reviewers say (SerpApi, with source + as-of). Nothing is computed here. */
 export function Showroom({ c, r, initial, onClose }: { c: Customer; r: Recommendation; initial: string; onClose: () => void }) {
-  const { t, money, locale, lang } = useI18n();
+  const { t, money, locale } = useI18n();
   const options = trims(c, r);
   const [trimKey, setTrimKey] = useState(initial);
   const trim = options.find((o) => o.key === trimKey) ?? options[0];
@@ -44,8 +43,7 @@ export function Showroom({ c, r, initial, onClose }: { c: Customer; r: Recommend
             <h2 id="showroom-title" className="text-3xl font-semibold tracking-tight">{car}</h2>
           </div>
           <div className="flex items-center gap-3">
-            <SyntheticBadge lang={lang} />
-            <button type="button" onClick={onClose} className="rounded-full border border-line px-6 py-3 font-semibold">{t("close")}</button>
+            <button type="button" onClick={onClose} className="rounded-lg border border-line px-6 py-3 font-semibold">{t("close")}</button>
           </div>
         </header>
 
@@ -56,7 +54,7 @@ export function Showroom({ c, r, initial, onClose }: { c: Customer; r: Recommend
               <div role="tablist" aria-label={t("features")} className="flex flex-wrap gap-2">
                 {FEATURES.map((f) => (
                   <button key={f} type="button" role="tab" aria-selected={selected === f} onClick={() => setSelected(f)}
-                    className={`rounded-full border px-4 py-2 font-semibold ${selected === f ? "border-accent bg-accent text-on-accent" : "border-line"}`}>
+                    className={`rounded-lg border px-4 py-2 font-semibold ${selected === f ? "border-accent bg-accent text-on-accent" : "border-line"}`}>
                     {t(`hs_${f}` as Key)}
                   </button>
                 ))}

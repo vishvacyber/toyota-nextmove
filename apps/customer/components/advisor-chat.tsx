@@ -1,6 +1,7 @@
 "use client";
 import { useContext, useEffect, useRef, useState, type FormEvent } from "react";
 import { useReducedMotion } from "framer-motion";
+import { Mic } from "lucide-react";
 import type { AdvisorAnswer } from "@nextmove/contracts";
 import { api, isBusy } from "@nextmove/contracts/client";
 import { Card } from "@/components/cards";
@@ -113,7 +114,7 @@ export function AdvisorChat({ customerId }: { customerId: string }) {
       {!turns.length && (
         <div className="mt-4 flex flex-wrap gap-2">
           {suggestions.map((s) => (
-            <button key={s} type="button" onClick={() => ask(s)} className="rounded-full border border-line px-4 py-2 text-left">{s}</button>
+            <button key={s} type="button" onClick={() => ask(s)} className="rounded-lg border border-line px-4 py-2 text-left">{s}</button>
           ))}
         </div>
       )}
@@ -121,7 +122,7 @@ export function AdvisorChat({ customerId }: { customerId: string }) {
       {speaking && (
         <div role="status" className="mt-4 flex items-start gap-3 rounded-2xl bg-fg px-4 py-3 text-bg">
           <p className="flex-1"><span className="font-semibold">{t("caption")}: </span><>{speaking}</></p>
-          <button type="button" onClick={stopSpeaking} className="rounded-full border border-bg/40 px-4 py-1 font-semibold">{t("stop")}</button>
+          <button type="button" onClick={stopSpeaking} className="rounded-lg border border-bg/40 px-4 py-1 font-semibold">{t("stop")}</button>
         </div>
       )}
 
@@ -132,7 +133,7 @@ export function AdvisorChat({ customerId }: { customerId: string }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={t("ask_placeholder")}
-          className="min-w-0 flex-1 rounded-full border border-line bg-bg px-5 py-3"
+          className="min-w-0 flex-1 rounded-lg border border-line bg-bg px-5 py-3"
         />
         {canListen && (
           <button
@@ -140,12 +141,12 @@ export function AdvisorChat({ customerId }: { customerId: string }) {
             onClick={listen}
             aria-pressed={listening}
             aria-label={listening ? t("mic_stop") : t("mic_start")}
-            className={`rounded-full px-5 py-3 font-semibold ${listening ? "animate-pulse bg-accent text-on-accent" : "border border-line"}`}
+            className={`inline-flex items-center gap-2 rounded-lg px-5 py-3 font-semibold ${listening ? "animate-pulse bg-accent text-on-accent" : "border border-line"}`}
           >
-            🎤 {listening ? t("listening") : t("speak")}
+            <Mic aria-hidden className="h-5 w-5" /> {listening ? t("listening") : t("speak")}
           </button>
         )}
-        <button type="submit" disabled={busy || !text.trim()} className="rounded-full bg-accent px-6 py-3 font-semibold text-on-accent disabled:opacity-50">
+        <button type="submit" disabled={busy || !text.trim()} className="rounded-lg bg-accent px-6 py-3 font-semibold text-on-accent disabled:opacity-50">
           {t("send")}
         </button>
       </form>

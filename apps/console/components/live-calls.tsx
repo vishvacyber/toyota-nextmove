@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
+import { TriangleAlert } from "lucide-react";
 import type { Call } from "@nextmove/contracts";
 import { api } from "@nextmove/contracts/client";
 import { MockBadge } from "@/components/mock-provider";
@@ -72,8 +73,8 @@ function CallCard({ c, onChange }: { c: Call; onChange: (c: Call) => void }) {
             {WHO[l.role] && <span className="font-medium">{WHO[l.role]}: </span>}
             {l.text}
             {l.guardian && l.guardian.verdict !== "pass" && (
-              <span className="block text-xs text-destructive">
-                ⚠ Guardian {l.guardian.verdict}: {l.guardian.checks.filter((x) => !x.passed).map((x) => x.detail ?? x.name).join("; ")}
+              <span className="flex items-center gap-1 text-xs text-destructive">
+                <TriangleAlert aria-hidden className="size-3" /> Guardian {l.guardian.verdict}: {l.guardian.checks.filter((x) => !x.passed).map((x) => x.detail ?? x.name).join("; ")}
               </span>
             )}
           </li>

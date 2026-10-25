@@ -66,7 +66,7 @@ from sim import simulate
 from sim.generator import customers_by_id
 from tools import ToolError, actions, market, store
 
-PERSONAS = ["CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"]
+PERSONAS = ["CUST-VISHWAA2026", "CUST-SAMEERA2026", "CUST-HUNG2026"]
 
 
 @asynccontextmanager
@@ -118,7 +118,7 @@ def health() -> Health:
 
 @app.get("/customers", response_model=list[Customer])
 def list_customers(q: str | None = None) -> list[Customer]:
-    """Search by id or name (case-insensitive substring). Synthetic customers only."""
+    """Search by id or name (case-insensitive substring). Generated customers only (no real customer data)."""
     q = (q or "").strip().lower()
     return [c for c in customers_by_id().values()
             if not q or q in c.id.lower() or q in f"{c.first_name} {c.last_name}".lower()]

@@ -122,10 +122,10 @@ Cut order: A/B testing → Studio template deploy → Long-term Profit page.
 ### Customer App (K)
 | Stage | Build | Done when |
 | --- | --- | --- |
-| K0 Foundation | `/app` + `/kiosk`, kiosk shell (idle reset, privacy blur), tokens, i18n, MSW | Both modes load Maria |
+| K0 Foundation | `/app` + `/kiosk`, kiosk shell (idle reset, privacy blur), tokens, i18n, MSW | Both modes load Vishwaa |
 | K1 Core flow | Sign in / QR / guest, My situation, My next move, Why this | Each persona sees correct recommendation + explanation |
-| K2 Decide + act | What-if sliders, timing optimizer, true cost + CO2, action center, handoff status | James: recommendation → deal packet sent |
-| K3 AI experiences | Photo pre-inspection, chat + voice (EN/ES), alerts inbox, hardship flow | Maria gets estimate; Priya completes hardship |
+| K2 Decide + act | What-if sliders, timing optimizer, true cost + CO2, action center, handoff status | Sameera: recommendation → deal packet sent |
+| K3 AI experiences | Photo pre-inspection, chat + voice (EN/ES), alerts inbox, hardship flow | Vishwaa gets estimate; Hung completes hardship |
 | K4 3D Showroom | R3F 360°, exploded view slider, hotspots, trim/color, reviews summary | Smooth on demo laptop + kiosk screen |
 | K5 Polish + integrate | Attract loop, QR continue-on-phone, real API, perf + a11y pass | Demo runs on live data with cache fallback |
 
@@ -137,9 +137,9 @@ Cut order: exploded view → voice → QR continue → Spanish.
 3. **Demo freeze** — 3 hours before deadline; bug fixes only; record backup video.
 
 ## 11. Demo script (3 min)
-1. Maria at kiosk: photo pre-inspection estimates wear charges; buyout beats return; taps "start buyout".
-2. James: live comps show positive equity; timing optimizer says don't wait; hybrid lowers total cost; explores in 3D; deal packet sent.
-3. Priya: hardship agent offers paycheck-aligned due date + human callback.
+1. Vishwaa at kiosk: photo pre-inspection estimates wear charges; buyout beats return; taps "start buyout".
+2. Sameera: live comps show positive equity; timing optimizer says don't wait; hybrid lowers total cost; explores in 3D; deal packet sent.
+3. Hung: hardship agent offers paycheck-aligned due date + human callback.
 4. Console: sessions live with agent traces; queue with $ value; Proof dashboard; fairness report; deploy Recall Notifier in 60s.
 
 ## 12. Risks

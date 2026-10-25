@@ -3,13 +3,13 @@
 from app.models import AdvisorAnswer, AgentTrace
 
 CASES = [
-    {"customer_id": "CUST-MARIA", "question": "What should I do at lease end?", "agent": "advisor",
+    {"customer_id": "CUST-VISHWAA2026", "question": "What should I do at lease end?", "agent": "advisor",
      "keywords": ["lease", "end", "buy", "buyout", "return", "do"], "recommended": "buyout",
      "tools": ["run_scenario"], "action": ("L1", "executed")},
-    {"customer_id": "CUST-JAMES", "question": "Should I upgrade to a hybrid now or keep my Camry?", "agent": "advisor",
+    {"customer_id": "CUST-SAMEERA2026", "question": "Should I upgrade to a hybrid now or keep my Camry?", "agent": "advisor",
      "keywords": ["upgrade", "hybrid", "keep", "trade", "camry", "equity"], "recommended": "upgrade",
      "tools": ["run_scenario"], "action": ("L1", "executed")},
-    {"customer_id": "CUST-PRIYA", "question": "I missed a payment after changing jobs. What can I do?", "agent": "hardship",
+    {"customer_id": "CUST-HUNG2026", "question": "I missed a payment after changing jobs. What can I do?", "agent": "hardship",
      "keywords": ["missed", "payment", "late", "job", "defer", "deferral", "help"], "recommended": "due_date_change",
      "tools": ["run_scenario", "handoff_to_human"], "action": ("L4", "escalated")},
 ]
