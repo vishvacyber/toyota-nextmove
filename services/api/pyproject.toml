@@ -8,6 +8,7 @@ dependencies = [
     "pydantic>=2.7",
     "httpx>=0.28.1",
     "mcp>=2.3.0",
+    "claude-agent-sdk>=0.2.174",
 ]
 
 [dependency-groups]

@@ -54,6 +54,12 @@ cd services/api && SUPABASE_URL=... SUPABASE_SERVICE_KEY=... uv run python -m si
 - `pnpm dev` runs from the snapshot (works offline). `pnpm --filter @nextmove/api dev:live` loads `.env.local` to use Supabase and live SerpApi.
 - Cache table: `services/api/migrations/001_serpapi_cache.sql`. Re-seed the 3 personas (cache hits are free): `pnpm --filter @nextmove/api seed:cache`.
 
+## API: agents (B3)
+- `services/api/agents/`: Advisor and Hardship run on the Claude Agent SDK with the separate subscription login (`CLAUDE_CONFIG_DIR` in `.env.local`). The SDK is locked down: no built-in tools, no settings files, only the B2 tool registry (mounted in-process as an SDK MCP server). Orchestrator, Sentinel, Market Intel and Guardian are plain code.
+- Guardian (`guardian.py`) checks every agent answer: every number must appear in that run's tool output, plus tone, consent, disclosures, fairness and prompt injection. A failed answer gets one send-back; after that, a pre-generated answer (`fallback.json`) or an engine template is served, marked in the trace.
+- Endpoints: `POST /agents/advisor/ask`, `GET /customers/{id}/recommendation`, `GET /opportunities`, `GET /traces`, `GET /alerts`. Traces go to Supabase `traces` (`migrations/002_traces.sql`) and Realtime Broadcast channel `traces`, event `created`.
+- Live persona evals (spend subscription quota; pytest never calls the SDK): `pnpm --filter @nextmove/api evals:live` (add `--save` to refresh `fallback.json`, or pass `CUST-…` IDs to rerun some).
+
 ## Contract
 
 `packages/contracts/openapi.yaml` is the source of truth. After editing it, run `pnpm gen` to regenerate the TS types and the API's Pydantic models.

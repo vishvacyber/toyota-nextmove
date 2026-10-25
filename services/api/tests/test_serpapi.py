@@ -110,3 +110,19 @@ def test_price_extraction():
         {"title": "2022 Toyota Camry", "link": "e", "rich_snippet": {"top": {"detected_extensions": {"price": 20800.0}}}},
     ]}
     assert [c["price"] for c in market.parse_comps(resp, "Camry", 2022)] == [22985, 18250, 20800]
+
+
+def test_engine_comp_lookups_are_one_supabase_query(env):
+    reqs = [q.comps(m, y) for m, y in (("RAV4", 2024), ("Camry", 2022), ("Prius", 2023))]
+    rows = [{"key": client.cache_key(*r), "engine": r[0], "params": r[1], "response": {"organic_results": []},
+             "source": "SerpApi Google Search", "fetched_at": "2026-10-24T00:00:00+00:00"} for r in reqs]
+    fake, calls = env(Fake(db_rows=rows)), []
+    get = fake.get
+    fake.get = lambda url, params=None, **kw: calls.append(params) or get(url, params, **kw)
+    env(fake)
+    client._db_engine_rows.cache_clear()
+    try:
+        assert all(client.cached_only(*r)["key"] == row["key"] for r, row in zip(reqs, rows))
+        assert len(calls) == 1 and fake.serpapi == []
+    finally:
+        client._db_engine_rows.cache_clear()
