@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { components, DeployResult, StudioAgent } from "@nextmove/contracts";
 import { api, useApi } from "@nextmove/contracts/client";
 import { ApiState } from "@/components/state";
+import { useToast } from "@/components/toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { asOf, label, pct } from "@/lib/format";
 import { TEMPLATES, TOOLS, type Template } from "@/lib/trust";
 import { cn } from "@/lib/utils";
+import { MockBadge } from "@/components/mock-provider";
 
 type StudioAgentCreate = components["schemas"]["StudioAgentCreate"];
 const STATUS: Record<StudioAgent["status"], "secondary" | "outline" | "destructive"> = { deployed: "secondary", draft: "outline", failed: "destructive" };
@@ -42,15 +44,14 @@ export default function AgentStudio() {
   const [timed, setTimed] = useState<{ id: string; start: number }>();
   const [gate, setGate] = useState<{ agent: StudioAgent; result?: DeployResult; seconds?: number }>();
   const [busy, setBusy] = useState<string>();
-  const [actionError, setActionError] = useState<Error>();
+  const toast = useToast();
   // Agents created or deployed here override the fetched snapshot (the MSW store is per browser; see DECISIONS C4).
   const agents = [...local.filter((a) => !data?.some((d) => d.id === a.id)), ...(data ?? []).map((d) => local.find((a) => a.id === d.id) ?? d)];
   const keep = (a: StudioAgent) => setLocal((l) => [a, ...l.filter((x) => x.id !== a.id)]);
 
   async function run(key: string, fn: () => Promise<void>) {
     setBusy(key);
-    setActionError(undefined);
-    try { await fn(); } catch (e) { setActionError(e as Error); } finally { setBusy(undefined); }
+    try { await fn(); } catch (e) { toast(`Action failed: ${(e as Error).message}`, true); } finally { setBusy(undefined); }
   }
 
   function pick(t: Template, at: number) {
@@ -70,6 +71,7 @@ export default function AgentStudio() {
       const a = await api<StudioAgent>("/studio/agents", { method: "POST", body: JSON.stringify(body) });
       keep(a);
       setGate({ agent: a });
+      toast(`Created ${a.name}`);
       if (startedAt) setTimed({ id: a.id, start: startedAt });
     });
   }
@@ -80,15 +82,16 @@ export default function AgentStudio() {
     const deployed: StudioAgent = { ...a, status: result.passed ? "deployed" : "failed", deployed_at: result.deployed_at ?? a.deployed_at };
     keep(deployed);
     setGate({ agent: deployed, result, seconds: timed?.id === a.id ? (performance.now() - timed.start) / 1000 : undefined });
+    toast(result.passed ? `${a.name} deployed: deploy gate passed` : `${a.name} blocked by the deploy gate`, !result.passed);
   });
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Agent Studio</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-semibold">Agent Studio <MockBadge path="/studio/agents" /></h1>
         <p className="text-sm text-muted-foreground">Start from a template, attach registry tools, then deploy. Every deploy runs the persona evals and prompt-injection tests first.</p>
       </div>
-      <ApiState loading={loading} error={error ?? actionError} />
+      <ApiState loading={loading} error={error} />
 
       <div className="grid gap-3 xl:grid-cols-2">
         <Card>

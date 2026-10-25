@@ -3,12 +3,13 @@ import Link from "next/link";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import type { KpiSnapshot, Opportunity } from "@nextmove/contracts";
 import { useApi } from "@nextmove/contracts/client";
-import { ApiState } from "@/components/state";
+import { ApiState, Empty } from "@/components/state";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { asOf, label, pct, usd } from "@/lib/format";
 import { KPIS } from "@/lib/kpis";
+import { MockBadge } from "@/components/mock-provider";
 
 const chartConfig = {
   baseline_retention: { label: "Baseline", color: "var(--chart-2)" },
@@ -26,7 +27,7 @@ export default function CommandCenter() {
         <h1 className="text-2xl font-semibold">Command Center</h1>
         {k && (
           <p className="text-xs text-muted-foreground">
-            Source: portfolio simulation ({k.customers_simulated.toLocaleString()} customers, {k.months} months) · as of {asOf(k.as_of)}
+            Source: portfolio simulation ({k.customers_simulated.toLocaleString()} customers, {k.months} months) · as of {asOf(k.as_of)} <MockBadge path="/kpis" />
           </p>
         )}
       </div>
@@ -121,6 +122,7 @@ export default function CommandCenter() {
               </li>
             ))}
           </ul>
+          {opps.data && !opps.data.some((o) => o.priority === 1) && <Empty>No priority 1 opportunities right now.</Empty>}
         </CardContent>
       </Card>
     </div>

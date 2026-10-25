@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { AgentTrace } from "@nextmove/contracts";
 import { RealtimeBadge } from "@/components/realtime-badge";
-import { ApiState } from "@/components/state";
+import { ApiState, Empty } from "@/components/state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 const DEV = process.env.NODE_ENV !== "production";
 const EVENTS = ["created"] as const;
 
-// Dev-only stand-in for a backend trace, until the console uses the real API (C5).
+// Dev-only stand-in for a backend trace (real ones arrive from the API on the same channel).
 function simulated(blocked: boolean): AgentTrace {
   return {
     id: `TR-SIM-${Date.now()}`, agent: "recall_notifier", customer_id: "CUST-JAMES", started_at: new Date().toISOString(), duration_ms: 1840,
@@ -56,7 +56,7 @@ const json = (o: object) => <pre className="max-h-40 overflow-auto rounded bg-mu
 export default function Traces() {
   const [customer, setCustomer] = useState("");
   const path = customer ? `/traces?customer_id=${encodeURIComponent(customer)}` : "/traces";
-  const { items, error, realtime, broadcast } = useRealtimeList<AgentTrace>(path, "traces", EVENTS);
+  const { items, error, loading, realtime, broadcast } = useRealtimeList<AgentTrace>(path, "traces", EVENTS);
   // Live events aren't filtered by the channel, so apply the customer filter here too.
   const traces = items.filter((t) => !customer || t.customer_id === customer).sort((a, b) => b.started_at.localeCompare(a.started_at));
   const [selected, setSelected] = useState<string>();
@@ -76,7 +76,7 @@ export default function Traces() {
           {DEV && <Button variant="outline" size="sm" onClick={() => broadcast("created", simulated(true))}>Simulate blocked trace</Button>}
         </div>
       </div>
-      <ApiState loading={false} error={error} />
+      <ApiState loading={loading} error={error} />
 
       <div className="grid gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <Card size="sm">
@@ -106,7 +106,7 @@ export default function Traces() {
                   </button>
                 </li>
               ))}
-              {!traces.length && <li className="text-sm text-muted-foreground">No traces.</li>}
+              {!loading && !traces.length && <li><Empty>No traces yet. Agent runs appear here live.</Empty></li>}
             </ul>
           </CardContent>
         </Card>

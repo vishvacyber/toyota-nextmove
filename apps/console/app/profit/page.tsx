@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { asOf, pct, usd } from "@/lib/format";
 import { kpiSource } from "@/lib/kpis";
+import { MockBadge } from "@/components/mock-provider";
 
 const chartConfig = {
   baseline: { label: "Baseline", color: "var(--chart-2)" },
@@ -28,7 +29,7 @@ export default function Profit() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-semibold">Long-term Profit</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-semibold">Long-term Profit <MockBadge path="/kpis" /></h1>
           <p className="text-sm text-muted-foreground">What keeping customers in the Toyota family is worth over the simulation horizon.</p>
         </div>
         {k && <p className="text-xs text-muted-foreground">{kpiSource(k)} at {pct(k.assumptions.adoption_rate)} adoption · as of {asOf(k.as_of)}</p>}

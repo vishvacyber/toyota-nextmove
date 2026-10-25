@@ -4,6 +4,7 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import type { components, Offer, OfferSimulation } from "@nextmove/contracts";
 import { api, useApi } from "@nextmove/contracts/client";
 import { ApiState } from "@/components/state";
+import { useToast } from "@/components/toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } f
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { label, pct, usd } from "@/lib/format";
+import { MockBadge } from "@/components/mock-provider";
 
 type OfferCreate = components["schemas"]["OfferCreate"];
 type Incentive = Offer["incentive"]["type"];
@@ -26,7 +28,7 @@ export default function OfferStudio() {
   const [created, setCreated] = useState<Offer[]>([]);
   const [sim, setSim] = useState<OfferSimulation>();
   const [busy, setBusy] = useState<string>();
-  const [actionError, setActionError] = useState<Error>();
+  const toast = useToast();
   const offers = [...created, ...(data ?? [])];
   const ids = new Set(offers.map((o) => o.id));
   const parents = offers.filter((o) => !o.variant_of || !ids.has(o.variant_of));
@@ -34,8 +36,7 @@ export default function OfferStudio() {
 
   async function run(key: string, fn: () => Promise<void>) {
     setBusy(key);
-    setActionError(undefined);
-    try { await fn(); } catch (e) { setActionError(e as Error); } finally { setBusy(undefined); }
+    try { await fn(); } catch (e) { toast(`Action failed: ${(e as Error).message}`, true); } finally { setBusy(undefined); }
   }
 
   function create(e: React.FormEvent<HTMLFormElement>) {
@@ -53,6 +54,7 @@ export default function OfferStudio() {
       const o = await api<Offer>("/offers", { method: "POST", body: JSON.stringify(body) });
       setCreated((c) => [o, ...c]);
       form.reset();
+      toast(`Created offer ${o.name}`);
     });
   }
 
@@ -62,10 +64,10 @@ export default function OfferStudio() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Offer Studio</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-semibold">Offer Studio <MockBadge path="/offers" /></h1>
         <p className="text-sm text-muted-foreground">Eligibility rules and incentives. Add a variant to A/B test an offer, then simulate it against the synthetic portfolio.</p>
       </div>
-      <ApiState loading={loading} error={error ?? actionError} />
+      <ApiState loading={loading} error={error} />
 
       <Card>
         <CardHeader>

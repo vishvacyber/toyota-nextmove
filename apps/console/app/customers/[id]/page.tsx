@@ -8,6 +8,7 @@ import { ApiState } from "@/components/state";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { asOf, label, pct, usd } from "@/lib/format";
+import { MockBadge } from "@/components/mock-provider";
 
 // shortcut: risk bands are display thresholds on the API's risk_score, move them to the engine if they ever drive actions.
 const riskBand = (r: number) => (r >= 0.6 ? "High" : r >= 0.3 ? "Medium" : "Low");
@@ -21,13 +22,47 @@ function Field({ k, children }: { k: string; children: React.ReactNode }) {
   );
 }
 
+function RecommendationCard({ rec }: { rec: { data?: Recommendation; error?: Error; loading: boolean } }) {
+  const r = rec.data;
+  return (
+    <Card size="sm" className="lg:col-span-2">
+    <CardHeader>
+      <CardTitle>Current recommendation</CardTitle>
+      {r && <CardDescription>Engine output · generated {asOf(r.generated_at)}{r.trace_id && <> · trace <span className="font-mono">{r.trace_id}</span></>}</CardDescription>}
+    </CardHeader>
+    <CardContent className="space-y-3 text-sm">
+      <ApiState loading={rec.loading} error={rec.error} />
+      {r && (
+        <>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-base font-semibold">{r.headline}</p>
+            <Badge variant={r.guardian.verdict === "pass" ? "secondary" : "destructive"}>Guardian: {r.guardian.verdict}</Badge>
+            {r.review?.status && <Badge variant="outline">Review: {r.review.status}</Badge>}
+          </div>
+          <p className="text-muted-foreground">{r.why}</p>
+          <ScenarioTable recommended={r.recommended} others={[...r.alternatives, ...(r.baseline ? [r.baseline] : [])]} />
+          {r.why_not.length > 0 && (
+            <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
+              {r.why_not.map((w) => <li key={w.option}><span className="text-foreground">Not {label(w.option)}:</span> {w.reason}</li>)}
+            </ul>
+          )}
+          <p>
+            <span className="text-muted-foreground">Next action: </span>{r.action.label}{" "}
+            <Badge variant="outline">{r.action.autonomy_level}</Badge>
+          </p>
+        </>
+      )}
+    </CardContent>
+  </Card>
+  );
+}
+
 export default function Customer360() {
   const { id } = useParams<{ id: string }>();
   const cust = useApi<Customer>(`/customers/${id}`);
   const rec = useApi<Recommendation>(`/customers/${id}/recommendation`);
   const opps = useApi<Opportunity[]>("/opportunities");
   const c = cust.data;
-  const r = rec.data;
   const opp = opps.data?.find((o) => o.customer_id === id);
 
   if (!c) return <ApiState loading={cust.loading} error={cust.error} />;
@@ -42,6 +77,7 @@ export default function Customer360() {
       </nav>
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-semibold">{c.first_name} {c.last_name}</h1>
+        <MockBadge path="/customers/:id" />
         <Badge variant="outline">{label(c.situation)}</Badge>
         <Badge variant={k.status === "current" ? "secondary" : "destructive"}>{label(k.status)}</Badge>
       </div>
@@ -112,35 +148,7 @@ export default function Customer360() {
       </div>
 
       <div className="grid gap-3 lg:grid-cols-3">
-        <Card size="sm" className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Current recommendation</CardTitle>
-            {r && <CardDescription>Engine output · generated {asOf(r.generated_at)}{r.trace_id && <> · trace <span className="font-mono">{r.trace_id}</span></>}</CardDescription>}
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <ApiState loading={rec.loading} error={rec.error} />
-            {r && (
-              <>
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-base font-semibold">{r.headline}</p>
-                  <Badge variant={r.guardian.verdict === "pass" ? "secondary" : "destructive"}>Guardian: {r.guardian.verdict}</Badge>
-                  {r.review?.status && <Badge variant="outline">Review: {r.review.status}</Badge>}
-                </div>
-                <p className="text-muted-foreground">{r.why}</p>
-                <ScenarioTable recommended={r.recommended} others={[...r.alternatives, ...(r.baseline ? [r.baseline] : [])]} />
-                {r.why_not.length > 0 && (
-                  <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
-                    {r.why_not.map((w) => <li key={w.option}><span className="text-foreground">Not {label(w.option)}:</span> {w.reason}</li>)}
-                  </ul>
-                )}
-                <p>
-                  <span className="text-muted-foreground">Next action: </span>{r.action.label}{" "}
-                  <Badge variant="outline">{r.action.autonomy_level}</Badge>
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        <RecommendationCard rec={rec} />
 
         <Card size="sm">
           <CardHeader><CardTitle>Timeline</CardTitle><CardDescription>Payments and life events</CardDescription></CardHeader>

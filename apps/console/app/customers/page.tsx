@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { label, pct, usd } from "@/lib/format";
+import { MockBadge } from "@/components/mock-provider";
 
 export default function Customers() {
   const [q, setQ] = useState("");
@@ -18,7 +19,7 @@ export default function Customers() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Customers</h1>
+      <h1 className="flex items-center gap-2 text-2xl font-semibold">Customers <MockBadge path="/customers" /></h1>
       <div className="flex items-center gap-3">
         <Input type="search" placeholder="Search name or ID…" aria-label="Search customers" value={q} onChange={(e) => setQ(e.target.value)} className="h-8 w-72" />
         {data && <span className="text-sm text-muted-foreground" aria-live="polite">{data.length} customers</span>}
