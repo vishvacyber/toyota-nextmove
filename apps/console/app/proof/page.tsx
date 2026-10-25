@@ -85,7 +85,7 @@ export default function Proof() {
               </label>
             ))}
             <p className="text-xs text-muted-foreground md:col-span-3">
-              Lead time and hardship uptake are sent to the simulation but only move the numbers once the full portfolio simulation (B5) is live; adoption moves every KPI today.
+              Each slider re-runs the 24-month simulation over all 1,200 synthetic customers.
             </p>
           </CardContent>
         </Card>

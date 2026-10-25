@@ -192,3 +192,12 @@ def test_patch_alert_enforces_approval_before_send():
     r = client.patch(f"/alerts/{aid}", json={"status": "sent"})
     assert r.status_code == 200 and r.json()["status"] == "sent"
     assert client.get("/alerts", params={"status": "sent"}).json()[0]["id"] == aid
+
+
+def test_recommendation_assumptions_are_unique():
+    # The option and the scenario set both carry the market-value note; it must show once (it's also a React key).
+    from agents import recommend
+    from sim.generator import customers_by_id
+    for cid in ("CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"):
+        a = recommend.recommendation(customers_by_id()[cid]).assumptions
+        assert len(a) == len(set(a)), cid

@@ -90,6 +90,6 @@ def recommendation(c: Customer) -> Recommendation:
     return Recommendation(
         customer_id=c.id, situation=situation, headline=headline(c, rec), recommended=rec, alternatives=alts,
         baseline=baseline, why=why, why_not=[WhyNotItem(option=s.option, reason=why_not(s)) for s in alts],
-        assumptions=[*rec.assumptions, *ss.assumptions],
+        assumptions=list(dict.fromkeys([*rec.assumptions, *ss.assumptions])),   # both carry the market note
         action=NextAction(type=type_, label=label, autonomy_level=AutonomyLevel.L3),
         guardian=verdict, review=REVIEWS.get(c.id, Review(status=Status3.pending)), generated_at=AS_OF, trace_id=trace_id)
