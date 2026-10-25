@@ -1,0 +1,123 @@
+# Eligibility rules. An option is eligible when every rule passes; the first failing rule's
+# reason is shown to the customer. Ops: eq, ne, lt, lte, gt, gte. `only_for` limits a rule to one
+# contract type. Facts come from engine.scenarios.facts(); no protected attributes are available.
+#
+# Facts: contract_type, days_to_maturity, days_past_due, remaining_months, payoff, equity,
+#        rate_drop (contract APR − TFS refinance APR, points), extended_term, payment_stress
+# do_nothing has no rules: the baseline is always shown.
+
+[[keep]]
+field = "contract_type"
+op = "eq"
+value = "loan"
+reason = "A lease can't be kept past its end date. See buyout or extend."
+
+[[buyout]]
+field = "contract_type"
+op = "eq"
+value = "lease"
+reason = "Buyout applies to leases only."
+[[buyout]]
+field = "days_to_maturity"
+op = "lte"
+value = 180
+reason = "Buyout opens 180 days before your lease ends."
+
+[[return]]
+field = "contract_type"
+op = "eq"
+value = "lease"
+reason = "Only leased vehicles are returned."
+[[return]]
+field = "days_to_maturity"
+op = "lte"
+value = 180
+reason = "Return planning opens 180 days before your lease ends."
+
+[[refinance]]
+field = "contract_type"
+op = "eq"
+value = "loan"
+reason = "Only loans can be refinanced."
+[[refinance]]
+field = "rate_drop"
+op = "gte"
+value = 0.5
+reason = "Today's rate isn't at least 0.5 points below yours, so refinancing wouldn't save enough."
+[[refinance]]
+field = "payoff"
+op = "gte"
+value = 3000
+reason = "Your balance is too small to refinance."
+[[refinance]]
+field = "remaining_months"
+op = "gte"
+value = 12
+reason = "Fewer than 12 payments left, so refinancing wouldn't pay off."
+[[refinance]]
+field = "days_past_due"
+op = "eq"
+value = 0
+reason = "Your account needs to be current to refinance."
+
+[[trade_in]]
+field = "equity"
+op = "gte"
+value = 0
+reason = "You owe more than the vehicle is worth today."
+[[trade_in]]
+field = "days_past_due"
+op = "eq"
+value = 0
+reason = "Your account needs to be current to trade in."
+
+[[extend]]
+only_for = "lease"
+field = "days_to_maturity"
+op = "lte"
+value = 180
+reason = "Lease extensions open 180 days before your lease ends."
+[[extend]]
+only_for = "loan"
+field = "extended_term"
+op = "lte"
+value = 84
+reason = "Loans can't be extended past 84 months in total."
+
+[[upgrade]]
+field = "equity"
+op = "gte"
+value = -2000
+reason = "Negative equity over $2,000 can't be rolled into a new vehicle."
+[[upgrade]]
+field = "days_past_due"
+op = "eq"
+value = 0
+reason = "Your account needs to be current to upgrade."
+
+[[due_date_change]]
+field = "payment_stress"
+op = "eq"
+value = true
+reason = "Your payments are on track, so there's no need to move your due date."
+
+[[deferral]]
+field = "contract_type"
+op = "eq"
+value = "loan"
+reason = "Deferrals apply to loans only."
+[[deferral]]
+field = "payment_stress"
+op = "eq"
+value = true
+reason = "Deferrals are for customers who've missed or are late on a payment."
+[[deferral]]
+field = "days_past_due"
+op = "lte"
+value = 60
+reason = "Accounts more than 60 days past due need a specialist."
+[[deferral]]
+field = "remaining_months"
+op = "gte"
+value = 3
+reason = "Too few payments left to defer one."

@@ -34,6 +34,18 @@ Frontends run on MSW mocks by default (`NEXT_PUBLIC_API_MOCKING=enabled`).
 pnpm typecheck && pnpm lint && pnpm test
 ```
 
+## API: data + engine
+
+- `services/api/engine/`: `finance.py` (pure formulas), `scenarios.py` (option builders), `config.toml` (rates, fees, depreciation table, driving costs), `eligibility.toml` (readable rules).
+- `services/api/sim/generator.py`: 1,200 deterministic synthetic customers (seed 42), including `CUST-MARIA`, `CUST-JAMES`, `CUST-PRIYA`. Regenerated in memory when the API starts.
+- `POST /scenarios` with `{"customer_id": "CUST-JAMES"}` returns every eligible option plus the `do_nothing` baseline.
+
+Seed Supabase (one-shot, optional; create the `customers` table first, SQL is in the script's docstring):
+
+```bash
+cd services/api && SUPABASE_URL=... SUPABASE_SERVICE_KEY=... uv run python -m sim.seed_supabase
+```
+
 ## Contract
 
 `packages/contracts/openapi.yaml` is the source of truth. After editing it, run `pnpm gen` to regenerate the TS types and the API's Pydantic models.
