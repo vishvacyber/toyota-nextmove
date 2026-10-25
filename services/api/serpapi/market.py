@@ -1,0 +1,100 @@
+"""Parse cached SerpApi responses into contract shapes. Pure functions: no engine imports, no I/O."""
+
+import math
+import re
+import statistics
+
+from serpapi.queries import CITY
+
+PRICE = r"\$(\d{1,3},\d{3})"
+# Phrases that state a market price for the whole model-year (listing-site averages, resale values, MSRP).
+PRICE_PHRASES = [re.compile(rf"average[^$.;]{{0,90}}?{PRICE}", re.IGNORECASE), re.compile(rf"resale value of {PRICE}", re.IGNORECASE),
+                 re.compile(rf"(?:msrp|starts at)[^$.;]{{0,20}}?{PRICE}", re.IGNORECASE)]
+MIN_PRICE, MAX_PRICE = 5_000, 150_000
+MIN_DEALER_REVIEWS = 100
+
+
+def parse_comps(resp: dict, model: str, year: int) -> list[dict]:
+    """One Comp per organic result that names this model-year and states a price."""
+    out, seen = [], set()
+    for r in resp.get("organic_results", []):
+        text = f"{r.get('title', '')} {r.get('snippet', '')}"
+        if model.lower() not in text.lower() or str(year) not in text or r.get("link") in seen:
+            continue
+        price = next((float(m.group(1).replace(",", "")) for p in PRICE_PHRASES if (m := p.search(r.get("snippet", "")))), None)
+        if price is None:
+            ext = {**(r.get("rich_snippet", {}).get("top", {}).get("detected_extensions") or {}),
+                   **(r.get("rich_snippet", {}).get("bottom", {}).get("detected_extensions") or {})}
+            price = ext.get("price")
+        if price and MIN_PRICE <= price <= MAX_PRICE:
+            seen.add(r["link"])
+            out.append({"title": r.get("title", ""), "price": price, "miles": None, "source_url": r["link"]})
+    return out
+
+
+def comp_summary(comps: list[dict]) -> dict:
+    prices = [c["price"] for c in comps]
+    return {"median": statistics.median(prices), "low": min(prices), "high": max(prices), "n": len(prices)}
+
+
+def top_video(resp: dict) -> dict | None:
+    for v in resp.get("video_results", []):
+        m = re.search(r"v=([\w-]{11})", v.get("link", ""))
+        if m:
+            return {"id": m.group(1), "title": v.get("title", ""), "channel": (v.get("channel") or {}).get("name") or "",
+                    "link": v["link"]}
+    return None
+
+
+def review_excerpt(video: dict, transcript: dict, words: int = 25) -> str:
+    """A short quoted excerpt of the reviewer's own words: quoted text, not a generated summary."""
+    text = " ".join(t["snippet"] for t in transcript.get("transcript", []) if not t.get("snippet", "").startswith("["))
+    excerpt = " ".join(text.split()[:words])
+    return f'{video["channel"]} on YouTube, "{video["title"]}": "{excerpt}…"'
+
+
+def _miles_between(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    p1, p2, dl = math.radians(lat1), math.radians(lat2), math.radians(lng2 - lng1)
+    return 3958.8 * math.acos(min(1, math.sin(p1) * math.sin(p2) + math.cos(p1) * math.cos(p2) * math.cos(dl)))
+
+
+def parse_dealers(resp: dict, region: str) -> list[dict]:
+    """Toyota dealers with 100+ reviews, best rated first, with distance from the region's home city.
+    Keeps data_id for the reviews lookup (drop it before returning a contract Dealer)."""
+    _, lat, lng = CITY[region]
+    out = []
+    for r in resp.get("local_results", []):
+        if "toyota" not in r.get("title", "").lower() or not r.get("data_id") or (r.get("reviews") or 0) < MIN_DEALER_REVIEWS:
+            continue
+        gps = r.get("gps_coordinates") or {}
+        dist = round(_miles_between(lat, lng, gps["latitude"], gps["longitude"]), 1) if gps else None
+        out.append({"id": r.get("place_id") or r["data_id"], "data_id": r["data_id"], "name": r["title"],
+                    "address": r.get("address", ""), "rating": r.get("rating"), "review_count": r.get("reviews"),
+                    "distance_mi": dist})
+    return sorted(out, key=lambda d: (-(d["rating"] or 0), d["distance_mi"] or 0))
+
+
+def parse_reviews(resp: dict, n: int = 3) -> list[dict]:
+    return [{"rating": r.get("rating"), "text": r["snippet"]} for r in resp.get("reviews", []) if r.get("snippet")][:n]
+
+
+def parse_recalls(resp: dict, model: str, n: int = 5) -> list[dict]:
+    """Recall headlines that name this model, newest first (Google News coverage, not an official NHTSA lookup)."""
+    hits = [r for r in resp.get("news_results", [])
+            if "recall" in r.get("title", "").lower() and model.lower() in r.get("title", "").lower() and r.get("iso_date")]
+    hits.sort(key=lambda r: r["iso_date"], reverse=True)
+    return [{"title": r["title"], "date": r["iso_date"][:10], "source_url": r["link"]} for r in hits[:n]]
+
+
+def parse_trend(resp: dict, model: str) -> dict | None:
+    """12-month average interest (0-100, relative to the other compared models) and the last-quarter direction."""
+    iot = resp.get("interest_over_time", {})
+    query = f"Toyota {model}"
+    avg = next((a["value"] for a in iot.get("averages", []) if a["query"] == query), None)
+    series = [v["extracted_value"] for w in iot.get("timeline_data", []) if not w.get("partial_data")
+              for v in w["values"] if v["query"] == query]
+    if avg is None or len(series) < 26:
+        return None
+    recent, prior = statistics.mean(series[-13:]), statistics.mean(series[-26:-13])
+    direction = "up" if recent > prior * 1.05 else "down" if recent < prior * 0.95 else "flat"
+    return {"direction": direction, "demand_index": avg}

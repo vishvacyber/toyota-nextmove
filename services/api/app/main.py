@@ -1,9 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.models import Health, ScenarioRequest, ScenarioSet
+from app.models import Health, MarketQuote, Model, ScenarioRequest, ScenarioSet
 from engine import scenarios
 from sim.generator import customers_by_id
+from tools import market
 
 app = FastAPI(title="Toyota NextMove API", version="0.1.0")
 app.add_middleware(
@@ -29,3 +30,8 @@ def run_scenarios(req: ScenarioRequest) -> ScenarioSet:
               or (o.down_payment is not None and o.down_payment < 0) or (o.annual_miles is not None and o.annual_miles < 0)):
         raise HTTPException(422, "Overrides must be non-negative and term_months positive")
     return scenarios.run(req, customer)
+
+
+@app.get("/market/{model}", response_model=MarketQuote)
+def get_market(model: Model, year: int | None = None) -> MarketQuote:
+    return market.quote(model.value, year)

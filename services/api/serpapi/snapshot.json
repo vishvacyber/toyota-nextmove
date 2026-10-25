@@ -1,0 +1,4174 @@
+{
+ "02c749c3f4e7fb6aca35ef5247020e271198de8df9fbf1f01c4aa434ffa2ff6c": {
+  "engine": "google_maps_reviews",
+  "fetched_at": "2026-10-25T02:59:29.903702+00:00",
+  "key": "02c749c3f4e7fb6aca35ef5247020e271198de8df9fbf1f01c4aa434ffa2ff6c",
+  "params": {
+   "data_id": "0x865b2cec30dc3899:0x274f8273b3b49e70",
+   "hl": "en",
+   "sort_by": "newestFirst"
+  },
+  "response": {
+   "place_info": {
+    "address": "5600 183A Toll Rd, Leander, TX 78641",
+    "rating": 4.8,
+    "reviews": 25368,
+    "title": "Toyota of Cedar Park",
+    "type": "Toyota dealer"
+   },
+   "reviews": [
+    {
+     "iso_date": "2026-10-25T02:11:33Z",
+     "rating": 5.0
+    },
+    {
+     "iso_date": "2026-10-24T18:16:31Z",
+     "rating": 1.0
+    },
+    {
+     "iso_date": "2026-10-24T15:47:55Z",
+     "rating": 5.0,
+     "snippet": "The best car buying experience of my life!\n\nCar dealerships and the majority of muggle men in them is one of my least favorite, oddly most intimidating environments I can think of. Kind of like all male sports bars\u2026only worse and with a different flavor of male sales predators. Can other women relate!?\n\nMy girls KenneDy in sales, Rayan in finance and Karim in insurance made buying my new RAV4, a legit wonderful and pleasant experience. Even with their systems down.\n\nI felt met, listened too, cared for, respected and safe as a single woman being there.\n\nFor all my powerful (and all kinds) single ladies that still feel like they need to bring their brother, spouse, etc with them as an environment buffer\u2026you will not have to.\n\nAsk for my girl Kennedy and have a healing, safe, fun, easy, breezy, beautiful car buying experience.\n\nToyotas are also so safe, reliable and sexy even.\n\nGo check out what they\u2019ve got. I saw a lot of cars and trucks I really liked.\n\nRemember, Kennedy = an amazing car buying experience! Particularly for all my girls still intimidated by car dealerships and want to rewire their experience with it.\n\nThis dealership was actually also started by a woman."
+    },
+    {
+     "iso_date": "2026-06-25T13:48:10Z",
+     "rating": 5.0,
+     "snippet": "This is the best Toyota in the Austin area. I didn\u2019t buy my Toyota from here but wish I did. The staff are attentive and knowledgeable, making sure you are satisfied. Buy and do the service here, you won\u2019t regret it!\n\nI\u2019m updating this because this really is the best location in Tx. Michael is an amazing service advisor, If you have the chance ask for him. I use my car for work so I need it really bad, and sometimes I\u2019m not the easiest person to work with. They do it effortlessly here"
+    },
+    {
+     "iso_date": "2026-10-23T02:43:14Z",
+     "rating": 5.0,
+     "snippet": "Mateo was wonderful to work with! Felt like he represented us well and got the job done. Thanks for a great car buying experience (one of my least favorite things to do). #Toyota #happywife #pinkbow"
+    },
+    {
+     "iso_date": "2026-10-23T01:36:25Z",
+     "rating": 5.0,
+     "snippet": "Karen fue mi mejor experiencia! Trabajamos a distancia y nunca pens\u00e9 que ella podr\u00eda conseguir mi aprobaci\u00f3n tan f\u00e1cil! Dios te bendiga y sigas ayudando a m\u00e1s gente para que sigas recibiendo bendiciones."
+    },
+    {
+     "iso_date": "2026-10-23T00:29:11Z",
+     "rating": 5.0,
+     "snippet": "Dealing with Lonnie was a pleasant experience."
+    },
+    {
+     "iso_date": "2024-10-29T18:50:48Z",
+     "rating": 5.0,
+     "snippet": "Tucker McMullen was great along with the rest of the sales and leasing team. Great place to get a car and don\u2019t get exhausted with the process. Highly recommend.\n\nUpdate from 10/22/2026: I just went back to the Toyota Cedar Park location to buy out my lease, Angel Salgado was so helpful throughout the entire process. The easiest and quickest experience in regard to a car purchase.\n\nThank you Toyota!"
+    }
+   ]
+  },
+  "source": "SerpApi Google Maps Reviews"
+ },
+ "05ba84cf3e56d748f7fb5b9656b52b30141f3244c0c9432621963d33313ffa98": {
+  "engine": "youtube_video_transcript",
+  "fetched_at": "2026-10-25T02:56:25.792229+00:00",
+  "key": "05ba84cf3e56d748f7fb5b9656b52b30141f3244c0c9432621963d33313ffa98",
+  "params": {
+   "language_code": "en",
+   "v": "RWc0imT3O-k"
+  },
+  "response": {
+   "transcript": [
+    {
+     "snippet": "The 2027 Toyota Camry XSE all-wheel drive brings a sportier personality to Toyota's popular midsize sedan,"
+    },
+    {
+     "snippet": "combining aggressive styling, a refined interior, and an efficient hybrid powertrain. As one of the most premium"
+    },
+    {
+     "snippet": "models in the Camry lineup, the XSE offers a combination of performance,"
+    },
+    {
+     "snippet": "comfort, and technology designed for drivers who want something more exciting than a [music] traditional family sedan."
+    },
+    {
+     "snippet": "Under the hood, the 2027 Camry XS"
+    },
+    {
+     "snippet": "[music]"
+    },
+    {
+     "snippet": "All-Wheel Drive features a 2.5 L [music] 4 cylinder gasoline engine paired with Toyota's fifth generation hybrid system."
+    },
+    {
+     "snippet": "Together, [music] the gasoline engine and electric motors produce 232 [music] combined horsepower,"
+    },
+    {
+     "snippet": "giving the all-wheel drive model a slight [music] advantage over the 225 horsepower available in front-wheel drive versions."
+    },
+    {
+     "snippet": "Toyota's electronic ondemand [music] all-wheel drive system uses a dedicated"
+    },
+    {
+     "snippet": "electric motor [music] at the rear axle to distribute power when additional traction is needed. [music]"
+    },
+    {
+     "snippet": "Whether accelerating from a stop or driving on slippery pavement, the system automatically adjusts [music] power"
+    },
+    {
+     "snippet": "delivery to help maintain stability and control. An electronically [music] controlled continuously"
+    },
+    {
+     "snippet": "variable transmission provides smooth acceleration [music] while helping maximize fuel efficiency."
+    },
+    {
+     "snippet": "[music] The XSE also receives a sporttuned suspension with specially calibrated springs"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube Transcript"
+ },
+ "1521510d86a4eb3396f8624b069cd1fe7fac597268510ee4b1cdd2dd3f4c6697": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T02:57:37.589671+00:00",
+  "key": "1521510d86a4eb3396f8624b069cd1fe7fac597268510ee4b1cdd2dd3f4c6697",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 20,
+   "q": "2024 Toyota RAV4 used price"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.cargurus.com/Cars/l-Used-2024-Toyota-RAV4-c33137",
+     "snippet": "With 9,720 currently listed for sale and an average price of $30,722, 38.7% of 2024 Toyota RAV4 listings on CarGurus are rated as good or great deals.",
+     "title": "Used 2024 Toyota RAV4 for Sale Nationwide"
+    },
+    {
+     "link": "https://www.carmax.com/cars/toyota/rav4/2024",
+     "snippet": "Used 2024 Toyota RAV4 near me for sale ; 32K mi \u00b7 Dulles \u00b7 28867109 \u00b7 JTMB6RFV7RD144200 \u00b7 31,303 ; 7K mi \u00b7 Dulles \u00b7 70312310 \u00b7 2T3A1RFV4RC402848 \u00b7 6,984 ; 6K mi \u00b7 Dulles.",
+     "title": "Used 2024 Toyota RAV4 near me for sale"
+    },
+    {
+     "link": "https://www.kbb.com/cars-for-sale/used/2024/toyota/rav4",
+     "snippet": "Shop, watch video walkarounds and compare prices on Used 2024 Toyota RAV4 listings ... 2024 Toyota RAV4 SE ranging in price from $19778 to $50162.",
+     "title": "Used 2024 Toyota RAV4 for Sale"
+    },
+    {
+     "link": "https://www.toyotacertified.com/rav4/2024",
+     "snippet": "Find deals and offers on Certified Used Toyota 2024 RAV4 at a dealer near you. Check live inventory and buy your favorite Toyota hassle-free.",
+     "title": "Toyota Certified Used RAV4 for Sale Near Me"
+    },
+    {
+     "link": "https://www.autotrader.com/cars-for-sale/2024/toyota/rav4",
+     "snippet": "Search from 5045 Used Toyota RAV4 for sale, including a 2024 Toyota RAV4 Adventure, a 2024 ... 2024 Toyota RAV4 SE ranging in price from $19778 to $50162.",
+     "title": "Used 2024 Toyota RAV4 for Sale Near Me - Autotrader"
+    },
+    {
+     "link": "https://www.edmunds.com/used-2024-toyota-rav4-atlanta-ga/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 3.9,
+        "reviews": 56
+       },
+       "extensions": [
+        "3.9(56)"
+       ]
+      }
+     },
+     "snippet": "The average list price of a used 2024 Toyota RAV4 in Atlanta, Georgia is $30,637. The average mileage on a used Toyota RAV4 2024 for sale ...",
+     "title": "Used 2024 Toyota RAV4 for Sale in Atlanta, GA"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/rav4/2024/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 28700.0,
+        "rating": 4.6
+       },
+       "extensions": [
+        "4.6",
+        "$28,700.00",
+        "Review by Matt Degen"
+       ]
+      }
+     },
+     "snippet": "Used 2024 Toyota RAV4 prices currently range from $27,900 for the LE Sport Utility 4D to $36,100 for the TRD Off-Road Sport Utility 4D when purchasing from a ...",
+     "title": "2024 Toyota RAV4 Price, Value, Ratings & Reviews"
+    },
+    {
+     "link": "https://www.truecar.com/used-cars-for-sale/listings/toyota/rav4/year-2024/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 4.8,
+        "reviews": 4
+       },
+       "extensions": [
+        "4.8(4)"
+       ]
+      }
+     },
+     "snippet": "Prices for a used 2024 Toyota RAV4 currently range from $2,600 to $333,558, with vehicle mileage ranging from 5 to 390,596. Find used 2024 Toyota RAV4 ...",
+     "title": "Used 2024 Toyota RAV4 for Sale Near Me"
+    },
+    {
+     "link": "https://www.carfax.com/Used-2024-Toyota-RAV4_z39664",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 4.8,
+        "reviews": 3386
+       },
+       "extensions": [
+        "4.8(3,386)"
+       ]
+      }
+     },
+     "snippet": "Trim Type. Price Range. Average Selling Price ; 2024 Toyota RAV4 LE. $26,563 - $33,746. $30,159 ; 2024 Toyota RAV4 Adventure. $29,078 - ...",
+     "title": "Used 2024 Toyota RAV4 for Sale Near Me"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
+ "1782a632f8d3a920bc52eb4940bd477b7cf6c59979e6a534864b8231764fc744": {
+  "engine": "youtube",
+  "fetched_at": "2026-10-25T02:56:34.161551+00:00",
+  "key": "1782a632f8d3a920bc52eb4940bd477b7cf6c59979e6a534864b8231764fc744",
+  "params": {
+   "search_query": "2023 Toyota Prius review"
+  },
+  "response": {
+   "video_results": [
+    {
+     "channel": {
+      "name": "Throttle House"
+     },
+     "link": "https://www.youtube.com/watch?v=rl-QKRvZm-M",
+     "title": "2023 Toyota Prius Review // Full Of Secrets"
+    },
+    {
+     "channel": {
+      "name": "Doug DeMuro"
+     },
+     "link": "https://www.youtube.com/watch?v=GC0nTBC-Jvs",
+     "title": "The 2023 Toyota Prius Is New and Shockingly Gorgeous"
+    },
+    {
+     "channel": {
+      "name": "Micah Muzio"
+     },
+     "link": "https://www.youtube.com/watch?v=ZffskIWaHb4",
+     "title": "2023 Toyota Prius | Family Review"
+    },
+    {
+     "channel": {
+      "name": "The Car Care Nut"
+     },
+     "link": "https://www.youtube.com/watch?v=nZOZdipTjeo",
+     "title": "Should You Buy A 2023 Toyota Prius? 5th Generation Toyota Hybrid System Explained"
+    },
+    {
+     "channel": {
+      "name": "Edmunds Cars"
+     },
+     "link": "https://www.youtube.com/watch?v=Hm8CXLsrNGM",
+     "title": "We Drive the Hot New 2023 Toyota Prius | 2023 Toyota Prius TESTED! | Full Review with Test Results"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube"
+ },
+ "1a59a41381a5d2ce8e1b0e987a548477b62a794b29c43eb80cdcd4ee27ad5c68": {
+  "engine": "youtube_video_transcript",
+  "fetched_at": "2026-10-25T02:56:05.878273+00:00",
+  "key": "1a59a41381a5d2ce8e1b0e987a548477b62a794b29c43eb80cdcd4ee27ad5c68",
+  "params": {
+   "language_code": "en",
+   "v": "TK3tfskBFtU"
+  },
+  "response": {
+   "transcript": [
+    {
+     "snippet": "the toyota camry is two years older than me it's 38 looking alright in every generation the camry has been consistent"
+    },
+    {
+     "snippet": "roomy comfortable low maintenance you always know what you're getting with the camry this generation has been out since"
+    },
+    {
+     "snippet": "2017 as a 2018 model year for 2022 there's very few changes it's mostly the same the camry is just a great"
+    },
+    {
+     "snippet": "american-made car that american automakers have forgotten how to make and don't you forget to subscribe to cargurus just like the camry we're going"
+    },
+    {
+     "snippet": "to be here for the long haul there are 13 ways to buy a camry this is the xle all-wheel drive with a"
+    },
+    {
+     "snippet": "4-cylinder this could have been a hybrid or v6 that leaves 10 more trims from the base le to the xse there's also a trd"
+    },
+    {
+     "snippet": "which we tested in california you can read about that on cargurus.com now on many camry trims you can order a black roof a flaming red interior throw"
+    },
+    {
+     "snippet": "quad exhaust tips and a spoiler out the back yeah you can let your hair down in the camry this camry painted in ruby flare pearl it's simpler it's happier to"
+    },
+    {
+     "snippet": "blend in and that's okay it's a pleasant looking car this particular one the xle doesn't really draw me in but it doesn't push me"
+    },
+    {
+     "snippet": "away either it's a little simpler than the xse models or the se nightshade that's a new trim on the hybrid model that darkens things up add some spiffier"
+    },
+    {
+     "snippet": "wheels you can add all those things to a camry but in general it's fine right led headlights led tail lights are optional"
+    },
+    {
+     "snippet": "this one has it now it's saying something when you can't recognize what camry you have it could be the uber drivers it could be the neighbors who"
+    },
+    {
+     "snippet": "knows because millions of people rely on this car they buy the camry for economy for easy driving at low cost i'm talking up to 39"
+    },
+    {
+     "snippet": "mpg highway without the hybrid most of these camry 4 cylinders are 28 to 32 combined and look at the hybrid remember"
+    },
+    {
+     "snippet": "this is a real car not a prius these numbers are insane for a big sedan"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube Transcript"
+ },
+ "2ab8f3b704c0f1433f5546fed5c4c38e0e0b82928b6753f36e1de2227ab30819": {
+  "engine": "google_maps",
+  "fetched_at": "2026-10-25T02:56:44.114640+00:00",
+  "key": "2ab8f3b704c0f1433f5546fed5c4c38e0e0b82928b6753f36e1de2227ab30819",
+  "params": {
+   "hl": "en",
+   "ll": "@41.8781,-87.6298,11z",
+   "q": "Toyota dealership",
+   "type": "search"
+  },
+  "response": {
+   "local_results": [
+    {
+     "address": "6701 LaGrange Rd, Hodgkins, IL 60525",
+     "data_id": "0x880e483baa469d33:0xea0b0f83e2f36686",
+     "gps_coordinates": {
+      "latitude": 41.767503,
+      "longitude": -87.8663933
+     },
+     "place_id": "ChIJM51GqjtIDogRhmbz4oMPC-o",
+     "rating": 4.5,
+     "reviews": 4387,
+     "title": "Continental Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "725 Roosevelt Rd, Lombard, IL 60148",
+     "data_id": "0x880e525e20ac45f9:0x1b262a2322ce6f31",
+     "gps_coordinates": {
+      "latitude": 41.859218299999995,
+      "longitude": -88.031255
+     },
+     "place_id": "ChIJ-UWsIF5SDogRMW_OIiMqJhs",
+     "rating": 4.7,
+     "reviews": 6944,
+     "title": "Lombard Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "875 W Golf Rd, Schaumburg, IL 60194",
+     "data_id": "0x880fa8b98876c635:0xca1efa9bf2d11f8d",
+     "gps_coordinates": {
+      "latitude": 42.0476524,
+      "longitude": -88.1023092
+     },
+     "place_id": "ChIJNcZ2iLmoD4gRjR_R8pv6Hso",
+     "rating": 4.4,
+     "reviews": 4336,
+     "title": "Schaumburg Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "550 E Ogden Ave, Westmont, IL 60559",
+     "data_id": "0x880e4e9096a44707:0xcdcfdbcf22d6ffd7",
+     "gps_coordinates": {
+      "latitude": 41.811123599999995,
+      "longitude": -87.95955239999999
+     },
+     "place_id": "ChIJB0eklpBODogR1__WIs_bz80",
+     "rating": 4.6,
+     "reviews": 6740,
+     "title": "Oakbrook Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "8505 W 159th St, Tinley Park, IL 60487",
+     "data_id": "0x880e3fb818459359:0xda91c805503c8a04",
+     "gps_coordinates": {
+      "latitude": 41.601342599999995,
+      "longitude": -87.8264963
+     },
+     "place_id": "ChIJWZNFGLg_DogRBIo8UAXIkdo",
+     "rating": 4.5,
+     "reviews": 3839,
+     "title": "Orland Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1301 W Dempster St, Park Ridge, IL 60068",
+     "data_id": "0x880fc81648b49e93:0x1ba6e11892ba766b",
+     "gps_coordinates": {
+      "latitude": 42.039400799999996,
+      "longitude": -87.8424412
+     },
+     "place_id": "ChIJk560SBbID4gRa3a6khjhphs",
+     "rating": 4.6,
+     "reviews": 4071,
+     "title": "Bredemann Toyota in Park Ridge - Sales",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "3255 N Cicero Ave, Chicago, IL 60641",
+     "data_id": "0x880fccfa7f6c9fd9:0xbc1b59daf75de50a",
+     "gps_coordinates": {
+      "latitude": 41.9403052,
+      "longitude": -87.7464225
+     },
+     "place_id": "ChIJ2Z9sf_rMD4gRCuVd99pZG7w",
+     "rating": 4.4,
+     "reviews": 2803,
+     "title": "Victory Toyota of Midtown",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "6941 S Western Ave, Chicago, IL 60636",
+     "data_id": "0x880e2fc5f920fd43:0x403b53b85f3bd7c",
+     "gps_coordinates": {
+      "latitude": 41.7669943,
+      "longitude": -87.682966
+     },
+     "place_id": "ChIJQ_0g-cUvDogRfL3zhTu1AwQ",
+     "rating": 4.5,
+     "reviews": 2838,
+     "title": "Toyota On Western",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "4320 95th St, Oak Lawn, IL 60453",
+     "data_id": "0x880e3a8d02bd1a8d:0xe86157bdf1457adf",
+     "gps_coordinates": {
+      "latitude": 41.7208055,
+      "longitude": -87.7296516
+     },
+     "place_id": "ChIJjRq9Ao06DogR33pF8b1XYeg",
+     "rating": 4.5,
+     "reviews": 2389,
+     "title": "Oak Lawn Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "440 W Lake St, Elmhurst, IL 60126",
+     "data_id": "0x880fb33f608c36d9:0x4435a71160430274",
+     "gps_coordinates": {
+      "latitude": 41.917519,
+      "longitude": -87.953394
+     },
+     "place_id": "ChIJ2TaMYD-zD4gRdAJDYBGnNUQ",
+     "rating": 4.5,
+     "reviews": 4031,
+     "title": "McGrath Elmhurst Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "6042 N Western Ave, Chicago, IL 60659",
+     "data_id": "0x880fd182c7d39905:0x9fde15a242ff6231",
+     "gps_coordinates": {
+      "latitude": 41.9916467,
+      "longitude": -87.6900393
+     },
+     "place_id": "ChIJBZnTx4LRD4gRMWL_QqIV3p8",
+     "rating": 4.4,
+     "reviews": 4874,
+     "title": "Chicago Northside Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1970 River Oaks Dr, Calumet City, IL 60409",
+     "data_id": "0x880e204ebe4fbdbf:0x62a013e78635bf93",
+     "gps_coordinates": {
+      "latitude": 41.601541,
+      "longitude": -87.5727519
+     },
+     "place_id": "ChIJv71Pvk4gDogRk781hucToGI",
+     "rating": 4.4,
+     "reviews": 4836,
+     "title": "Advantage Toyota of River Oaks",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1600 W Lake St, Streamwood, IL 60107",
+     "data_id": "0x880f0678e6b6ea87:0xd78f92b492c4fae4",
+     "gps_coordinates": {
+      "latitude": 42.01414,
+      "longitude": -88.21736899999999
+     },
+     "place_id": "ChIJh-q25ngGD4gR5PrEkrSSj9c",
+     "rating": 4.5,
+     "reviews": 10402,
+     "title": "Elgin Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "2095 N Rand Rd, Palatine, IL 60074",
+     "data_id": "0x880fa367889a2223:0x985419e80fe455e0",
+     "gps_coordinates": {
+      "latitude": 42.148603,
+      "longitude": -88.0303474
+     },
+     "place_id": "ChIJIyKaiGejD4gR4FXkD-gZVJg",
+     "rating": 4.6,
+     "reviews": 6543,
+     "title": "Arlington Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1488 W Ogden Ave, Naperville, IL 60540",
+     "data_id": "0x880ef86885199def:0x86113f4d6b0df172",
+     "gps_coordinates": {
+      "latitude": 41.775697699999995,
+      "longitude": -88.1848536
+     },
+     "place_id": "ChIJ750ZhWj4DogRcvENa00_EYY",
+     "rating": 4.8,
+     "reviews": 8218,
+     "title": "Toyota of Naperville",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1530 Frontage Rd, Northbrook, IL 60062",
+     "data_id": "0x880fc6a5b0412243:0xd7db8faa5c7bd993",
+     "gps_coordinates": {
+      "latitude": 42.124478499999995,
+      "longitude": -87.7838434
+     },
+     "place_id": "ChIJQyJBsKXGD4gRk9l7XKqP29c",
+     "rating": 4.6,
+     "reviews": 2726,
+     "title": "Toyota on Edens",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1561 N Fremont St, Chicago, IL 60642",
+     "data_id": "0x880fd32074bd6f47:0x14b518b5c4240454",
+     "gps_coordinates": {
+      "latitude": 41.9101043,
+      "longitude": -87.6502529
+     },
+     "place_id": "ChIJR2-9dCDTD4gRVAQkxLUYtRQ",
+     "rating": 4.4,
+     "reviews": 5068,
+     "title": "Toyota of Downtown Chicago",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "684 S Weber Rd, Romeoville, IL 60446",
+     "data_id": "0x880e592be1b9ddbb:0x3a9c66d4e3d111ed",
+     "gps_coordinates": {
+      "latitude": 41.5989854,
+      "longitude": -88.1238901
+     },
+     "place_id": "ChIJu9254StZDogR7RHR49RmnDo",
+     "rating": 4.5,
+     "reviews": 4466,
+     "title": "Romeoville Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "7225 N Cicero Ave, Lincolnwood, IL 60712",
+     "data_id": "0x880fcee33bd88dc9:0xb5820bc58093934e",
+     "gps_coordinates": {
+      "latitude": 42.013259999999995,
+      "longitude": -87.747411
+     },
+     "place_id": "ChIJyY3YO-POD4gRTpOTgMULgrU",
+     "rating": 4.4,
+     "reviews": 6485,
+     "title": "Serra Toyota Lincolnwood",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "3255 N Cicero Ave, Chicago, IL 60641",
+     "data_id": "0x880fccf0822a6933:0x39d10aae85e8d887",
+     "gps_coordinates": {
+      "latitude": 41.9403052,
+      "longitude": -87.7464225
+     },
+     "place_id": "ChIJM2kqgvDMD4gRh9joha4K0Tk",
+     "rating": 4.4,
+     "reviews": 959,
+     "title": "Victory Toyota of Midtown Service",
+     "type": "Auto repair shop"
+    }
+   ]
+  },
+  "source": "SerpApi Google Maps"
+ },
+ "36845727263e543c3b631cd525264dce370ec1e15d2aefd2a3d4b7651c8f0cd1": {
+  "engine": "youtube",
+  "fetched_at": "2026-10-25T02:55:36.593179+00:00",
+  "key": "36845727263e543c3b631cd525264dce370ec1e15d2aefd2a3d4b7651c8f0cd1",
+  "params": {
+   "search_query": "2024 Toyota RAV4 review"
+  },
+  "response": {
+   "video_results": [
+    {
+     "channel": {
+      "name": "Realistick"
+     },
+     "link": "https://www.youtube.com/watch?v=LOwAE5aHvbs",
+     "title": "2019-2024 Toyota RAV4 70k Mile Review & Common Problems"
+    },
+    {
+     "channel": {
+      "name": "Micah Muzio"
+     },
+     "link": "https://www.youtube.com/watch?v=nKxPJs7qp4Y",
+     "title": "2024 Toyota RAV4 Review | Old but Does it Matter?"
+    },
+    {
+     "channel": {
+      "name": "Motormouth"
+     },
+     "link": "https://www.youtube.com/watch?v=_NKjY-r86OE",
+     "title": "2024 Toyota Rav4 review // A special RAV4 on a special anniversary!"
+    },
+    {
+     "channel": {
+      "name": "Hawkeye Rides"
+     },
+     "link": "https://www.youtube.com/watch?v=xrbgTLmWvro",
+     "title": "2024 Toyota Rav4 le Why would you BUY THIS :All Specs & Test Drive"
+    },
+    {
+     "channel": {
+      "name": "Gold Pony"
+     },
+     "link": "https://www.youtube.com/watch?v=GCAO-_koqdk",
+     "title": "2024 Toyota RAV4 Review | The #1 Selling SUV in America!"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube"
+ },
+ "5e57b52e770349c6a07b1a3200c00a27811b60c40ed433c8d5bcc6a803ecf154": {
+  "engine": "google_maps",
+  "fetched_at": "2026-10-25T02:56:26.404260+00:00",
+  "key": "5e57b52e770349c6a07b1a3200c00a27811b60c40ed433c8d5bcc6a803ecf154",
+  "params": {
+   "hl": "en",
+   "ll": "@34.0522,-118.2437,11z",
+   "q": "Toyota dealership",
+   "type": "search"
+  },
+  "response": {
+   "local_results": [
+    {
+     "address": "1901 S Figueroa St, Los Angeles, CA 90007",
+     "data_id": "0x80c2c7c6c994dacb:0x56e2e6edebc27901",
+     "gps_coordinates": {
+      "latitude": 34.034453,
+      "longitude": -118.2730356
+     },
+     "place_id": "ChIJy9qUycbHwoARAXnC6-3m4lY",
+     "rating": 4.2,
+     "reviews": 5368,
+     "title": "Toyota of Downtown L.A.",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "9077 Washington Blvd, Culver City, CA 90232",
+     "data_id": "0x80c2b980b3314815:0xec119ffd24caaf09",
+     "gps_coordinates": {
+      "latitude": 34.0256861,
+      "longitude": -118.39180739999999
+     },
+     "place_id": "ChIJFUgxs4C5woARCa_KJP2fEew",
+     "rating": 4.1,
+     "reviews": 6388,
+     "title": "Culver City Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1260 S Brand Blvd, Glendale, CA 91204",
+     "data_id": "0x80c2c0e1a34a7c41:0x3d664b2b076ce8e3",
+     "gps_coordinates": {
+      "latitude": 34.130465,
+      "longitude": -118.254454
+     },
+     "place_id": "ChIJQXxKo-HAwoAR4-hsBytLZj0",
+     "rating": 4.6,
+     "reviews": 3882,
+     "title": "Toyota of Glendale",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1400 N Tustin St, Orange, CA 92867",
+     "data_id": "0x80dcd74dd1b60ffd:0xb15cbe2e5108bbe6",
+     "gps_coordinates": {
+      "latitude": 33.8109262,
+      "longitude": -117.83614019999999
+     },
+     "place_id": "ChIJ_Q-20U3X3IAR5rsIUS6-XLE",
+     "rating": 4.4,
+     "reviews": 4431,
+     "title": "Toyota of Orange",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "4606 Lankershim Blvd, North Hollywood, CA 91602",
+     "data_id": "0x80c2be223d323ee1:0x44db91c40998e238",
+     "gps_coordinates": {
+      "latitude": 34.1541443,
+      "longitude": -118.36762239999999
+     },
+     "place_id": "ChIJ4T4yPSK-woAROOKYCcSR20Q",
+     "rating": 4.3,
+     "reviews": 5076,
+     "title": "North Hollywood Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "18700 Studebaker Rd, Cerritos, CA 90703",
+     "data_id": "0x80dd2d773b13c2ef:0x1fbf5f443772968c",
+     "gps_coordinates": {
+      "latitude": 33.8621251,
+      "longitude": -118.0981856
+     },
+     "place_id": "ChIJ78ITO3ct3YARjJZyN0Rfvx8",
+     "rating": 4.6,
+     "reviews": 11492,
+     "title": "AutoNation Toyota Cerritos",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1331 N Euclid St, Anaheim, CA 92801",
+     "data_id": "0x80dd29f5d16aec9f:0x19a985f383e5f031",
+     "gps_coordinates": {
+      "latitude": 33.852843,
+      "longitude": -117.943163
+     },
+     "place_id": "ChIJn-xq0fUp3YARMfDlg_OFqRk",
+     "rating": 4.4,
+     "reviews": 7451,
+     "title": "Toyota of Anaheim",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "9670 Trask Ave, Garden Grove, CA 92844",
+     "data_id": "0x80dd27d7955655dd:0xa195c5c048af987d",
+     "gps_coordinates": {
+      "latitude": 33.766455,
+      "longitude": -117.96158709999999
+     },
+     "place_id": "ChIJ3VVWldcn3YARfZivSMDFlaE",
+     "rating": 4.2,
+     "reviews": 2980,
+     "title": "Toyota Place",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1230 Santa Monica Blvd, Santa Monica, CA 90404",
+     "data_id": "0x80c2a4cc3d718ed3:0xf83949f91b31068d",
+     "gps_coordinates": {
+      "latitude": 34.0230512,
+      "longitude": -118.4868848
+     },
+     "place_id": "ChIJ045xPcykwoARjQYxG_lJOfg",
+     "rating": 4.3,
+     "reviews": 2174,
+     "title": "Toyota Santa Monica",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "6400 Beach Blvd, Buena Park, CA 90621",
+     "data_id": "0x80dd2b95c1a2dcbd:0x1f954318d040b024",
+     "gps_coordinates": {
+      "latitude": 33.8663605,
+      "longitude": -117.9968675
+     },
+     "place_id": "ChIJvdyiwZUr3YARJLBA0BhDlR8",
+     "rating": 4.5,
+     "reviews": 6745,
+     "title": "AutoNation Toyota Buena Park",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "3399 E Willow St, Long Beach, CA 90806",
+     "data_id": "0x80dd322990d00a87:0x187fe3e136eb09c5",
+     "gps_coordinates": {
+      "latitude": 33.8052232,
+      "longitude": -118.1521379
+     },
+     "place_id": "ChIJhwrQkCky3YARxQnrNuHjfxg",
+     "rating": 4.1,
+     "reviews": 1841,
+     "title": "West Coast Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "3534 Peck Rd, El Monte, CA 91731",
+     "data_id": "0x80c2d0b224ac0e3d:0x3455c0916b77f47e",
+     "gps_coordinates": {
+      "latitude": 34.0694376,
+      "longitude": -118.0218829
+     },
+     "place_id": "ChIJPQ6sJLLQwoARfvR3a5HAVTQ",
+     "rating": 4.7,
+     "reviews": 28515,
+     "title": "Longo Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "5855 Van Nuys Blvd, Sherman Oaks, CA 91401",
+     "data_id": "0x80c297a8f386cf95:0xc6cf027e44e77463",
+     "gps_coordinates": {
+      "latitude": 34.177119499999996,
+      "longitude": -118.4496231
+     },
+     "place_id": "ChIJlc-G86iXwoARY3TnRH4Cz8Y",
+     "rating": 4.5,
+     "reviews": 9039,
+     "title": "Keyes Toyota",
+     "type": "Car dealer"
+    },
+    {
+     "address": "9136 Firestone Blvd, Downey, CA 90241",
+     "data_id": "0x80c2cd82cd521fc9:0x6aa14a15383841e7",
+     "gps_coordinates": {
+      "latitude": 33.933126,
+      "longitude": -118.120228
+     },
+     "place_id": "ChIJyR9SzYLNwoAR50E4OBVKoWo",
+     "rating": 4.6,
+     "reviews": 5625,
+     "title": "Penske Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "17070 Gale Ave, City of Industry, CA 91748",
+     "data_id": "0x80c2d58d10c3d09b:0x41f0c1b8ccbde7bb",
+     "gps_coordinates": {
+      "latitude": 33.9995839,
+      "longitude": -117.93462009999999
+     },
+     "place_id": "ChIJm9DDEI3VwoARu-e9zLjB8EE",
+     "rating": 4.6,
+     "reviews": 8725,
+     "title": "Puente Hills Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "18416 S Western Ave, Gardena, CA 90248",
+     "data_id": "0x80c2b55ceef8154d:0x681927eb5c081ebd",
+     "gps_coordinates": {
+      "latitude": 33.8634501,
+      "longitude": -118.30855729999999
+     },
+     "place_id": "ChIJTRX47ly1woARvR4IXOsnGWg",
+     "rating": 4.2,
+     "reviews": 2051,
+     "title": "South Bay Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "6920 Sunset Blvd, Los Angeles, CA 90028",
+     "data_id": "0x80c2bf4790f025b9:0x29a50fa28ee6aae5",
+     "gps_coordinates": {
+      "latitude": 34.0976405,
+      "longitude": -118.34098979999999
+     },
+     "place_id": "ChIJuSXwkEe_woAR5armjqIPpSk",
+     "rating": 4.3,
+     "reviews": 2859,
+     "title": "Toyota of Hollywood",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "2849 Long Beach Blvd, Long Beach, CA 90806",
+     "data_id": "0x80c2cca8370d9811:0xac44d33a69fb5f27",
+     "gps_coordinates": {
+      "latitude": 33.8085869,
+      "longitude": -118.1899742
+     },
+     "place_id": "ChIJEZgNN6jMwoARJ1_7aTrTRKw",
+     "rating": 4.6,
+     "reviews": 1190,
+     "title": "Cabe Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "15300 Beach Blvd, Westminster, CA 92683",
+     "data_id": "0x80dd26475496667b:0x5da8742cecc1efcf",
+     "gps_coordinates": {
+      "latitude": 33.740577,
+      "longitude": -117.988462
+     },
+     "place_id": "ChIJe2aWVEcm3YARz-_B7Cx0qF0",
+     "rating": 4.4,
+     "reviews": 4211,
+     "title": "Beach Cities Toyota Westminster",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "1949 Auto Centre Dr, Glendora, CA 91740",
+     "data_id": "0x80c32f4deabcde79:0xbe658884d7c52a00",
+     "gps_coordinates": {
+      "latitude": 34.1186027,
+      "longitude": -117.8269119
+     },
+     "place_id": "ChIJed686k0vw4ARACrF14SIZb4",
+     "rating": 4.5,
+     "reviews": 5477,
+     "title": "Toyota of Glendora",
+     "type": "Toyota dealer"
+    }
+   ]
+  },
+  "source": "SerpApi Google Maps"
+ },
+ "6a96ca58ae94b01e1d2e06034d2fbd497c3f95552f27ebe12c928e055ee03843": {
+  "engine": "youtube",
+  "fetched_at": "2026-10-25T02:56:14.646798+00:00",
+  "key": "6a96ca58ae94b01e1d2e06034d2fbd497c3f95552f27ebe12c928e055ee03843",
+  "params": {
+   "search_query": "2027 Toyota Camry review"
+  },
+  "response": {
+   "video_results": [
+    {
+     "channel": {
+      "name": "DPCcars"
+     },
+     "link": "https://www.youtube.com/watch?v=RWc0imT3O-k",
+     "title": "2027 Toyota Camry XSE AWD \u2013 232 HP and a Sporty New Look"
+    },
+    {
+     "channel": {
+      "name": "Kirk Kreifels"
+     },
+     "link": "https://www.youtube.com/watch?v=d6F_b1atdA8",
+     "title": "Toyota just REVEALED the 2027 Camry"
+    },
+    {
+     "channel": {
+      "name": "Discerning Cars"
+     },
+     "link": "https://www.youtube.com/watch?v=c0SHj5B_ltc",
+     "title": "2027 Toyota Camry.. Official Updates"
+    },
+    {
+     "channel": {
+      "name": "CB Auto News and RZN Auto"
+     },
+     "link": "https://www.youtube.com/watch?v=X2GvmM2lP4s",
+     "title": "NEW 2027 Toyota Camry - 54 MPG Is Great, But The Steering Is A Massive Flaw!"
+    },
+    {
+     "channel": {
+      "name": "MotorScope"
+     },
+     "link": "https://www.youtube.com/watch?v=uAI94c8hI2M",
+     "title": "New 2027 Toyota Camry Unveiled! Next-Gen Sedan Upgraded! \ud83d\udd25\ud83d\udea8 | Latest Review!"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube"
+ },
+ "6e94ddf6d4ada050d0cfc4e3dabba67e3eee094ad8eb3e237b3765d92b4da375": {
+  "engine": "google_maps_reviews",
+  "fetched_at": "2026-10-25T02:56:27.232826+00:00",
+  "key": "6e94ddf6d4ada050d0cfc4e3dabba67e3eee094ad8eb3e237b3765d92b4da375",
+  "params": {
+   "data_id": "0x80c2d0b224ac0e3d:0x3455c0916b77f47e",
+   "hl": "en",
+   "sort_by": "newestFirst"
+  },
+  "response": {
+   "place_info": {
+    "address": "3534 Peck Rd, El Monte, CA 91731",
+    "rating": 4.7,
+    "reviews": 28515,
+    "title": "Longo Toyota",
+    "type": "Toyota dealer"
+   },
+   "reviews": [
+    {
+     "iso_date": "2026-10-25T01:04:30Z",
+     "rating": 5.0,
+     "snippet": "Great experience"
+    },
+    {
+     "iso_date": "2026-10-25T00:14:51Z",
+     "rating": 5.0
+    },
+    {
+     "iso_date": "2026-10-24T22:44:23Z",
+     "rating": 2.0,
+     "snippet": "This is my first time to buy a used 2015 highlander from longo toyota. Sam Halawi, salesperson, did a good job from start to finish in transition. I was happy because I felt confident with Longo. But I found out when I have car at home, the engine oil is over limit about a quart, the engine splash shield is missing, and I'm still worried about the transmission oil condition. The engine sound is louder than my 2004 Lexus RX."
+    },
+    {
+     "iso_date": "2026-10-24T21:05:07Z",
+     "rating": 5.0
+    },
+    {
+     "iso_date": "2026-10-24T20:25:09Z",
+     "rating": 5.0
+    },
+    {
+     "iso_date": "2022-10-29T15:20:27Z",
+     "rating": 5.0,
+     "snippet": "They have starbux and plenty of space to hangout while waiting."
+    },
+    {
+     "iso_date": "2026-10-24T18:25:04Z",
+     "rating": 5.0
+    },
+    {
+     "iso_date": "2026-04-07T15:48:09Z",
+     "rating": 5.0,
+     "snippet": "It was quick and easy and the best of all very affordable program\nMr. Noli Evangelista was very professional and took care of my car needs. I highly recommend Longo Toyota. It is the best or the best."
+    }
+   ]
+  },
+  "source": "SerpApi Google Maps Reviews"
+ },
+ "8ef5fe3c6a492a03544f9488d239efe2fc624ef3e8fa7e5272694b36dafa76d6": {
+  "engine": "google_news",
+  "fetched_at": "2026-10-25T02:56:30.837398+00:00",
+  "key": "8ef5fe3c6a492a03544f9488d239efe2fc624ef3e8fa7e5272694b36dafa76d6",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "q": "Toyota Prius recall"
+  },
+  "response": {
+   "news_results": [
+    {
+     "iso_date": "2026-03-13T07:00:00Z",
+     "link": "https://www.wardsauto.com/news/toyota-recalls-141k-prius-models-rear-door-switches-unexpected-opening/814251/",
+     "source": "WardsAuto",
+     "title": "Toyota recalls over 141K Prius models for rear door switch water intrusion"
+    },
+    {
+     "iso_date": "2026-10-22T15:30:00Z",
+     "link": "https://www.autoblog.com/features/ranking-toyotas-5-biggest-recalls-of-2026",
+     "source": "Autoblog",
+     "title": "Toyota\u2019s 6 Biggest Recalls of 2026 Affect Nearly 1.7 Million Vehicles"
+    },
+    {
+     "iso_date": "2026-02-09T08:00:00Z",
+     "link": "https://www.caranddriver.com/news/a70288900/toyota-prius-doors-unexpectedly-open-recall/",
+     "source": "Car and Driver",
+     "title": "Toyota Recalls 141,286 Priuses for Doors That Could Unexpectedly Open"
+    },
+    {
+     "iso_date": "2026-01-31T08:00:00Z",
+     "link": "https://www.forbes.com/sites/michaelharley/2026/01/31/toyota-recalls-prius-over-rear-doors-that-can-open-while-driving/",
+     "source": "Forbes",
+     "title": "Toyota Recalls Prius Over Rear Doors That Can Open While Driving"
+    },
+    {
+     "iso_date": "2026-02-11T08:00:00Z",
+     "link": "https://www.al.com/news/2026/02/if-you-own-one-of-these-toyota-models-your-rear-door-could-open-unexpectedly-while-driving.html",
+     "source": "AL.com",
+     "title": "If you own one of these Toyota models, your rear door could open unexpectedly while driving"
+    },
+    {
+     "iso_date": "2026-02-10T08:00:00Z",
+     "link": "https://www.theautochannel.com/news/2026/02/10/1632007-toyota-prius-recall-rear-door-problem.html",
+     "source": "The Auto Channel",
+     "title": "Toyota Prius Recall - Rear Door Problem"
+    },
+    {
+     "iso_date": "2026-02-12T08:00:00Z",
+     "link": "https://carbuzz.com/toyota-prius-recall-proves-electric-door-switches-are-a-bad-idea/",
+     "source": "CarBuzz",
+     "title": "Toyota Prius Recall Proves Electric Door Handles Are A Bad Idea"
+    },
+    {
+     "iso_date": "2026-02-09T08:00:00Z",
+     "link": "https://topclassactions.com/lawsuit-settlements/lawsuit-news/toyota-recalls-142000-priuses-due-to-faulty-door-switches/",
+     "source": "Top Class Actions",
+     "title": "Toyota recalls 142,000 Priuses due to faulty door switches"
+    },
+    {
+     "iso_date": "2026-02-10T08:00:00Z",
+     "link": "https://www.cincinnati.com/story/news/2026/02/10/toyota-prius-recall-fauilty-door-check-models-over-faulty-doors-what-you-need-to-know/88604283007/",
+     "source": "Cincinnati Enquirer",
+     "title": "Toyota recalls over 141,000 Prius models. What you need to know"
+    },
+    {
+     "iso_date": "2026-05-06T22:18:17Z",
+     "link": "https://www.automotive-fleet.com/news/faulty-fuse-triggers-toyota-prius-plug-in-recall",
+     "source": "Automotive Fleet",
+     "title": "Faulty Fuse Triggers Toyota Prius Plug-in Recall"
+    },
+    {
+     "iso_date": "2026-02-10T08:00:00Z",
+     "link": "https://www.foxbusiness.com/lifestyle/toyota-recalls-141k-vehicles-over-doors-could-open-while-driving",
+     "source": "Fox Business",
+     "title": "Toyota recalls 141K vehicles over doors that could open while driving"
+    },
+    {
+     "iso_date": "2026-02-09T08:00:00Z",
+     "link": "https://www.thedrive.com/news/your-toyota-prius-rear-doors-might-unexpectedly-open",
+     "source": "The Drive",
+     "title": "Your Toyota Prius\u2019 Rear Doors Might Unexpectedly Open"
+    },
+    {
+     "iso_date": "2026-02-11T08:00:00Z",
+     "link": "https://www.usatoday.com/story/cars/recalls/2026/02/11/toyota-recalls-vehicles-prius/88621255007/",
+     "source": "USA Today",
+     "title": "Toyota recalls over 141K vehicles. See impacted models."
+    },
+    {
+     "iso_date": "2026-02-10T08:00:00Z",
+     "link": "https://www.nj.com/business/2026/02/toyota-recalling-more-than-141k-vehicles-if-you-have-these-cars-bring-them-to-your-dealer-asap.html",
+     "source": "NJ.com",
+     "title": "Toyota recalling more than 141K vehicles: If you have these cars, bring them to your dealer ASAP"
+    },
+    {
+     "iso_date": "2026-02-11T08:00:00Z",
+     "link": "https://news.dealershipguy.com/p/toyota-is-recalling-over-141k-vehicles-for-rear-doors-that-might-open-while-driving-2026-02-11",
+     "source": "Car Dealership Guy News",
+     "title": "Toyota is recalling over 141K vehicles for rear doors that might open while driving"
+    }
+   ]
+  },
+  "source": "SerpApi Google News"
+ },
+ "99501eadbf58ab0d1a70c4020aacda617a145d3a0c0a470fce4bd21f9ce608e1": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T02:56:10.163147+00:00",
+  "key": "99501eadbf58ab0d1a70c4020aacda617a145d3a0c0a470fce4bd21f9ce608e1",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 20,
+   "q": "2027 Toyota Camry for sale price"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.toyota.com/vehicles/camry/2027",
+     "snippet": "2027 Camry. Starting MSRP $29,700 *. Info.",
+     "title": "2027 Toyota Camry | Toyota.com"
+    },
+    {
+     "link": "https://www.caranddriver.com/toyota/camry",
+     "rich_snippet": {
+      "bottom": {
+       "detected_extensions": {
+        "currency": "$",
+        "price": 30995.0
+       },
+       "extensions": [
+        "$30,995.00",
+        "Review by Andrew Wendler"
+       ]
+      }
+     },
+     "snippet": "The price of the 2027 Toyota Camry starts at $30,995 and goes up to $37,395 depending on the trim and options. C/D Expert Tip: The SE trim is the value play in ...",
+     "title": "2027 Toyota Camry Review, Pricing, and Specs"
+    },
+    {
+     "link": "https://www.seminoletoyota.com/toyota-reviews/2027-camry.htm?srsltid=AYCX9vKbeP7T1Wz4vmI9RjooIs93Kqdu7k0Xnd6I2LUoYA0iU7MSfw_2",
+     "snippet": "... Toyota's San Antonio Expansion Brings Job Boost. Thursday, 23 July, 2026. 2026 Toyota Camry XSE Sedan FWD. Total SRP:$44,086; Price:Unlock Price. Engine: 2.5L 4 ...",
+     "title": "2027 Toyota Camry Model Review - Sanford, FL"
+    },
+    {
+     "link": "https://www.edmunds.com/toyota/camry/",
+     "rich_snippet": {
+      "bottom": {
+       "detected_extensions": {
+        "currency": "$ to $",
+        "price": 30187.0
+       },
+       "extensions": [
+        "$30,187.00 to $36,412.00",
+        "Review by Cameron Rogers"
+       ]
+      }
+     },
+     "snippet": "2027 Toyota Camry MSRP starts at $29700. Read expert review, compare 5 trims, see MPG, specs, and safety ratings. Get dealer pricing and True Market Value ...",
+     "title": "2027 Toyota Camry Prices, Reviews, and Pictures"
+    },
+    {
+     "link": "https://www.toyotaofdallas.com/toyota-reviews/2027-camry.htm?srsltid=AYCX9vIjDQjaG5HdyTAuWpo0B5beRi8MVjckXnjbQob74EmEwxX6f_C8",
+     "snippet": "Explore the features and specs of the 2027 Toyota Camry in this model review. Visit our Dallas dealership in TX to take a test drive.",
+     "title": "2027 Toyota Camry Price, Specs, Features & Review"
+    },
+    {
+     "link": "https://www.cars.com/shopping/toyota-camry-2027/",
+     "snippet": "Shop 2027 Toyota Camrys for sale at Cars.com. Research, compare, save listings or contact sellers directly from 4317 2027 Camrys nationwide.",
+     "title": "New and Used 2027 Toyota Camry for Sale Near Me"
+    },
+    {
+     "link": "https://www.toyota-slo.com/new-inventory/camry-san-luis-obispo.htm",
+     "snippet": "2027 Toyota Camry LE. $31,604$31,482 Total SRP \u00b7 2.5L 4-Cyl. Gas/Electric Hybrid Engine \u00b7 Electronically controlled Continuously Variable Transmission (ECVT) with ...",
+     "title": "2026 Toyota Camry for Sale in San Luis Obispo"
+    },
+    {
+     "link": "https://www.plazatoyota.com/2027-toyota-camry-what-changes-release-date-and-pricing-for-nyc-drivers.htm",
+     "snippet": "A midsize sedan that averages better than 50 mpg in the city, offers all-wheel drive on every trim and still starts under $30,000 is a ...",
+     "title": "2027 Toyota Camry Release Date & Trim Guide | New York"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
+ "acec45fb461d39ab804d0c2224c34a5d66b96b2822509861ef24de9472049781": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T02:57:44.908012+00:00",
+  "key": "acec45fb461d39ab804d0c2224c34a5d66b96b2822509861ef24de9472049781",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 20,
+   "q": "2023 Toyota Prius used price"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.cargurus.com/Cars/l-Used-2023-Toyota-Prius-c32701",
+     "snippet": "With 974 currently listed for sale and an average price of $27,675, Index Price $28,608 1.1%",
+     "title": "Used 2023 Toyota Prius for Sale Nationwide"
+    },
+    {
+     "link": "https://www.carfax.com/Used-2023-Toyota-Prius_z39336",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 4.8,
+        "reviews": 277
+       },
+       "extensions": [
+        "4.8(277)"
+       ]
+      }
+     },
+     "snippet": "In CARFAX Used Car Listings, you can find a used 2023 Toyota Prius for sale from $23,898 to $32,110. The average selling price of this ...",
+     "title": "Used 2023 Toyota Prius for Sale Near Me"
+    },
+    {
+     "link": "https://www.toyotacertified.com/prius/2023",
+     "snippet": "Shop a Toyota Certified Used Prius 2023 for sale at a dealer near you. Find the latest deals and inventory to buy a used Prius 2023 hassle-free.",
+     "title": "Toyota Certified Used Prius 2023 for Sale Near Me"
+    },
+    {
+     "link": "https://www.carmax.com/cars/toyota/prius/2023",
+     "snippet": "2023 Toyota Prius LE\u00b751K mi. Est. $460/mo. Mileage: 50,109 \u30fb 2023 Toyota Prius Limited\u00b760K mi $149 \u30fb 2023 Toyota Prius LE\u00b720K mi $549",
+     "title": "Used 2023 Toyota Prius near me for sale"
+    },
+    {
+     "link": "https://www.autotrader.com/cars-for-sale/2023/toyota/prius",
+     "snippet": "... 2023 Toyota Prius XLE ranging in price from $19995 to $34995 ... Used 2023 Toyota Prius LE. Used. 2023 Toyota Prius. LE; 63K mi. Hybrid. 26,642. See payment.",
+     "title": "Used 2023 Toyota Prius for Sale Near Me - Autotrader"
+    },
+    {
+     "link": "https://www.edmunds.com/used-2023-toyota-prius-los-angeles-ca/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 4.3,
+        "reviews": 27
+       },
+       "extensions": [
+        "4.3(27)"
+       ]
+      }
+     },
+     "snippet": "The average list price of a used 2023 Toyota Prius in Los Angeles, California is $28,603. The average mileage on a used Toyota Prius ...",
+     "title": "Used 2023 Toyota Prius for Sale in Los Angeles, CA"
+    },
+    {
+     "link": "https://www.truecar.com/used-cars-for-sale/listings/toyota/prius/year-2023/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 5.0,
+        "reviews": 2
+       },
+       "extensions": [
+        "5.0(2)"
+       ]
+      }
+     },
+     "snippet": "Prices for a used 2023 Toyota Prius currently range from $3,894 to $40,121, with vehicle mileage ranging from 5 to 378,517.",
+     "title": "Used 2023 Toyota Prius for Sale Nationwide"
+    },
+    {
+     "link": "https://www.reddit.com/r/prius/comments/1i21fco/used_2023_in_the_24000_range_we_good_or_still/",
+     "snippet": "There are some 2023 with decent miles (25-30,000 -ish miles) in the $24,000 range. Are prices balanced out or are they still Gucci prices. I dont NEED a ...",
+     "title": "used 2023 in the $24000 range, we good or still wait it out?"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/prius/2023/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 4.8
+       },
+       "extensions": [
+        "4.8",
+        "Review by Colin Ryan"
+       ]
+      }
+     },
+     "snippet": "Used 2023 Toyota Prius prices currently range from $24,200 for the LE Hatchback 4D to $26,100 for the XLE Hatchback 4D when purchasing from a dealership, ...",
+     "title": "2023 Toyota Prius Price, Value, Ratings & Reviews"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
+ "ba51606462e8415fed5925d123401345e38106feb61c0c57fcb232a46c337d65": {
+  "engine": "google",
+  "fetched_at": "2026-10-25T02:57:40.916695+00:00",
+  "key": "ba51606462e8415fed5925d123401345e38106feb61c0c57fcb232a46c337d65",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "num": 20,
+   "q": "2022 Toyota Camry used price"
+  },
+  "response": {
+   "organic_results": [
+    {
+     "link": "https://www.cars.com/shopping/toyota-camry-2022/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 5.0,
+        "reviews": 6
+       },
+       "extensions": [
+        "5.0(6)"
+       ]
+      }
+     },
+     "snippet": "The nationwide average price for a 2022 Camry is $23,522, with pricing starting at $8,779.",
+     "title": "Used 2022 Toyota Camry for Sale Near Me"
+    },
+    {
+     "link": "https://www.jdpower.com/cars/2022/toyota/camry/sedan-4d-le-awd",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 83
+       },
+       "extensions": [
+        "83%",
+        "Review by JD Power"
+       ]
+      }
+     },
+     "snippet": "Average Price Paid $21,307 Pricing 80% of People Paid $20,448 - $22,843 Estimated Trade-In $0 High $17,000 The values are not for commercial use. $17,888 125, ...",
+     "title": "2022 Toyota Camry Sedan 4D LE AWD Average Price & ..."
+    },
+    {
+     "link": "https://www.caranddriver.com/toyota/camry-2022",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 8.5
+       },
+       "extensions": [
+        "8.5/10",
+        "Review by Eric Stafford"
+       ]
+      }
+     },
+     "snippet": "Used Price Range $7,500 - $36,350. See all results for used 2022 Toyota Camry for sale near 78228. Limited Warranty 3 Years/36,000 Miles",
+     "title": "2022 Toyota Camry Review, Pricing, and Specs"
+    },
+    {
+     "link": "https://www.cargurus.com/Cars/l-Used-2022-Toyota-Camry-Alabama-c31813_L2",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 4.9,
+        "reviews": 16
+       },
+       "extensions": [
+        "4.9(16)"
+       ]
+      }
+     },
+     "snippet": "With 4,354 currently listed for sale and an average price of $22,985, 33.3% of 2022 Toyota Camry listings on CarGurus are rated as good or great deals.",
+     "title": "Used 2022 Toyota Camry for Sale near Alabama"
+    },
+    {
+     "link": "https://www.kbb.com/toyota/camry/2022/le-sedan-4d/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 4.6
+       },
+       "extensions": [
+        "4.6",
+        "Review by Colin Ryan"
+       ]
+      }
+     },
+     "snippet": "A 2022 Toyota Camry LE Sedan 4D has depreciated $3,930 or 17% in the last 3 years and has a current resale value of $18,250 and trade-in value of $15,200.",
+     "title": "2022 Toyota Camry LE Sedan 4D Price, Listings & Reviews"
+    },
+    {
+     "link": "https://www.cars.com/shopping/toyota-camry-2022/denver-co/",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 5.0,
+        "reviews": 6
+       },
+       "extensions": [
+        "5.0(6)"
+       ]
+      }
+     },
+     "snippet": "The 2022 Toyota Camry price depends on several factors, including the trim level, optional features, mileage, vehicle history and location.",
+     "title": "Used 2022 Toyota Camry for Sale in Denver, CO"
+    },
+    {
+     "link": "https://www.cargurus.com/Cars/l-Used-2022-Toyota-Camry-Indianapolis-c31813_L9065",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 4.9,
+        "reviews": 16
+       },
+       "extensions": [
+        "4.9(16)"
+       ]
+      }
+     },
+     "snippet": "With 296 currently listed for sale and an average price of $22,599, 51.4% of 2022 s are rated as good or great deals. an average price of $28,998,",
+     "title": "Used 2022 Toyota Camry for Sale near Indianapolis, IN"
+    },
+    {
+     "link": "https://www.cargurus.com/Cars/l-Used-2022-Toyota-Camry-Ohio-c31813_L26517",
+     "rich_snippet": {
+      "top": {
+       "detected_extensions": {
+        "rating": 4.9,
+        "reviews": 16
+       },
+       "extensions": [
+        "4.9(16)"
+       ]
+      }
+     },
+     "snippet": "With 4,354 currently listed for sale and an average price of $22,985, 33.3% of 2022 Toyota Camry listings on CarGurus are rated as good or great deals.",
+     "title": "Used 2022 Toyota Camry for Sale near Ohio"
+    }
+   ]
+  },
+  "source": "SerpApi Google Search"
+ },
+ "be5d6727753df11e6ac5c2fab98d615ffc582d2e12aef333a4cf2562fe85c604": {
+  "engine": "google_maps",
+  "fetched_at": "2026-10-25T02:55:49.830965+00:00",
+  "key": "be5d6727753df11e6ac5c2fab98d615ffc582d2e12aef333a4cf2562fe85c604",
+  "params": {
+   "hl": "en",
+   "ll": "@30.2672,-97.7431,11z",
+   "q": "Toyota dealership",
+   "type": "search"
+  },
+  "response": {
+   "local_results": [
+    {
+     "address": "8400 Research Blvd, Austin, TX 78758",
+     "data_id": "0x8644cbc62678cf49:0xa71cec740a2017c1",
+     "gps_coordinates": {
+      "latitude": 30.357574,
+      "longitude": -97.716577
+     },
+     "place_id": "ChIJSc94JsbLRIYRwRcgCnTsHKc",
+     "rating": 4.2,
+     "reviews": 10895,
+     "title": "Group 1 Toyota North Austin",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "5600 183A Toll Rd, Leander, TX 78641",
+     "data_id": "0x865b2cec30dc3899:0x274f8273b3b49e70",
+     "gps_coordinates": {
+      "latitude": 30.543946599999998,
+      "longitude": -97.8147013
+     },
+     "place_id": "ChIJmTjcMOwsW4YRcJ60s3OCTyc",
+     "rating": 4.8,
+     "reviews": 25368,
+     "title": "Toyota of Cedar Park",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "4800 S I-35 Frontage Rd, Austin, TX 78745",
+     "data_id": "0x8644b34518e779e5:0x32be0f7ba18ba87",
+     "gps_coordinates": {
+      "latitude": 30.207678599999998,
+      "longitude": -97.75838399999999
+     },
+     "place_id": "ChIJ5XnnGEWzRIYRh7oYuvfgKwM",
+     "rating": 4.6,
+     "reviews": 15181,
+     "title": "AutoNation Toyota South Austin",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "2307 N Interstate Hwy 35, Round Rock, TX 78664",
+     "data_id": "0x8644d17902a57bc3:0xd177faf5f7fbd084",
+     "gps_coordinates": {
+      "latitude": 30.5338271,
+      "longitude": -97.6906944
+     },
+     "place_id": "ChIJw3ulAnnRRIYRhND79_X6d9E",
+     "rating": 4.6,
+     "reviews": 5034,
+     "title": "Round Rock Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "12950 Camino Real, Kyle, TX 78640",
+     "data_id": "0x865b4daba26cdb67:0x72f7f652cca03b8d",
+     "gps_coordinates": {
+      "latitude": 30.0014556,
+      "longitude": -97.73812679999999
+     },
+     "place_id": "ChIJZ9tsoqtNW4YRjTugzFL293I",
+     "rating": 4.3,
+     "reviews": 210,
+     "title": "YOTA Ranch",
+     "type": "Car repair and maintenance service"
+    },
+    {
+     "address": "806 State Hwy 71, Bastrop, TX 78602",
+     "data_id": "0x86449b2af347b45f:0x1a4f804b18d7521e",
+     "gps_coordinates": {
+      "latitude": 30.1097023,
+      "longitude": -97.3578172
+     },
+     "place_id": "ChIJX7RH8yqbRIYRHlLXGEuATxo",
+     "rating": 4.4,
+     "reviews": 1654,
+     "title": "Lost Pines Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "4800 S I-35 Frontage Rd Ste A, Austin, TX 78745",
+     "data_id": "0x8644b49e733654f3:0x317a77c5ea5e27e4",
+     "gps_coordinates": {
+      "latitude": 30.2088383,
+      "longitude": -97.76083899999999
+     },
+     "place_id": "ChIJ81Q2c560RIYR5Cde6sV3ejE",
+     "rating": 3.9,
+     "reviews": 2300,
+     "title": "AutoNation Toyota South Austin Service Center",
+     "type": "Car repair and maintenance service"
+    },
+    {
+     "address": "2401 N Mays St Suite 100, Round Rock, TX 78665",
+     "data_id": "0x8644d179022dd88b:0x47802133f07f7924",
+     "gps_coordinates": {
+      "latitude": 30.5348556,
+      "longitude": -97.6882187
+     },
+     "place_id": "ChIJi9gtAnnRRIYRJHl_8DMhgEc",
+     "rating": 4.7,
+     "reviews": 6251,
+     "title": "Round Rock Toyota Service and Parts",
+     "type": "Car repair and maintenance service"
+    },
+    {
+     "address": "1000 1006 Colonial Park Blvd, Austin, TX 78745",
+     "data_id": "0x8644b49fcfad90a3:0xcae1779146f25bde",
+     "gps_coordinates": {
+      "latitude": 30.2068396,
+      "longitude": -97.7612078
+     },
+     "place_id": "ChIJo5Ctz5-0RIYR3lvyRpF34co",
+     "rating": 4.3,
+     "reviews": 17,
+     "title": "AutoNation Toyota Drop Lot",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "8400 Research Blvd, Austin, TX 78758",
+     "data_id": "0x8644cbc62c28885b:0x4c78bde09d422d17",
+     "gps_coordinates": {
+      "latitude": 30.3585262,
+      "longitude": -97.7171327
+     },
+     "place_id": "ChIJW4goLMbLRIYRFy1CneC9eEw",
+     "rating": 4.6,
+     "reviews": 402,
+     "title": "Group 1 Toyota North Austin Collision",
+     "type": "Auto body shop"
+    },
+    {
+     "address": "8400 Research Blvd, Austin, TX 78758",
+     "data_id": "0x8644cbc882b1f8e1:0x3fa4c52de110e71a",
+     "gps_coordinates": {
+      "latitude": 30.357569899999998,
+      "longitude": -97.71663629999999
+     },
+     "place_id": "ChIJ4fixgsjLRIYRGucQ4S3FpD8",
+     "rating": 3.3,
+     "reviews": 549,
+     "title": "Group 1 Toyota North Austin Service Center",
+     "type": "Auto repair shop"
+    },
+    {
+     "address": "8400 Research Blvd, Austin, TX 78758",
+     "data_id": "0x8644cbc6281a23e5:0x814822839522efc",
+     "gps_coordinates": {
+      "latitude": 30.3515037,
+      "longitude": -97.714872
+     },
+     "place_id": "ChIJ5SMaKMbLRIYR_C5SOSiCFAg",
+     "rating": 3.5,
+     "reviews": 76,
+     "title": "Group 1 Toyota North Austin Parts Center",
+     "type": "Auto parts store"
+    },
+    {
+     "address": "10309 S Hwy 183, Austin, TX 78747",
+     "data_id": "0x8644ae0be2515555:0x4b7347ae5b0f9cc1",
+     "gps_coordinates": {
+      "latitude": 30.097414399999998,
+      "longitude": -97.6936915
+     },
+     "place_id": "ChIJVVVR4guuRIYRwZwPW65Hc0s",
+     "rating": 4.9,
+     "reviews": 244,
+     "title": "Prius World of Austin LLC",
+     "type": "Car dealer"
+    },
+    {
+     "address": "5600 183A Toll Rd, Leander, TX 78641",
+     "data_id": "0x865b2d868343ebe1:0x5483b90b7b82c39f",
+     "gps_coordinates": {
+      "latitude": 30.5438428,
+      "longitude": -97.8147887
+     },
+     "place_id": "ChIJ4etDg4YtW4YRn8OCewu5g1Q",
+     "rating": 4.5,
+     "reviews": 27,
+     "title": "Toyota of Cedar Park Parts",
+     "type": "Auto parts store"
+    },
+    {
+     "address": "8400 Research Blvd, Austin, TX 78758",
+     "data_id": "0x8644cbc63181eebd:0xc7aeb4eef687f6e6",
+     "gps_coordinates": {
+      "latitude": 30.358536599999997,
+      "longitude": -97.71687329999999
+     },
+     "place_id": "ChIJve6BMcbLRIYR5vaH9u60rsc",
+     "rating": 3.2,
+     "reviews": 107,
+     "title": "Group 1 Toyota North Austin Pre-Owned Vehicles",
+     "type": "Used car dealer"
+    },
+    {
+     "address": "5600 183A Toll Rd, Leander, TX 78641",
+     "data_id": "0x865b2ddf8b5cdb03:0x35a3e28ee296cc8d",
+     "gps_coordinates": {
+      "latitude": 30.5434836,
+      "longitude": -97.8148557
+     },
+     "place_id": "ChIJA9tci98tW4YRjcyW4o7iozU",
+     "rating": 4.3,
+     "reviews": 348,
+     "title": "Toyota of Cedar Park Service",
+     "type": "Auto repair shop"
+    },
+    {
+     "address": "4800 S I-35 Frontage Rd Ste B, Austin, TX 78745",
+     "data_id": "0x8644b49e0b54beb3:0x975a50bc2d718a55",
+     "gps_coordinates": {
+      "latitude": 30.208834099999997,
+      "longitude": -97.7607814
+     },
+     "place_id": "ChIJs75UC560RIYRVYpxLbxQWpc",
+     "rating": 3.7,
+     "reviews": 201,
+     "title": "AutoNation Toyota South Austin Parts Center",
+     "type": "Auto parts store"
+    },
+    {
+     "address": "806 State Hwy 71 W, Bastrop, TX 78602",
+     "data_id": "0x8644998c0e1b1027:0xc4428a7bb9ca68a7",
+     "gps_coordinates": {
+      "latitude": 30.1097023,
+      "longitude": -97.3578172
+     },
+     "place_id": "ChIJJxAbDoyZRIYRp2jKuXuKQsQ",
+     "rating": 4.5,
+     "reviews": 546,
+     "title": "Lost Pines Toyota Service Center",
+     "type": "Auto repair shop"
+    },
+    {
+     "address": "2307 I 35 N Frontage Rd, Round Rock, TX 78664",
+     "data_id": "0x8644d11504e49521:0xdc1ccbd24d7f8e51",
+     "gps_coordinates": {
+      "latitude": 30.5356396,
+      "longitude": -97.68965449999999
+     },
+     "place_id": "ChIJIZXkBBXRRIYRUY5_TdLLHNw",
+     "rating": 5,
+     "reviews": 3,
+     "title": "Claudia Monterroso - Round Rock Toyota",
+     "type": "Toyota dealer"
+    },
+    {
+     "address": "5101 I-35, San Marcos, TX 78666",
+     "data_id": "0x865ca5d18b80cc37:0x4f2e709ca73dc8e9",
+     "gps_coordinates": {
+      "latitude": 29.8155067,
+      "longitude": -97.997598
+     },
+     "place_id": "ChIJN8yAi9GlXIYR6cg9p5xwLk8",
+     "rating": 4.5,
+     "reviews": 4806,
+     "title": "San Marcos Toyota",
+     "type": "Toyota dealer"
+    }
+   ]
+  },
+  "source": "SerpApi Google Maps"
+ },
+ "d7e7dc6f4b6ba0a17935400d9afb344e78313b28db5fcf109fd45abac5f5b24f": {
+  "engine": "youtube_video_transcript",
+  "fetched_at": "2026-10-25T02:56:41.990475+00:00",
+  "key": "d7e7dc6f4b6ba0a17935400d9afb344e78313b28db5fcf109fd45abac5f5b24f",
+  "params": {
+   "language_code": "en",
+   "v": "rl-QKRvZm-M"
+  },
+  "response": {
+   "transcript": [
+    {
+     "snippet": "okay listen the design team has done their work clearly the new Prius is beautiful here at marketing though we"
+    },
+    {
+     "snippet": "have a different job we're here to sprinkle the pixie dust of excitement and capture the youth how do we make the"
+    },
+    {
+     "snippet": "new Prius cool we've already had some great ideas hybrid reborn on the tailgate oh wonderful putting the P from"
+    },
+    {
+     "snippet": "Prius on the gas capap inspired what else do we got what else do we got uh come on come on uh come on"
+    },
+    {
+     "snippet": "uh Twitter's big at the moment yes yes my nephew uses it yep uh and he uses uh hashes oh hash browns hash brown no"
+    },
+    {
+     "snippet": "hashtags hashtags yes yes yes yeah hashtags what are those"
+    },
+    {
+     "snippet": "exactly uh luggage tag you you label the luggage hashtags a modern label so we"
+    },
+    {
+     "snippet": "label things okay okay okay all right so what do we label how do we how do we let them discover things how do we make"
+    },
+    {
+     "snippet": "these Easter eggs okay uh uh this okay yep y the seat belt yep you move out the"
+    },
+    {
+     "snippet": "way yep # Safety First oh my God written on the seat oh my God oh my"
+    },
+    {
+     "snippet": "God okay I love it I love it more more more you uh the the wireless charger yep"
+    },
+    {
+     "snippet": "you take the phone out you look down in there # wireless charger oh my God oh my"
+    },
+    {
+     "snippet": "that so come on more uh the glove box yes yes when it's closed yep nothing"
+    },
+    {
+     "snippet": "open it y # glovebox no no nope I can't"
+    },
+    {
+     "snippet": "[Music]"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube Transcript"
+ },
+ "dabae18fc9024b92cebf6ba94a1ec1633c4c0e05d6a3772a2d8fbdc04030631d": {
+  "engine": "google_maps_reviews",
+  "fetched_at": "2026-10-25T02:56:50.544529+00:00",
+  "key": "dabae18fc9024b92cebf6ba94a1ec1633c4c0e05d6a3772a2d8fbdc04030631d",
+  "params": {
+   "data_id": "0x880ef86885199def:0x86113f4d6b0df172",
+   "hl": "en",
+   "sort_by": "newestFirst"
+  },
+  "response": {
+   "place_info": {
+    "address": "1488 W Ogden Ave, Naperville, IL 60540",
+    "rating": 4.8,
+    "reviews": 8218,
+    "title": "Toyota of Naperville",
+    "type": "Toyota dealer"
+   },
+   "reviews": [
+    {
+     "iso_date": "2026-10-24T23:50:05Z",
+     "rating": 5.0,
+     "snippet": "Emil was great!  Very efficient process."
+    },
+    {
+     "iso_date": "2026-10-24T22:49:16Z",
+     "rating": 5.0,
+     "snippet": "Emil Torres! Must be a popular sales person he was all over helping everyone! Very kind guy! Laughed at our humor! Made the process as easy as possible! Made sure experience was smooth!"
+    },
+    {
+     "iso_date": "2026-10-24T20:57:11Z",
+     "rating": 5.0,
+     "snippet": "Excelente servicio"
+    },
+    {
+     "iso_date": "2026-10-24T20:25:27Z",
+     "rating": 5.0
+    },
+    {
+     "iso_date": "2026-10-24T20:22:18Z",
+     "rating": 4.0,
+     "snippet": "Very good people work there.  Pleasant buying experience.   I bit too long on the extended warranty discussion.   The new Camry is an awesome automobile"
+    },
+    {
+     "iso_date": "2026-10-24T19:17:08Z",
+     "rating": 5.0,
+     "snippet": "Emil is great"
+    },
+    {
+     "iso_date": "2026-10-24T17:43:24Z",
+     "rating": 5.0,
+     "snippet": "We had a great experience! She was very helpful and made the entire car-buying process quick, easy, and stress-free. Her customer service was excellent, and we truly appreciate all her help.\nHighly recommend!"
+    },
+    {
+     "iso_date": "2026-10-24T17:38:27Z",
+     "rating": 5.0,
+     "snippet": "Salve is the Best seller ever!\nExcellent attention!"
+    }
+   ]
+  },
+  "source": "SerpApi Google Maps Reviews"
+ },
+ "dedc70a1369e8922b4fae9a9aa5d5dc850ccf9c42af1e6f879ebec7d5eab861c": {
+  "engine": "google_news",
+  "fetched_at": "2026-10-25T02:55:33.518198+00:00",
+  "key": "dedc70a1369e8922b4fae9a9aa5d5dc850ccf9c42af1e6f879ebec7d5eab861c",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "q": "Toyota RAV4 recall"
+  },
+  "response": {
+   "news_results": [
+    {
+     "iso_date": "2026-10-21T22:30:59Z",
+     "link": "https://www.facebook.com/Boston25News/posts/toyota-recalls-30978-2026-rav4-plug-in-hybrids-for-powertrain-shutdown-risk-get-/1608993347928992/",
+     "source": "Facebook",
+     "title": "Toyota recalls 30,978 2026 RAV4 Plug-In Hybrids for powertrain shutdown risk. Get details."
+    },
+    {
+     "iso_date": "2026-10-14T07:00:00Z",
+     "link": "https://www.foxbusiness.com/economy/toyota-recalls-31k-rav4-plug-in-hybrids-that-may-shut-down-high-speeds",
+     "source": "Fox Business",
+     "title": "Toyota recalls 31,000 RAV4 plug-in hybrids that may shut down at high speeds"
+    },
+    {
+     "iso_date": "2026-10-15T07:00:00Z",
+     "link": "https://www.usatoday.com/story/cars/recalls/2026/10/14/toyota-recalls-vehicles-rav4-plug-in-hybrid-model/92249703007/",
+     "source": "USA Today",
+     "title": "Toyota recalls over 30,000 vehicles. See the affected model"
+    },
+    {
+     "iso_date": "2026-10-15T07:00:00Z",
+     "link": "https://www.motor1.com/news/812057/toyota-rav4-plug-hybrid-recall/",
+     "source": "Motor1.com",
+     "title": "Toyota Recalls 30,000 RAV4 Plug-In Hybrids Over Motor That Can Shut Down"
+    },
+    {
+     "iso_date": "2026-10-19T13:23:35Z",
+     "link": "https://theevreport.com/toyota-rav4-plug-in-hybrid-recall-power-loss",
+     "source": "The EV Report",
+     "title": "Toyota Recalls 30,978 RAV4 Plug-In Hybrids Over Power Loss"
+    },
+    {
+     "iso_date": "2026-10-08T07:00:00Z",
+     "link": "https://www.kbb.com/car-news/recall-toyota-rav4-plug-in-hybrids-may-lose-power-while-driving/",
+     "source": "Kelley Blue Book",
+     "title": "Recall: Toyota RAV4 Plug-in Hybrids May Lose Power While Driving"
+    },
+    {
+     "iso_date": "2026-10-23T12:20:28Z",
+     "link": "https://autos.yahoo.com/safety-and-recalls/articles/toyota-rav4-owner-takes-suv-122028497.html",
+     "source": "Yahoo Autos",
+     "title": "Toyota RAV4 Owner Takes SUV in for Recall, Finds Dents and Further Damage After Getting Home"
+    },
+    {
+     "iso_date": "2026-10-15T12:14:05Z",
+     "link": "https://www.elpasotimes.com/story/news/2026/10/15/toyota-rav4-recall-30000-vehicles-at-risk-of-software-issue/92261240007/",
+     "source": "El Paso Times",
+     "title": "Toyota recalls 30,000 vehicles over risk of shutting down while driving"
+    },
+    {
+     "iso_date": "2026-10-19T07:00:00Z",
+     "link": "https://katu.com/news/nation-world/toyota-recall-recalls-recalled-rav4-plug-in-hybrid-software-issue-may-reduce-power-cincinnati-consumer-alerts-shut-down-at-higher-speeds-crash-risk-free-dealer-update-owners-notified-december-vehicle-safety",
+     "source": "KATU",
+     "title": "Toyota recalls thousands of vehicles over issue that could cause power loss at high speeds"
+    },
+    {
+     "iso_date": "2026-10-19T07:00:00Z",
+     "link": "https://wgxa.tv/news/nation-world/toyota-recall-recalls-recalled-rav4-plug-in-hybrid-software-issue-may-reduce-power-cincinnati-consumer-alerts-shut-down-at-higher-speeds-crash-risk-free-dealer-update-owners-notified-december-vehicle-safety",
+     "source": "WGXA",
+     "title": "Toyota recalls thousands of vehicles over issue that could cause power loss at high speeds"
+    },
+    {
+     "iso_date": "2026-10-11T07:00:00Z",
+     "link": "https://www.autoevolution.com/news/toyota-issues-2026-rav4-phev-safety-recall-roughly-31000-units-affected-stateside-276847.html",
+     "source": "autoevolution",
+     "title": "Toyota Issues 2026 RAV4 PHEV Safety Recall, Roughly 31,000 Units Affected Stateside"
+    },
+    {
+     "iso_date": "2026-10-08T07:00:00Z",
+     "link": "https://www.cars.com/articles/toyota-recalls-31000-rav4-plug-in-hybrids-for-loss-of-drive-power-530132/",
+     "source": "Cars.com",
+     "title": "Toyota Recalls 31,000 RAV4 Plug-in Hybrids for Loss of Drive Power"
+    },
+    {
+     "iso_date": "2026-10-15T07:00:00Z",
+     "link": "https://www.usatoday.com/story/cars/recalls/2026/10/15/toyota-rav4-plug-in-hybrid-worth-considering-recall/92262367007/",
+     "source": "USA Today",
+     "title": "Would I still recommend Toyota's recalled RAV4 Plug-In Hybrid?"
+    },
+    {
+     "iso_date": "2026-10-15T07:00:00Z",
+     "link": "https://www.9news.com/article/news/nation-world/toyota-recall-rav-4-plug-in-hybrid-vehicles/507-7f30f54e-d2ac-4413-8ca9-a29c1a682764",
+     "source": "9News",
+     "title": "Toyota recalls 30,000 RAV4 Plug-in Hybrids that may shut down at high speeds"
+    },
+    {
+     "iso_date": "2026-10-15T17:50:00Z",
+     "link": "https://www.wcax.com/2026/10/15/toyota-recalls-thousands-rav-4s-because-vehicles-could-shut-down-heres-why/",
+     "source": "WCAX",
+     "title": "Toyota recalls thousands of RAV4s because vehicles could shut down. Here\u2019s why"
+    }
+   ]
+  },
+  "source": "SerpApi Google News"
+ },
+ "e21b22a0c07211a24b2100d38a9cd3ccc9b1568d7c2f6181751052e3fb4eda9c": {
+  "engine": "google_trends",
+  "fetched_at": "2026-10-25T02:56:51.948206+00:00",
+  "key": "e21b22a0c07211a24b2100d38a9cd3ccc9b1568d7c2f6181751052e3fb4eda9c",
+  "params": {
+   "data_type": "TIMESERIES",
+   "date": "today 12-m",
+   "geo": "US",
+   "q": "Toyota RAV4,Toyota Camry,Toyota Prius,Toyota Tacoma,Toyota Highlander"
+  },
+  "response": {
+   "interest_over_time": {
+    "averages": [
+     {
+      "query": "Toyota RAV4",
+      "value": 56
+     },
+     {
+      "query": "Toyota Camry",
+      "value": 77
+     },
+     {
+      "query": "Toyota Prius",
+      "value": 23
+     },
+     {
+      "query": "Toyota Tacoma",
+      "value": 69
+     },
+     {
+      "query": "Toyota Highlander",
+      "value": 52
+     }
+    ],
+    "timeline_data": [
+     {
+      "date": "Oct 19\u2009\u2013\u200925, 2025",
+      "timestamp": "1760832000",
+      "values": [
+       {
+        "extracted_value": 35,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "35"
+       },
+       {
+        "extracted_value": 57,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "57"
+       },
+       {
+        "extracted_value": 14,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "14"
+       },
+       {
+        "extracted_value": 48,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "48"
+       },
+       {
+        "extracted_value": 36,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "36"
+       }
+      ]
+     },
+     {
+      "date": "Oct 26\u2009\u2013\u2009Nov 1, 2025",
+      "timestamp": "1761436800",
+      "values": [
+       {
+        "extracted_value": 34,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "34"
+       },
+       {
+        "extracted_value": 60,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "60"
+       },
+       {
+        "extracted_value": 13,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "13"
+       },
+       {
+        "extracted_value": 46,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "46"
+       },
+       {
+        "extracted_value": 35,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "35"
+       }
+      ]
+     },
+     {
+      "date": "Nov 2\u2009\u2013\u20098, 2025",
+      "timestamp": "1762041600",
+      "values": [
+       {
+        "extracted_value": 35,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "35"
+       },
+       {
+        "extracted_value": 60,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "60"
+       },
+       {
+        "extracted_value": 14,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "14"
+       },
+       {
+        "extracted_value": 48,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "48"
+       },
+       {
+        "extracted_value": 37,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "37"
+       }
+      ]
+     },
+     {
+      "date": "Nov 9\u2009\u2013\u200915, 2025",
+      "timestamp": "1762646400",
+      "values": [
+       {
+        "extracted_value": 38,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "38"
+       },
+       {
+        "extracted_value": 61,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "61"
+       },
+       {
+        "extracted_value": 14,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "14"
+       },
+       {
+        "extracted_value": 49,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "49"
+       },
+       {
+        "extracted_value": 37,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "37"
+       }
+      ]
+     },
+     {
+      "date": "Nov 16\u2009\u2013\u200922, 2025",
+      "timestamp": "1763251200",
+      "values": [
+       {
+        "extracted_value": 36,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "36"
+       },
+       {
+        "extracted_value": 60,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "60"
+       },
+       {
+        "extracted_value": 15,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "15"
+       },
+       {
+        "extracted_value": 51,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "51"
+       },
+       {
+        "extracted_value": 37,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "37"
+       }
+      ]
+     },
+     {
+      "date": "Nov 23\u2009\u2013\u200929, 2025",
+      "timestamp": "1763856000",
+      "values": [
+       {
+        "extracted_value": 38,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "38"
+       },
+       {
+        "extracted_value": 62,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "62"
+       },
+       {
+        "extracted_value": 15,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "15"
+       },
+       {
+        "extracted_value": 51,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "51"
+       },
+       {
+        "extracted_value": 38,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "38"
+       }
+      ]
+     },
+     {
+      "date": "Nov 30\u2009\u2013\u2009Dec 6, 2025",
+      "timestamp": "1764460800",
+      "values": [
+       {
+        "extracted_value": 38,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "38"
+       },
+       {
+        "extracted_value": 61,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "61"
+       },
+       {
+        "extracted_value": 14,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "14"
+       },
+       {
+        "extracted_value": 53,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "53"
+       },
+       {
+        "extracted_value": 37,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "37"
+       }
+      ]
+     },
+     {
+      "date": "Dec 7\u2009\u2013\u200913, 2025",
+      "timestamp": "1765065600",
+      "values": [
+       {
+        "extracted_value": 38,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "38"
+       },
+       {
+        "extracted_value": 59,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "59"
+       },
+       {
+        "extracted_value": 15,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "15"
+       },
+       {
+        "extracted_value": 50,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "50"
+       },
+       {
+        "extracted_value": 38,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "38"
+       }
+      ]
+     },
+     {
+      "date": "Dec 14\u2009\u2013\u200920, 2025",
+      "timestamp": "1765670400",
+      "values": [
+       {
+        "extracted_value": 37,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "37"
+       },
+       {
+        "extracted_value": 56,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "56"
+       },
+       {
+        "extracted_value": 14,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "14"
+       },
+       {
+        "extracted_value": 48,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "48"
+       },
+       {
+        "extracted_value": 36,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "36"
+       }
+      ]
+     },
+     {
+      "date": "Dec 21\u2009\u2013\u200927, 2025",
+      "timestamp": "1766275200",
+      "values": [
+       {
+        "extracted_value": 41,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "41"
+       },
+       {
+        "extracted_value": 62,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "62"
+       },
+       {
+        "extracted_value": 14,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "14"
+       },
+       {
+        "extracted_value": 55,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "55"
+       },
+       {
+        "extracted_value": 42,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "42"
+       }
+      ]
+     },
+     {
+      "date": "Dec 28, 2025\u2009\u2013\u2009Jan 3, 2026",
+      "timestamp": "1766880000",
+      "values": [
+       {
+        "extracted_value": 42,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "42"
+       },
+       {
+        "extracted_value": 63,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "63"
+       },
+       {
+        "extracted_value": 15,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "15"
+       },
+       {
+        "extracted_value": 53,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "53"
+       },
+       {
+        "extracted_value": 44,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "44"
+       }
+      ]
+     },
+     {
+      "date": "Jan 4\u2009\u2013\u200910, 2026",
+      "timestamp": "1767484800",
+      "values": [
+       {
+        "extracted_value": 37,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "37"
+       },
+       {
+        "extracted_value": 61,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "61"
+       },
+       {
+        "extracted_value": 15,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "15"
+       },
+       {
+        "extracted_value": 49,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "49"
+       },
+       {
+        "extracted_value": 37,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "37"
+       }
+      ]
+     },
+     {
+      "date": "Jan 11\u2009\u2013\u200917, 2026",
+      "timestamp": "1768089600",
+      "values": [
+       {
+        "extracted_value": 38,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "38"
+       },
+       {
+        "extracted_value": 62,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "62"
+       },
+       {
+        "extracted_value": 15,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "15"
+       },
+       {
+        "extracted_value": 52,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "52"
+       },
+       {
+        "extracted_value": 39,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "39"
+       }
+      ]
+     },
+     {
+      "date": "Jan 18\u2009\u2013\u200924, 2026",
+      "timestamp": "1768694400",
+      "values": [
+       {
+        "extracted_value": 38,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "38"
+       },
+       {
+        "extracted_value": 61,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "61"
+       },
+       {
+        "extracted_value": 14,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "14"
+       },
+       {
+        "extracted_value": 53,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "53"
+       },
+       {
+        "extracted_value": 39,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "39"
+       }
+      ]
+     },
+     {
+      "date": "Jan 25\u2009\u2013\u200931, 2026",
+      "timestamp": "1769299200",
+      "values": [
+       {
+        "extracted_value": 39,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "39"
+       },
+       {
+        "extracted_value": 57,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "57"
+       },
+       {
+        "extracted_value": 13,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "13"
+       },
+       {
+        "extracted_value": 52,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "52"
+       },
+       {
+        "extracted_value": 37,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "37"
+       }
+      ]
+     },
+     {
+      "date": "Feb 1\u2009\u2013\u20097, 2026",
+      "timestamp": "1769904000",
+      "values": [
+       {
+        "extracted_value": 43,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "43"
+       },
+       {
+        "extracted_value": 61,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "61"
+       },
+       {
+        "extracted_value": 14,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "14"
+       },
+       {
+        "extracted_value": 51,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "51"
+       },
+       {
+        "extracted_value": 38,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "38"
+       }
+      ]
+     },
+     {
+      "date": "Feb 8\u2009\u2013\u200914, 2026",
+      "timestamp": "1770508800",
+      "values": [
+       {
+        "extracted_value": 45,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "45"
+       },
+       {
+        "extracted_value": 65,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "65"
+       },
+       {
+        "extracted_value": 17,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "17"
+       },
+       {
+        "extracted_value": 58,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "58"
+       },
+       {
+        "extracted_value": 50,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "50"
+       }
+      ]
+     },
+     {
+      "date": "Feb 15\u2009\u2013\u200921, 2026",
+      "timestamp": "1771113600",
+      "values": [
+       {
+        "extracted_value": 58,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "58"
+       },
+       {
+        "extracted_value": 79,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "79"
+       },
+       {
+        "extracted_value": 25,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "25"
+       },
+       {
+        "extracted_value": 77,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "77"
+       },
+       {
+        "extracted_value": 59,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "59"
+       }
+      ]
+     },
+     {
+      "date": "Feb 22\u2009\u2013\u200928, 2026",
+      "timestamp": "1771718400",
+      "values": [
+       {
+        "extracted_value": 60,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "60"
+       },
+       {
+        "extracted_value": 79,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "79"
+       },
+       {
+        "extracted_value": 26,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "26"
+       },
+       {
+        "extracted_value": 78,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "78"
+       },
+       {
+        "extracted_value": 61,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "61"
+       }
+      ]
+     },
+     {
+      "date": "Mar 1\u2009\u2013\u20097, 2026",
+      "timestamp": "1772323200",
+      "values": [
+       {
+        "extracted_value": 62,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "62"
+       },
+       {
+        "extracted_value": 83,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "83"
+       },
+       {
+        "extracted_value": 27,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "27"
+       },
+       {
+        "extracted_value": 75,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "75"
+       },
+       {
+        "extracted_value": 60,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "60"
+       }
+      ]
+     },
+     {
+      "date": "Mar 8\u2009\u2013\u200914, 2026",
+      "timestamp": "1772928000",
+      "values": [
+       {
+        "extracted_value": 66,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "66"
+       },
+       {
+        "extracted_value": 84,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "84"
+       },
+       {
+        "extracted_value": 30,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "30"
+       },
+       {
+        "extracted_value": 78,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "78"
+       },
+       {
+        "extracted_value": 62,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "62"
+       }
+      ]
+     },
+     {
+      "date": "Mar 15\u2009\u2013\u200921, 2026",
+      "timestamp": "1773532800",
+      "values": [
+       {
+        "extracted_value": 67,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "67"
+       },
+       {
+        "extracted_value": 79,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "79"
+       },
+       {
+        "extracted_value": 30,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "30"
+       },
+       {
+        "extracted_value": 78,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "78"
+       },
+       {
+        "extracted_value": 61,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "61"
+       }
+      ]
+     },
+     {
+      "date": "Mar 22\u2009\u2013\u200928, 2026",
+      "timestamp": "1774137600",
+      "values": [
+       {
+        "extracted_value": 65,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "65"
+       },
+       {
+        "extracted_value": 87,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "87"
+       },
+       {
+        "extracted_value": 29,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "29"
+       },
+       {
+        "extracted_value": 79,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "79"
+       },
+       {
+        "extracted_value": 59,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "59"
+       }
+      ]
+     },
+     {
+      "date": "Mar 29\u2009\u2013\u2009Apr 4, 2026",
+      "timestamp": "1774742400",
+      "values": [
+       {
+        "extracted_value": 72,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "72"
+       },
+       {
+        "extracted_value": 92,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "92"
+       },
+       {
+        "extracted_value": 32,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "32"
+       },
+       {
+        "extracted_value": 85,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "85"
+       },
+       {
+        "extracted_value": 62,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "62"
+       }
+      ]
+     },
+     {
+      "date": "Apr 5\u2009\u2013\u200911, 2026",
+      "timestamp": "1775347200",
+      "values": [
+       {
+        "extracted_value": 76,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "76"
+       },
+       {
+        "extracted_value": 99,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "99"
+       },
+       {
+        "extracted_value": 35,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "35"
+       },
+       {
+        "extracted_value": 96,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "96"
+       },
+       {
+        "extracted_value": 63,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "63"
+       }
+      ]
+     },
+     {
+      "date": "Apr 12\u2009\u2013\u200918, 2026",
+      "timestamp": "1775952000",
+      "values": [
+       {
+        "extracted_value": 78,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "78"
+       },
+       {
+        "extracted_value": 100,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "100"
+       },
+       {
+        "extracted_value": 36,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "36"
+       },
+       {
+        "extracted_value": 91,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "91"
+       },
+       {
+        "extracted_value": 66,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "66"
+       }
+      ]
+     },
+     {
+      "date": "Apr 19\u2009\u2013\u200925, 2026",
+      "timestamp": "1776556800",
+      "values": [
+       {
+        "extracted_value": 74,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "74"
+       },
+       {
+        "extracted_value": 95,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "95"
+       },
+       {
+        "extracted_value": 32,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "32"
+       },
+       {
+        "extracted_value": 93,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "93"
+       },
+       {
+        "extracted_value": 67,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "67"
+       }
+      ]
+     },
+     {
+      "date": "Apr 26\u2009\u2013\u2009May 2, 2026",
+      "timestamp": "1777161600",
+      "values": [
+       {
+        "extracted_value": 73,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "73"
+       },
+       {
+        "extracted_value": 87,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "87"
+       },
+       {
+        "extracted_value": 29,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "29"
+       },
+       {
+        "extracted_value": 83,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "83"
+       },
+       {
+        "extracted_value": 64,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "64"
+       }
+      ]
+     },
+     {
+      "date": "May 3\u2009\u2013\u20099, 2026",
+      "timestamp": "1777766400",
+      "values": [
+       {
+        "extracted_value": 71,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "71"
+       },
+       {
+        "extracted_value": 95,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "95"
+       },
+       {
+        "extracted_value": 30,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "30"
+       },
+       {
+        "extracted_value": 86,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "86"
+       },
+       {
+        "extracted_value": 63,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "63"
+       }
+      ]
+     },
+     {
+      "date": "May 10\u2009\u2013\u200916, 2026",
+      "timestamp": "1778371200",
+      "values": [
+       {
+        "extracted_value": 71,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "71"
+       },
+       {
+        "extracted_value": 95,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "95"
+       },
+       {
+        "extracted_value": 31,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "31"
+       },
+       {
+        "extracted_value": 88,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "88"
+       },
+       {
+        "extracted_value": 63,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "63"
+       }
+      ]
+     },
+     {
+      "date": "May 17\u2009\u2013\u200923, 2026",
+      "timestamp": "1778976000",
+      "values": [
+       {
+        "extracted_value": 75,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "75"
+       },
+       {
+        "extracted_value": 97,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "97"
+       },
+       {
+        "extracted_value": 34,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "34"
+       },
+       {
+        "extracted_value": 91,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "91"
+       },
+       {
+        "extracted_value": 63,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "63"
+       }
+      ]
+     },
+     {
+      "date": "May 24\u2009\u2013\u200930, 2026",
+      "timestamp": "1779580800",
+      "values": [
+       {
+        "extracted_value": 70,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "70"
+       },
+       {
+        "extracted_value": 92,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "92"
+       },
+       {
+        "extracted_value": 32,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "32"
+       },
+       {
+        "extracted_value": 88,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "88"
+       },
+       {
+        "extracted_value": 66,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "66"
+       }
+      ]
+     },
+     {
+      "date": "May 31\u2009\u2013\u2009Jun 6, 2026",
+      "timestamp": "1780185600",
+      "values": [
+       {
+        "extracted_value": 74,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "74"
+       },
+       {
+        "extracted_value": 91,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "91"
+       },
+       {
+        "extracted_value": 31,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "31"
+       },
+       {
+        "extracted_value": 82,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "82"
+       },
+       {
+        "extracted_value": 65,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "65"
+       }
+      ]
+     },
+     {
+      "date": "Jun 7\u2009\u2013\u200913, 2026",
+      "timestamp": "1780790400",
+      "values": [
+       {
+        "extracted_value": 76,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "76"
+       },
+       {
+        "extracted_value": 95,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "95"
+       },
+       {
+        "extracted_value": 32,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "32"
+       },
+       {
+        "extracted_value": 89,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "89"
+       },
+       {
+        "extracted_value": 66,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "66"
+       }
+      ]
+     },
+     {
+      "date": "Jun 14\u2009\u2013\u200920, 2026",
+      "timestamp": "1781395200",
+      "values": [
+       {
+        "extracted_value": 68,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "68"
+       },
+       {
+        "extracted_value": 89,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "89"
+       },
+       {
+        "extracted_value": 29,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "29"
+       },
+       {
+        "extracted_value": 81,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "81"
+       },
+       {
+        "extracted_value": 65,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "65"
+       }
+      ]
+     },
+     {
+      "date": "Jun 21\u2009\u2013\u200927, 2026",
+      "timestamp": "1782000000",
+      "values": [
+       {
+        "extracted_value": 79,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "79"
+       },
+       {
+        "extracted_value": 97,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "97"
+       },
+       {
+        "extracted_value": 33,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "33"
+       },
+       {
+        "extracted_value": 93,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "93"
+       },
+       {
+        "extracted_value": 72,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "72"
+       }
+      ]
+     },
+     {
+      "date": "Jun 28\u2009\u2013\u2009Jul 4, 2026",
+      "timestamp": "1782604800",
+      "values": [
+       {
+        "extracted_value": 79,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "79"
+       },
+       {
+        "extracted_value": 92,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "92"
+       },
+       {
+        "extracted_value": 33,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "33"
+       },
+       {
+        "extracted_value": 94,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "94"
+       },
+       {
+        "extracted_value": 72,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "72"
+       }
+      ]
+     },
+     {
+      "date": "Jul 5\u2009\u2013\u200911, 2026",
+      "timestamp": "1783209600",
+      "values": [
+       {
+        "extracted_value": 78,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "78"
+       },
+       {
+        "extracted_value": 93,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "93"
+       },
+       {
+        "extracted_value": 33,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "33"
+       },
+       {
+        "extracted_value": 90,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "90"
+       },
+       {
+        "extracted_value": 73,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "73"
+       }
+      ]
+     },
+     {
+      "date": "Jul 12\u2009\u2013\u200918, 2026",
+      "timestamp": "1783814400",
+      "values": [
+       {
+        "extracted_value": 69,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "69"
+       },
+       {
+        "extracted_value": 85,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "85"
+       },
+       {
+        "extracted_value": 26,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "26"
+       },
+       {
+        "extracted_value": 79,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "79"
+       },
+       {
+        "extracted_value": 79,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "79"
+       }
+      ]
+     },
+     {
+      "date": "Jul 19\u2009\u2013\u200925, 2026",
+      "timestamp": "1784419200",
+      "values": [
+       {
+        "extracted_value": 79,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "79"
+       },
+       {
+        "extracted_value": 96,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "96"
+       },
+       {
+        "extracted_value": 31,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "31"
+       },
+       {
+        "extracted_value": 91,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "91"
+       },
+       {
+        "extracted_value": 73,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "73"
+       }
+      ]
+     },
+     {
+      "date": "Jul 26\u2009\u2013\u2009Aug 1, 2026",
+      "timestamp": "1785024000",
+      "values": [
+       {
+        "extracted_value": 73,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "73"
+       },
+       {
+        "extracted_value": 89,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "89"
+       },
+       {
+        "extracted_value": 27,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "27"
+       },
+       {
+        "extracted_value": 84,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "84"
+       },
+       {
+        "extracted_value": 65,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "65"
+       }
+      ]
+     },
+     {
+      "date": "Aug 2\u2009\u2013\u20098, 2026",
+      "timestamp": "1785628800",
+      "values": [
+       {
+        "extracted_value": 65,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "65"
+       },
+       {
+        "extracted_value": 90,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "90"
+       },
+       {
+        "extracted_value": 27,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "27"
+       },
+       {
+        "extracted_value": 81,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "81"
+       },
+       {
+        "extracted_value": 63,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "63"
+       }
+      ]
+     },
+     {
+      "date": "Aug 9\u2009\u2013\u200915, 2026",
+      "timestamp": "1786233600",
+      "values": [
+       {
+        "extracted_value": 75,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "75"
+       },
+       {
+        "extracted_value": 98,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "98"
+       },
+       {
+        "extracted_value": 29,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "29"
+       },
+       {
+        "extracted_value": 95,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "95"
+       },
+       {
+        "extracted_value": 71,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "71"
+       }
+      ]
+     },
+     {
+      "date": "Aug 16\u2009\u2013\u200922, 2026",
+      "timestamp": "1786838400",
+      "values": [
+       {
+        "extracted_value": 73,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "73"
+       },
+       {
+        "extracted_value": 87,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "87"
+       },
+       {
+        "extracted_value": 29,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "29"
+       },
+       {
+        "extracted_value": 85,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "85"
+       },
+       {
+        "extracted_value": 66,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "66"
+       }
+      ]
+     },
+     {
+      "date": "Aug 23\u2009\u2013\u200929, 2026",
+      "timestamp": "1787443200",
+      "values": [
+       {
+        "extracted_value": 61,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "61"
+       },
+       {
+        "extracted_value": 80,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "80"
+       },
+       {
+        "extracted_value": 26,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "26"
+       },
+       {
+        "extracted_value": 74,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "74"
+       },
+       {
+        "extracted_value": 56,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "56"
+       }
+      ]
+     },
+     {
+      "date": "Aug 30\u2009\u2013\u2009Sep 5, 2026",
+      "timestamp": "1788048000",
+      "values": [
+       {
+        "extracted_value": 51,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "51"
+       },
+       {
+        "extracted_value": 74,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "74"
+       },
+       {
+        "extracted_value": 20,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "20"
+       },
+       {
+        "extracted_value": 65,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "65"
+       },
+       {
+        "extracted_value": 48,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "48"
+       }
+      ]
+     },
+     {
+      "date": "Sep 6\u2009\u2013\u200912, 2026",
+      "timestamp": "1788652800",
+      "values": [
+       {
+        "extracted_value": 41,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "41"
+       },
+       {
+        "extracted_value": 69,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "69"
+       },
+       {
+        "extracted_value": 16,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "16"
+       },
+       {
+        "extracted_value": 57,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "57"
+       },
+       {
+        "extracted_value": 42,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "42"
+       }
+      ]
+     },
+     {
+      "date": "Sep 13\u2009\u2013\u200919, 2026",
+      "timestamp": "1789257600",
+      "values": [
+       {
+        "extracted_value": 45,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "45"
+       },
+       {
+        "extracted_value": 66,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "66"
+       },
+       {
+        "extracted_value": 18,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "18"
+       },
+       {
+        "extracted_value": 58,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "58"
+       },
+       {
+        "extracted_value": 42,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "42"
+       }
+      ]
+     },
+     {
+      "date": "Sep 20\u2009\u2013\u200926, 2026",
+      "timestamp": "1789862400",
+      "values": [
+       {
+        "extracted_value": 41,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "41"
+       },
+       {
+        "extracted_value": 69,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "69"
+       },
+       {
+        "extracted_value": 16,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "16"
+       },
+       {
+        "extracted_value": 53,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "53"
+       },
+       {
+        "extracted_value": 40,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "40"
+       }
+      ]
+     },
+     {
+      "date": "Sep 27\u2009\u2013\u2009Oct 3, 2026",
+      "timestamp": "1790467200",
+      "values": [
+       {
+        "extracted_value": 38,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "38"
+       },
+       {
+        "extracted_value": 66,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "66"
+       },
+       {
+        "extracted_value": 16,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "16"
+       },
+       {
+        "extracted_value": 51,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "51"
+       },
+       {
+        "extracted_value": 40,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "40"
+       }
+      ]
+     },
+     {
+      "date": "Oct 4\u2009\u2013\u200910, 2026",
+      "timestamp": "1791072000",
+      "values": [
+       {
+        "extracted_value": 38,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "38"
+       },
+       {
+        "extracted_value": 64,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "64"
+       },
+       {
+        "extracted_value": 18,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "18"
+       },
+       {
+        "extracted_value": 52,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "52"
+       },
+       {
+        "extracted_value": 39,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "39"
+       }
+      ]
+     },
+     {
+      "date": "Oct 11\u2009\u2013\u200917, 2026",
+      "timestamp": "1791676800",
+      "values": [
+       {
+        "extracted_value": 40,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "40"
+       },
+       {
+        "extracted_value": 62,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "62"
+       },
+       {
+        "extracted_value": 14,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "14"
+       },
+       {
+        "extracted_value": 46,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "46"
+       },
+       {
+        "extracted_value": 37,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "37"
+       }
+      ]
+     },
+     {
+      "date": "Oct 18\u2009\u2013\u200924, 2026",
+      "timestamp": "1792281600",
+      "values": [
+       {
+        "extracted_value": 35,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "35"
+       },
+       {
+        "extracted_value": 61,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "61"
+       },
+       {
+        "extracted_value": 13,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "13"
+       },
+       {
+        "extracted_value": 53,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "53"
+       },
+       {
+        "extracted_value": 34,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "34"
+       }
+      ]
+     },
+     {
+      "date": "Oct 25\u2009\u2013\u200931, 2026",
+      "partial_data": true,
+      "timestamp": "1792886400",
+      "values": [
+       {
+        "extracted_value": 31,
+        "query": "Toyota RAV4",
+        "query_index": 0,
+        "value": "31"
+       },
+       {
+        "extracted_value": 48,
+        "query": "Toyota Camry",
+        "query_index": 1,
+        "value": "48"
+       },
+       {
+        "extracted_value": 12,
+        "query": "Toyota Prius",
+        "query_index": 2,
+        "value": "12"
+       },
+       {
+        "extracted_value": 41,
+        "query": "Toyota Tacoma",
+        "query_index": 3,
+        "value": "41"
+       },
+       {
+        "extracted_value": 29,
+        "query": "Toyota Highlander",
+        "query_index": 4,
+        "value": "29"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "source": "SerpApi Google Trends"
+ },
+ "efd19df5d64579324a978cbbf58a92d69755ed56db0a919e598700268102f4a2": {
+  "engine": "google_news",
+  "fetched_at": "2026-10-25T02:56:11.072450+00:00",
+  "key": "efd19df5d64579324a978cbbf58a92d69755ed56db0a919e598700268102f4a2",
+  "params": {
+   "gl": "us",
+   "hl": "en",
+   "q": "Toyota Camry recall"
+  },
+  "response": {
+   "news_results": [
+    {
+     "iso_date": "2026-10-24T11:15:47Z",
+     "link": "https://www.autonocion.com/us/toyota-land-cruiser-recall-2026/",
+     "source": "Autonocion.com",
+     "title": "Toyota Faces Another Recall in 2026, This Time Impacting Over 105,000 Land Cruisers"
+    },
+    {
+     "iso_date": "2026-08-11T07:00:00Z",
+     "link": "https://www.foxbusiness.com/lifestyle/toyota-recalls-655k-camrys-globally-over-display-defect-can-knock-out-safety-indicators",
+     "source": "Fox Business",
+     "title": "Toyota recalls 655K Camrys globally over display defect that can knock out safety indicators"
+    },
+    {
+     "iso_date": "2026-08-11T07:00:00Z",
+     "link": "https://www.caranddriver.com/news/a73402826/2025-2026-toyota-camry-recall-blank-instrument-cluster/",
+     "source": "Car and Driver",
+     "title": "Toyota Recalls 500K Camrys over Blank Digital Gauge Display"
+    },
+    {
+     "iso_date": "2026-08-14T07:00:00Z",
+     "link": "https://www.wardsauto.com/news/toyota-recalls-508k-camry-hybrids-for-blank-instrument-cluster-displays/827854/",
+     "source": "WardsAuto",
+     "title": "Toyota recalls 508K Camry Hybrids for blank instrument cluster displays"
+    },
+    {
+     "iso_date": "2026-10-22T15:30:00Z",
+     "link": "https://www.autoblog.com/features/ranking-toyotas-5-biggest-recalls-of-2026",
+     "source": "Autoblog",
+     "title": "Toyota\u2019s 6 Biggest Recalls of 2026 Affect Nearly 1.7 Million Vehicles"
+    },
+    {
+     "iso_date": "2026-08-11T07:00:00Z",
+     "link": "https://apnews.com/article/toyota-camry-recall-safety-display-42839afc0e53d3bc56155c6c72575cad",
+     "source": "AP News",
+     "title": "Toyota recalls 655K Camrys over display error that may deactivate turn signals and other indicators"
+    },
+    {
+     "iso_date": "2026-08-11T07:00:00Z",
+     "link": "https://tflcar.com/2026/08/toyota-camry-instrument-cluster-display-recall/",
+     "source": "TFLcar",
+     "title": "Toyota Recalls More Than 500,000 New Camrys for Blank Cluster Screens and Deactivated Turn Signals"
+    },
+    {
+     "iso_date": "2026-08-12T07:00:00Z",
+     "link": "https://www.abccolumbia.com/2026/08/12/toyota-recalls-over-500k-vehicles-due-to-software-issue/",
+     "source": "ABC Columbia",
+     "title": "Toyota recalls over 500K vehicles due to software issue"
+    },
+    {
+     "iso_date": "2026-08-12T07:00:00Z",
+     "link": "https://www.wral.com/video/toyota-camry-hybrid-recall-august-2026/",
+     "source": "WRAL",
+     "title": "Toyota recalls 500,000 Camry hybrids due to safety issue"
+    },
+    {
+     "iso_date": "2026-08-08T07:00:00Z",
+     "link": "https://roadethos.com/news/toyota-recalls-508000-camrys-over-blank-driver-displays",
+     "source": "Road Ethos",
+     "title": "Toyota Recalls 508,000 Camrys Over Blank Driver Displays"
+    },
+    {
+     "iso_date": "2026-08-12T07:00:00Z",
+     "link": "https://www.facebook.com/Boston25News/posts/the-number-of-recalls-includes-508354-2025-2026-camry-hybrids-that-were-produced/1538925464935781/",
+     "source": "Facebook",
+     "title": "The number of recalls includes 508,354 2025-2026 Camry Hybrids that were produced in the United States."
+    },
+    {
+     "iso_date": "2026-08-13T07:00:00Z",
+     "link": "https://www.local3news.com/local-news/recall-alert-toyota-recalls-655k-camrys-over-software-issue/article_3fd318cb-2fe1-4f7d-802b-dcb8a14c0184.html",
+     "source": "Local 3 News",
+     "title": "RECALL ALERT: Toyota recalls 655K Camrys over software issue"
+    },
+    {
+     "iso_date": "2026-08-13T07:00:00Z",
+     "link": "https://nbcmontana.com/news/local/toyota-recalls-more-than-500000-camry-hybrids-climbing-ropes-also-recalled",
+     "source": "NBC Montana",
+     "title": "Toyota recalls more than 500,000 Camry hybrids; climbing ropes also recalled"
+    },
+    {
+     "iso_date": "2026-08-11T07:00:00Z",
+     "link": "https://carbuzz.com/toyota-camry-half-million-software-glitch-instrument-display-august-2026/",
+     "source": "CarBuzz",
+     "title": "Toyota Recalls Half A Million Camrys Over A Simple Glitch"
+    },
+    {
+     "iso_date": "2026-08-11T07:00:00Z",
+     "link": "https://www.reuters.com/legal/litigation/toyota-recall-over-508000-us-vehicles-over-instrument-cluster-display-issues-2026-08-11/",
+     "source": "Reuters",
+     "title": "Toyota to recall over 508,000 US vehicles over instrument cluster display issues"
+    }
+   ]
+  },
+  "source": "SerpApi Google News"
+ },
+ "f3ddf66b4686462bbfa3b32bb0280f7a63d328dd91aa28913e8fc49ee4153c31": {
+  "engine": "youtube",
+  "fetched_at": "2026-10-25T02:55:58.332516+00:00",
+  "key": "f3ddf66b4686462bbfa3b32bb0280f7a63d328dd91aa28913e8fc49ee4153c31",
+  "params": {
+   "search_query": "2022 Toyota Camry review"
+  },
+  "response": {
+   "video_results": [
+    {
+     "channel": {
+      "name": "CarGurus"
+     },
+     "link": "https://www.youtube.com/watch?v=TK3tfskBFtU",
+     "title": "Long live the sedan! | 2022 Toyota Camry Review"
+    },
+    {
+     "channel": {
+      "name": "Everyman Driver"
+     },
+     "link": "https://www.youtube.com/watch?v=ieM7ToPM_5A",
+     "title": "Watch Before You Buy A 2022 Toyota Camry"
+    },
+    {
+     "channel": {
+      "name": "Shooting Cars"
+     },
+     "link": "https://www.youtube.com/watch?v=rps6gm9lRKw",
+     "title": "2022 Toyota Camry LE Review - Safe & Warm"
+    },
+    {
+     "channel": {
+      "name": "Hawkeye Rides"
+     },
+     "link": "https://www.youtube.com/watch?v=OQelbIz2mQc",
+     "title": "2022 Toyota Camry SE: All Specs & Test Drive"
+    },
+    {
+     "channel": {
+      "name": "W.T.F Car Reviews"
+     },
+     "link": "https://www.youtube.com/watch?v=Pk6kdVbB_wQ",
+     "title": "2022 Toyota Camry SE: TEST DRIVE+FULL REVIEW"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube"
+ },
+ "f84ebd84e510d679256acffcb1116b5abbbfab71783f1a596065502ba34892c6": {
+  "engine": "youtube_video_transcript",
+  "fetched_at": "2026-10-25T02:55:47.903941+00:00",
+  "key": "f84ebd84e510d679256acffcb1116b5abbbfab71783f1a596065502ba34892c6",
+  "params": {
+   "language_code": "en",
+   "v": "LOwAE5aHvbs"
+  },
+  "response": {
+   "transcript": [
+    {
+     "snippet": "[Music]"
+    },
+    {
+     "snippet": "the RAV4 is crossover royalty it sits"
+    },
+    {
+     "snippet": "atop its competitors in sales and like a"
+    },
+    {
+     "snippet": "true king many would argue that its"
+    },
+    {
+     "snippet": "bloodline is the biggest reason behind"
+    },
+    {
+     "snippet": "its success today we'll drive a new and"
+    },
+    {
+     "snippet": "used one and evaluate its attributes to"
+    },
+    {
+     "snippet": "answer the big question does the RAV4"
+    },
+    {
+     "snippet": "deserve its Crown I would put my money"
+    },
+    {
+     "snippet": "on 2024 being the last year of this"
+    },
+    {
+     "snippet": "generation despite that the RAV4 remains"
+    },
+    {
+     "snippet": "of highly competitive vehicle for a"
+    },
+    {
+     "snippet": "variety of reasons one big"
+    },
+    {
+     "snippet": "differentiating factor is the"
+    },
+    {
+     "snippet": "versatility this is packaged well so the"
+    }
+   ]
+  },
+  "source": "SerpApi YouTube Transcript"
+ }
+}

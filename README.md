@@ -46,6 +46,14 @@ Seed Supabase (one-shot, optional; create the `customers` table first, SQL is in
 cd services/api && SUPABASE_URL=... SUPABASE_SERVICE_KEY=... uv run python -m sim.seed_supabase
 ```
 
+## API: tools + SerpApi (B2)
+
+- `services/api/tools/`: the 12 SPEC §4 tools in one registry (`registry.py`): JSON schema from each Pydantic input, `openai_tools()` for Grok, and an MCP server (`mcp_server.py`) for Claude. Run one alone: `uv run python -m tools` (list) or `uv run python -m tools get_market_value '{"model":"RAV4"}'`.
+- `services/api/serpapi/`: cached SerpApi lookups. Order: Supabase `serpapi_cache` → committed `snapshot.json` → live (only on a miss, max 10 per process, never when `NEXTMOVE_OFFLINE=1`). Market value in every scenario comes from cached comps (source + as-of in the assumptions), with the depreciation table as fallback.
+- `GET /market/{model}?year=` returns a `MarketQuote`.
+- `pnpm dev` runs from the snapshot (works offline). `pnpm --filter @nextmove/api dev:live` loads `.env.local` to use Supabase and live SerpApi.
+- Cache table: `services/api/migrations/001_serpapi_cache.sql`. Re-seed the 3 personas (cache hits are free): `pnpm --filter @nextmove/api seed:cache`.
+
 ## Contract
 
 `packages/contracts/openapi.yaml` is the source of truth. After editing it, run `pnpm gen` to regenerate the TS types and the API's Pydantic models.
