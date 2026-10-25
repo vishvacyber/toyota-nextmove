@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
 import type { Handoff, Session } from "@nextmove/contracts";
-import { useApi } from "@nextmove/contracts/client";
+import { api, useApi } from "@nextmove/contracts/client";
 import { RealtimeBadge } from "@/components/realtime-badge";
-import { ApiState } from "@/components/state";
+import { ApiState, Empty } from "@/components/state";
+import { useToast } from "@/components/toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { EMPLOYEE_ID } from "@/lib/employee";
 import { asOf, label } from "@/lib/format";
 import { useHandoffs } from "@/lib/handoffs";
+import { MockBadge } from "@/components/mock-provider";
 
 const ORDER: Record<Handoff["status"], number> = { waiting: 0, claimed: 1, resolved: 2 };
 const DEV = process.env.NODE_ENV !== "production";
@@ -20,15 +21,14 @@ const customer = (id: string) => <Link href={`/customers/${id}`} className="font
 
 export default function LiveActivity() {
   const sessions = useApi<Session[]>("/sessions");
-  const { handoffs, error, realtime, claim, broadcast } = useHandoffs();
-  const [claimError, setClaimError] = useState<Error>();
+  const { handoffs, error, loading, realtime, claim, broadcast } = useHandoffs();
+  const toast = useToast();
   const inbox = [...handoffs].sort((a, b) => ORDER[a.status] - ORDER[b.status] || b.created_at.localeCompare(a.created_at));
 
+  // Dev only: creates a real handoff, the same call the kiosk makes.
   function simulate() {
-    broadcast("created", {
-      id: `HO-SIM-${Date.now()}`, customer_id: "CUST-MARIA", reason: "Talk to a person about lease buyout", surface: "kiosk",
-      status: "waiting", context_summary: "Simulated from the console (dev only)", created_at: new Date().toISOString(),
-    });
+    api<Handoff>("/handoffs", { method: "POST", body: JSON.stringify({ customer_id: "CUST-MARIA", reason: "Talk to a person about lease buyout", surface: "kiosk" }) })
+      .then((h) => broadcast("created", h), (e: Error) => toast(`Couldn't create handoff: ${e.message}`, true));
   }
 
   return (
@@ -38,7 +38,7 @@ export default function LiveActivity() {
         <Card size="sm">
           <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">
             <div>
-              <CardTitle>Handoff inbox</CardTitle>
+              <CardTitle className="flex items-center gap-2">Handoff inbox <MockBadge path="/handoffs" /></CardTitle>
               <CardDescription>Customers who asked for a person</CardDescription>
             </div>
             <div className="flex items-center gap-2">
@@ -47,7 +47,7 @@ export default function LiveActivity() {
             </div>
           </CardHeader>
           <CardContent className="space-y-2">
-            <ApiState loading={false} error={error ?? claimError} />
+            <ApiState loading={loading} error={error} />
             <ul className="space-y-2" aria-label="Handoffs" aria-live="polite">
               {inbox.map((h) => (
                 <li key={h.id} className="flex items-start justify-between gap-3 rounded-md border p-3 text-sm">
@@ -59,18 +59,18 @@ export default function LiveActivity() {
                   <div className="flex shrink-0 flex-col items-end gap-1">
                     <Badge variant={h.status === "waiting" ? "default" : "secondary"}>{label(h.status)}</Badge>
                     {h.status === "waiting" ? (
-                      <Button size="sm" onClick={() => claim(h, EMPLOYEE_ID).then(() => setClaimError(undefined), setClaimError)}>Claim</Button>
+                      <Button size="sm" onClick={() => claim(h, EMPLOYEE_ID).then(() => toast(`Claimed handoff from ${h.customer_id}`), (e: Error) => toast(`Claim failed: ${e.message}`, true))}>Claim</Button>
                     ) : h.claimed_by && <span className="text-xs text-muted-foreground">by {h.claimed_by}</span>}
                   </div>
                 </li>
               ))}
-              {!inbox.length && <li className="text-sm text-muted-foreground">No handoffs.</li>}
+              {!loading && !inbox.length && <li><Empty>No handoffs. New requests from the app or kiosk appear here live.</Empty></li>}
             </ul>
           </CardContent>
         </Card>
 
         <Card size="sm">
-          <CardHeader><CardTitle>Live sessions</CardTitle><CardDescription>Customers in the app or kiosk now</CardDescription></CardHeader>
+          <CardHeader><CardTitle className="flex items-center gap-2">Live sessions <MockBadge path="/sessions" /></CardTitle><CardDescription>Customers in the app or kiosk now</CardDescription></CardHeader>
           <CardContent>
             <ApiState loading={sessions.loading} error={sessions.error} />
             <Table>

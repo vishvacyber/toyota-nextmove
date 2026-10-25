@@ -5,13 +5,15 @@ import { Suspense, useState } from "react";
 import type { AuditEntry, components, Opportunity, OptionType, Recommendation } from "@nextmove/contracts";
 import { api, useApi } from "@nextmove/contracts/client";
 import { ScenarioTable } from "@/components/scenario-table";
-import { ApiState } from "@/components/state";
+import { ApiState, Empty } from "@/components/state";
+import { useToast } from "@/components/toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EMPLOYEE_ID } from "@/lib/employee";
 import { asOf, label, pct, usd } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { MockBadge } from "@/components/mock-provider";
 
 type RecommendationReview = components["schemas"]["RecommendationReview"];
 
@@ -48,6 +50,7 @@ function Review() {
                 </li>
               ))}
             </ul>
+            {opps.data && !list.length && <Empty>No customers in the queue.</Empty>}
           </CardContent>
         </Card>
         {id && <ReviewPanel key={id} id={id} opp={opp} />}
@@ -117,6 +120,7 @@ function ReviewForm({ id, options, recommended }: { id: string; options: { optio
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<Error>();
   const [audit, setAudit] = useState<AuditEntry>();
+  const toast = useToast();
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -124,9 +128,12 @@ function ReviewForm({ id, options, recommended }: { id: string; options: { optio
     setBusy(true);
     setError(undefined);
     try {
-      setAudit(await api<AuditEntry>(`/customers/${id}/recommendation/review`, { method: "POST", body: JSON.stringify(body) }));
+      const entry = await api<AuditEntry>(`/customers/${id}/recommendation/review`, { method: "POST", body: JSON.stringify(body) });
+      setAudit(entry);
+      toast(`${label(entry.action)} for ${id} · audit ${entry.id}`);
     } catch (err) {
       setError(err as Error);
+      toast(`Review not saved: ${(err as Error).message}`, true);
     } finally {
       setBusy(false);
     }
@@ -134,7 +141,7 @@ function ReviewForm({ id, options, recommended }: { id: string; options: { optio
 
   return (
     <Card size="sm">
-      <CardHeader><CardTitle>Decision</CardTitle><CardDescription>L3: your approval releases this to the customer</CardDescription></CardHeader>
+      <CardHeader><CardTitle className="flex items-center gap-2">Decision <MockBadge path="/customers/:id/recommendation/review" /></CardTitle><CardDescription>L3: your approval releases this to the customer</CardDescription></CardHeader>
       <CardContent>
         {audit ? (
           <div role="status" className="space-y-1 text-sm">

@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { asOf, pct } from "@/lib/format";
 import { KPIS, kpiSource, type Metric } from "@/lib/kpis";
+import { MockBadge } from "@/components/mock-provider";
 
 type Assumptions = KpiSnapshot["assumptions"];
 
@@ -51,7 +52,7 @@ export default function Proof() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-semibold">Proof</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-semibold">Proof <MockBadge path="/kpis" /></h1>
           <p className="text-sm text-muted-foreground">Baseline vs NextMove across the synthetic portfolio. Move an assumption to re-run the simulation.</p>
         </div>
         {k && <p className="text-xs text-muted-foreground">{kpiSource(k)} · as of {asOf(k.as_of)}</p>}

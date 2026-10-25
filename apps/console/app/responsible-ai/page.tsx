@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { asOf, label, pct } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { MockBadge } from "@/components/mock-provider";
 
 type Group = FairnessReport["groups"][number];
 const DIMENSIONS: { key: Group["dimension"]; title: string }[] = [{ key: "region", title: "By region" }, { key: "credit_tier", title: "By credit tier" }];
@@ -57,7 +58,7 @@ export default function ResponsibleAI() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Responsible AI</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-semibold">Responsible AI <MockBadge path="/fairness" /></h1>
         <p className="text-sm text-muted-foreground">Fairness by region and credit tier only (no protected attributes are stored), every agent and human action, overrides, and the model and prompt versions in use.</p>
       </div>
 

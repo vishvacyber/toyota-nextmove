@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { SyntheticBadge } from "@nextmove/tokens";
+import { CommandMenu } from "@/components/command-menu";
 import { Button } from "@/components/ui/button";
 import { NAV } from "@/lib/nav";
 import { cn } from "@/lib/utils";
@@ -53,7 +54,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </nav>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
+        <div role="note" className="bg-primary px-6 py-1 text-center text-xs font-medium text-primary-foreground">
+          Synthetic data only. Demo customers, no real people or accounts.
+        </div>
         <header className="flex items-center justify-end gap-3 border-b px-6 py-3">
+          <div className="mr-auto"><CommandMenu /></div>
           <SyntheticBadge />
           <label className="flex items-center gap-2 text-sm">
             <span className="text-muted-foreground">Role</span>

@@ -121,7 +121,7 @@ export default function Queue() {
                   ))}
                 </TableRow>
               ))}
-              {!loading && !table.getRowModel().rows.length && (
+              {!loading && !error && !table.getRowModel().rows.length && (
                 <TableRow><TableCell colSpan={columns.length} className="text-center text-muted-foreground">No matching opportunities.</TableCell></TableRow>
               )}
             </TableBody>

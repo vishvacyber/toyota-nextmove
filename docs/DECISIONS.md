@@ -206,3 +206,8 @@ Simplest option that satisfies the spec, per CLAUDE.md.
   - A test handoff for CUST-00001 was created, claimed by `EMP-B5-CHECK` and resolved on port 8105. Supabase accepted the `created` and both `updated` broadcasts (`traces.broadcast` returned True, no warnings).
   - The live deploy gate (`STUDIO_GATE_LIVE=1`) passed all 13 checks in 6.5 s with 3 SDK calls. James passed on the first draft, with no send-back.
 
+## C5 — console on the real API
+- **Live by default:** after B5, the console runs with `NEXT_PUBLIC_API_MOCKING=disabled`. MSW stays for offline use.
+- **Exact-path mocks (console only):** the console runs its own MSW provider (`apps/console/components/mock-provider.tsx`) with the shared `NEXT_PUBLIC_API_MOCKING` syntax plus a trailing `$` for an exact path (`lib/mocking.ts`), e.g. `/customers$` mocks the list without the live `/customers/{id}/recommendation`. Sections served by mocks show a **"Mock data"** badge (`MockBadge`); with mocking disabled the badge never renders.
+- **Approvals** lists `draft` and `pending_approval` alerts: the real Sentinel leaves its L2 outreach as `draft`, and both need a person before reaching a customer.
+- Toasts and the Cmd+K menu are small in-house components (no `sonner` / `cmdk` dependency).

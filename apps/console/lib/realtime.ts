@@ -14,6 +14,7 @@ export type Realtime = "connecting" | "live" | "offline";
 export function useRealtimeList<T extends { id: string }>(path: string, channel: string, events: readonly string[]) {
   const [items, setItems] = useState<T[]>([]);
   const [error, setError] = useState<Error>();
+  const [loading, setLoading] = useState(true);
   const [realtime, setRealtime] = useState<Realtime>(supabase ? "connecting" : "offline");
   const ch = useRef<RealtimeChannel | null>(null);
   const upsert = useCallback((x: T) => setItems((list) => upsertById(list, x)), []);
@@ -23,8 +24,8 @@ export function useRealtimeList<T extends { id: string }>(path: string, channel:
   useEffect(() => {
     let active = true;
     api<T[]>(path).then(
-      (seed) => { if (active) { setError(undefined); setItems((list) => seed.reduce(upsertById, list)); } },
-      (e: Error) => active && setError(e),
+      (seed) => { if (active) { setError(undefined); setLoading(false); setItems((list) => seed.reduce(upsertById, list)); } },
+      (e: Error) => { if (active) { setError(e); setLoading(false); } },
     );
     return () => { active = false; };
   }, [path]);
@@ -49,5 +50,5 @@ export function useRealtimeList<T extends { id: string }>(path: string, channel:
     void ch.current?.send({ type: "broadcast", event, payload: x });
   }, [upsert]);
 
-  return { items, error, realtime, broadcast };
+  return { items, error, loading, realtime, broadcast };
 }
