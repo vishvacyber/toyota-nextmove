@@ -9,7 +9,7 @@ from app.main import app
 from engine import scenarios
 from serpapi import client
 from sim.generator import customers_by_id
-from tools import REGISTRY, ToolError, actions, call, openai_tools
+from tools import REGISTRY, ToolError, actions, call
 from tools.mcp_server import server
 
 SPEC_TOOLS = {"get_customer", "run_scenario", "check_eligibility", "get_market_value", "find_dealer", "get_recalls",
@@ -18,8 +18,8 @@ SPEC_TOOLS = {"get_customer", "run_scenario", "check_eligibility", "get_market_v
 
 def test_registry_has_the_12_spec_tools_with_schemas():
     assert set(REGISTRY) == SPEC_TOOLS
-    for f in openai_tools():
-        assert f["type"] == "function" and f["function"]["parameters"]["type"] == "object" and f["function"]["description"]
+    for t in REGISTRY.values():
+        assert t.schema["type"] == "object" and t.description
 
 
 def test_get_customer_masks_pii():

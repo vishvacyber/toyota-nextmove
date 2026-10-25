@@ -1,8 +1,8 @@
-"""One tool registry for every LLM provider (CLAUDE.md: Grok primary, Claude Agent SDK fallback).
+"""One tool registry for the agents (Claude Agent SDK) and the MCP server.
 
 Each tool is a plain Python function taking one Pydantic input model. The JSON schema comes from that model,
-so OpenAI-style function calling (Grok) and MCP (Claude) see the same definition. Tools only fetch data or
-compute through the engine; none invents a number.
+so every consumer sees the same definition. Tools only fetch data or compute through the engine; none invents
+a number.
 """
 
 import inspect
@@ -59,9 +59,3 @@ def call(name: str, args: dict | None = None) -> dict:
         raise ToolError(f"Unknown tool {name}")
     t = REGISTRY[name]
     return _json(t.fn(t.input_model.model_validate(args or {})))
-
-
-def openai_tools() -> list[dict]:
-    """Tool definitions in OpenAI / xAI function-calling format (for the B3 Grok provider)."""
-    return [{"type": "function", "function": {"name": t.name, "description": t.description, "parameters": t.schema}}
-            for t in REGISTRY.values()]

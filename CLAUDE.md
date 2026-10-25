@@ -17,7 +17,7 @@ You are building **Toyota NextMove**, a proactive, agentic financial co-pilot fo
 - Customer App: Next.js PWA + TypeScript + Tailwind + Framer Motion + GSAP; React Three Fiber + drei for 3D; Web Speech API for voice.
 - API: Python 3.11+, FastAPI, Pydantic, pytest.
 - Data + realtime + auth: Supabase (Postgres, Realtime). Channels: `sessions`, `handoffs`, `traces`, `alerts`.
-- LLM: **Grok (xAI API, OpenAI-compatible tool calling) is primary; Claude Agent SDK (`claude-agent-sdk`, Python, Claude Pro login) is the fallback; pre-generated persona answers are the last fallback.** Agents call one provider function, so the chain is in one place. Tools are one MCP-style registry both providers use. Guardian stays deterministic code run on every provider's output.
+- LLM: **Claude Agent SDK** (`claude-agent-sdk`, Python) on a separate Claude Pro login (`CLAUDE_CONFIG_DIR`), no API key. Tools come from the B2 registry as an in-process SDK MCP server. Fallback when the SDK fails or hits limits: pre-generated, Guardian-checked persona answers. Guardian stays deterministic code run on every agent output.
 - Mocks: MSW in both frontends, fed by `packages/contracts/mocks`.
 - Package manager: pnpm workspaces.
 
