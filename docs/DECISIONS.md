@@ -32,6 +32,15 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Dev-only "Simulate customer handoff"** button on Live Activity broadcasts a `created` event, to prove the inbox before K2 lands.
 - **Console unit tests use `node --test`** (Node 24 runs TypeScript directly), so no test runner was added.
 
+## Stage C3 (console)
+- **Proof sliders send all three assumptions** (`adoption_rate`, `outreach_lead_days`, `hardship_uptake`) to `GET /kpis`, debounced 300 ms. The mock handler only scales NextMove with adoption, so lead time and hardship uptake are echoed but don't move numbers until the B5 simulation; the page says so under the sliders.
+- **KPI deltas are a display subtraction** (`nextmove − baseline`, rates shown in percentage points). The console computes no new money numbers. The KPI list moved to `lib/kpis.ts` so Command Center and Proof share it.
+- **Proof keeps the last snapshot on screen** while a new `/kpis` request loads (`useApi` blanks data on path change), so cards don't flicker while dragging.
+- **Long-term Profit reads the default `/kpis`** (LTV, `loyalty_revenue`, cost to serve). "Saved" is baseline minus NextMove cost to serve.
+- **A/B variants are offers with `variant_of`**: listed under their parent; "Simulate" runs only on parent offers (the endpoint returns parent + variants). New offers are drafts and are kept in page state plus the per-browser MSW store, so they disappear on reload until the real API lands.
+- **"Leader" on a simulation** is the variant with the highest API `expected_profit`; a comparison, not a calculation.
+- **Market Intel fetches all six models** (one `/market/{model}` each). Each card's footer shows the quote's `source` and `as_of`; comps and recalls link to their `source_url`.
+
 ## Stage K1 (customer app)
 - **Signed-in customer lives in `?id=CUST-…`** on `/app` and `/kiosk`. That URL is also the QR deep link, so there's no auth state to store. Sign-out (and the kiosk's 60s idle reset) goes back to the bare path, which shows sign-in. IDs are upper-cased, and `CUST-` is added if it's missing.
 - **No camera QR scanning** in K1: the phone's own camera opens the deep link. `BarcodeDetector` isn't available on desktop Safari or Firefox, so it would need a fallback anyway.
