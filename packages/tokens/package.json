@@ -1,0 +1,12 @@
+{
+  "name": "@nextmove/tokens",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.tsx",
+    "./tokens.css": "./tokens.css"
+  },
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "peerDependencies": { "react": "^19" },
+  "devDependencies": { "@types/react": "^19", "react": "^19", "typescript": "^5" }
+}

@@ -1,0 +1,63 @@
+/* NextMove design tokens. Toyota red is the single accent; everything else is neutral. */
+:root {
+  --nm-red: #eb0a1e;
+  --nm-red-strong: #c00012;
+  --nm-on-red: #ffffff;
+
+  --nm-bg: #ffffff;
+  --nm-surface: #f5f5f6;
+  --nm-border: #e2e2e5;
+  --nm-text: #111114;
+  --nm-text-muted: #5c5c66;
+
+  --nm-font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --nm-text-xs: 0.75rem;
+  --nm-text-sm: 0.875rem;
+  --nm-text-base: 1rem;
+  --nm-text-lg: 1.25rem;
+  --nm-text-xl: 1.75rem;
+  --nm-text-2xl: 2.5rem;
+  --nm-text-3xl: 3.5rem;
+
+  --nm-radius: 0.75rem;
+  --nm-touch-min: 64px;
+  --nm-focus: 0 0 0 3px color-mix(in srgb, var(--nm-red) 45%, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --nm-bg: #0b0b0d;
+    --nm-surface: #16161a;
+    --nm-border: #2a2a30;
+    --nm-text: #f4f4f6;
+    --nm-text-muted: #a1a1ab;
+  }
+}
+:root.dark {
+  --nm-bg: #0b0b0d;
+  --nm-surface: #16161a;
+  --nm-border: #2a2a30;
+  --nm-text: #f4f4f6;
+  --nm-text-muted: #a1a1ab;
+}
+
+.nm-synthetic-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--nm-border);
+  border-radius: 999px;
+  font: 600 var(--nm-text-xs) / 1.4 var(--nm-font);
+  letter-spacing: 0.02em;
+  color: var(--nm-text-muted);
+  background: var(--nm-surface);
+  white-space: nowrap;
+}
+.nm-synthetic-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nm-red);
+}

@@ -1,0 +1,19 @@
+{
+  "app_title": "Toyota NextMove",
+  "tagline": "¿Cuál es el siguiente paso más inteligente para ti y tu Toyota?",
+  "phone_mode": "App móvil",
+  "kiosk_mode": "Quiosco del concesionario",
+  "hello": "Hola, {name}",
+  "your_vehicle": "Tu vehículo",
+  "lease_ends": "Tu arrendamiento termina en {days} días",
+  "loan_ends": "Tu préstamo termina el {date}",
+  "monthly_payment": "Pago mensual",
+  "miles": "{miles} millas",
+  "your_next_move": "Tu siguiente paso",
+  "why_this": "Por qué",
+  "tap_to_reveal": "Toca para ver",
+  "loading": "Cargando…",
+  "error": "Algo salió mal. Inténtalo de nuevo.",
+  "language": "Idioma",
+  "idle_notice": "Sesión reiniciada por privacidad"
+}

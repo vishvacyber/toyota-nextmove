@@ -1,0 +1,12 @@
+{
+  "name": "toyota-nextmove",
+  "private": true,
+  "packageManager": "pnpm@10.34.8",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "gen": "pnpm --filter @nextmove/contracts gen && pnpm --filter @nextmove/api gen",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  }
+}

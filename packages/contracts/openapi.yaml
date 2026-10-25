@@ -1,0 +1,861 @@
+openapi: 3.1.0
+info:
+  title: Toyota NextMove API
+  version: 0.1.0
+  description: >
+    Contract shared by the Customer App, Employee Console and API.
+    Frozen after Stage 0; changes must be called out in docs/DECISIONS.md.
+    All data is synthetic. Money is USD as a number. Dates are ISO 8601.
+servers:
+  - url: http://localhost:8000
+
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Health" } } } }
+
+  /customers:
+    get:
+      operationId: listCustomers
+      parameters:
+        - { name: q, in: query, schema: { type: string }, description: Search by id or name }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Customer" } } } } }
+  /customers/{id}:
+    get:
+      operationId: getCustomer
+      parameters: [{ $ref: "#/components/parameters/CustomerId" }]
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Customer" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /customers/{id}/recommendation:
+    get:
+      operationId: getRecommendation
+      parameters: [{ $ref: "#/components/parameters/CustomerId" }]
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Recommendation" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /customers/{id}/recommendation/review:
+    post:
+      operationId: reviewRecommendation
+      description: Employee approves or overrides a recommendation (NextMove Review).
+      parameters: [{ $ref: "#/components/parameters/CustomerId" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/RecommendationReview" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/AuditEntry" } } } }
+  /customers/{id}/timing:
+    get:
+      operationId: getTiming
+      parameters: [{ $ref: "#/components/parameters/CustomerId" }]
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/TimingPlan" } } } }
+
+  /scenarios:
+    post:
+      operationId: runScenarios
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/ScenarioRequest" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/ScenarioSet" } } } }
+
+  /agents/advisor/ask:
+    post:
+      operationId: askAdvisor
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/AdvisorAsk" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/AdvisorAnswer" } } } }
+
+  /inspections:
+    post:
+      operationId: createInspection
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [customer_id, photos]
+              properties:
+                customer_id: { type: string }
+                photos: { type: array, items: { type: string, format: binary } }
+                angles: { type: array, items: { $ref: "#/components/schemas/PhotoAngle" } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/InspectionResult" } } } }
+
+  /handoffs:
+    get:
+      operationId: listHandoffs
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Handoff" } } } } }
+    post:
+      operationId: createHandoff
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/HandoffCreate" } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/Handoff" } } } }
+  /handoffs/{id}:
+    patch:
+      operationId: updateHandoff
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/HandoffUpdate" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Handoff" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /deal-packets:
+    get:
+      operationId: listDealPackets
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/DealPacket" } } } } }
+    post:
+      operationId: createDealPacket
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/DealPacketCreate" } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/DealPacket" } } } }
+
+  /alerts:
+    get:
+      operationId: listAlerts
+      parameters:
+        - { name: customer_id, in: query, schema: { type: string } }
+        - { name: status, in: query, schema: { $ref: "#/components/schemas/AlertStatus" } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Alert" } } } } }
+  /alerts/{id}:
+    patch:
+      operationId: updateAlert
+      description: Approve/dismiss (console, L3) or set consent (customer).
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/AlertUpdate" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Alert" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /sessions:
+    get:
+      operationId: listSessions
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Session" } } } } }
+
+  /opportunities:
+    get:
+      operationId: listOpportunities
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Opportunity" } } } } }
+
+  /offers:
+    get:
+      operationId: listOffers
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Offer" } } } } }
+    post:
+      operationId: createOffer
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/OfferCreate" } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/Offer" } } } }
+  /offers/{id}/simulate:
+    post:
+      operationId: simulateOffer
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/OfferSimulation" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /kpis:
+    get:
+      operationId: getKpis
+      description: Baseline vs NextMove over the synthetic portfolio. Query params override simulation assumptions.
+      parameters:
+        - { name: adoption_rate, in: query, schema: { type: number, minimum: 0, maximum: 1 } }
+        - { name: outreach_lead_days, in: query, schema: { type: integer } }
+        - { name: hardship_uptake, in: query, schema: { type: number, minimum: 0, maximum: 1 } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/KpiSnapshot" } } } }
+
+  /traces:
+    get:
+      operationId: listTraces
+      parameters:
+        - { name: customer_id, in: query, schema: { type: string } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/AgentTrace" } } } } }
+  /audit:
+    get:
+      operationId: listAudit
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/AuditEntry" } } } } }
+  /fairness:
+    get:
+      operationId: getFairness
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/FairnessReport" } } } }
+
+  /market/{model}:
+    get:
+      operationId: getMarket
+      parameters:
+        - { name: model, in: path, required: true, schema: { $ref: "#/components/schemas/Model" } }
+        - { name: year, in: query, schema: { type: integer } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/MarketQuote" } } } }
+
+  /studio/agents:
+    get:
+      operationId: listStudioAgents
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/StudioAgent" } } } } }
+    post:
+      operationId: createStudioAgent
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/StudioAgentCreate" } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/StudioAgent" } } } }
+  /studio/agents/{id}/deploy:
+    post:
+      operationId: deployStudioAgent
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/DeployResult" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+components:
+  parameters:
+    CustomerId: { name: id, in: path, required: true, schema: { type: string } }
+    Id: { name: id, in: path, required: true, schema: { type: string } }
+
+  responses:
+    NotFound:
+      description: Not found
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+
+  schemas:
+    Error:
+      type: object
+      required: [detail]
+      properties: { detail: { type: string } }
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [ok] }
+        version: { type: string }
+
+    # ---------- enums ----------
+    Model: { type: string, enum: [Camry, RAV4, Tacoma, Highlander, Prius, bZ] }
+    Powertrain: { type: string, enum: [gas, hybrid, ev] }
+    Region: { type: string, enum: [South, West, Midwest, Northeast] }
+    CreditTier: { type: string, enum: [A, B, C, D] }
+    Language: { type: string, enum: [en, es] }
+    AutonomyLevel:
+      type: string
+      enum: [L1, L2, L3, L4]
+      description: L1 read = auto; L2 draft = auto + visible; L3 customer-facing = consent/approval; L4 money/credit = humans only.
+    Situation:
+      type: string
+      enum: [lease_end, mileage_overage, positive_equity, rate_drop, early_payoff, life_event, payment_stress, ev_switch, none]
+    OptionType:
+      type: string
+      enum: [do_nothing, keep, buyout, return, new_lease, refinance, trade_in, extend, upgrade, pay_extra, pay_off, due_date_change, deferral]
+    AgentName: { type: string, description: "One of orchestrator, advisor, sentinel, hardship, market_intel, guardian, or a Studio agent id." }
+    Surface: { type: string, enum: [app, kiosk, voice, console] }
+    AlertStatus: { type: string, enum: [draft, pending_approval, approved, sent, dismissed] }
+    PhotoAngle: { type: string, enum: [front, rear, left, right, interior, wheels] }
+
+    # ---------- core entities ----------
+    Customer:
+      type: object
+      description: Synthetic customer. No protected attributes by design.
+      required: [id, first_name, last_name, region, credit_tier, preferred_language, pay_frequency, vehicle, contract, payment_history, life_events, risk_score, situation, synthetic]
+      properties:
+        id: { type: string, example: CUST-MARIA }
+        first_name: { type: string }
+        last_name: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        region: { $ref: "#/components/schemas/Region" }
+        credit_tier: { $ref: "#/components/schemas/CreditTier" }
+        preferred_language: { $ref: "#/components/schemas/Language" }
+        pay_frequency: { type: string, enum: [weekly, biweekly, semimonthly, monthly] }
+        next_payday: { type: string, format: date }
+        vehicle: { $ref: "#/components/schemas/Vehicle" }
+        contract: { $ref: "#/components/schemas/Contract" }
+        payment_history:
+          type: array
+          items: { $ref: "#/components/schemas/PaymentEvent" }
+        life_events: { type: array, items: { type: string } }
+        risk_score: { type: number, minimum: 0, maximum: 1, description: Payment-stress risk (0 low, 1 high) }
+        situation: { $ref: "#/components/schemas/Situation" }
+        synthetic: { type: boolean, const: true }
+    PaymentEvent:
+      type: object
+      required: [date, amount, status]
+      properties:
+        date: { type: string, format: date }
+        amount: { type: number }
+        status: { type: string, enum: [paid, late, missed] }
+    Vehicle:
+      type: object
+      required: [vin, model, year, trim, powertrain, color, odometer_miles]
+      properties:
+        vin: { type: string }
+        model: { $ref: "#/components/schemas/Model" }
+        year: { type: integer }
+        trim: { type: string }
+        powertrain: { $ref: "#/components/schemas/Powertrain" }
+        color: { type: string }
+        odometer_miles: { type: integer }
+        mpg: { type: number, description: MPG, or MPGe for EVs }
+    Contract:
+      type: object
+      required: [id, type, start_date, maturity_date, term_months, monthly_payment, apr, payoff_amount, payments_made, days_past_due, status, due_day]
+      properties:
+        id: { type: string }
+        type: { type: string, enum: [lease, loan] }
+        start_date: { type: string, format: date }
+        maturity_date: { type: string, format: date }
+        term_months: { type: integer }
+        monthly_payment: { type: number }
+        apr: { type: number, description: Annual rate as a percent, e.g. 4.9 }
+        payoff_amount: { type: number }
+        residual_value: { type: number, description: Lease only }
+        annual_mile_allowance: { type: integer, description: Lease only }
+        excess_mile_fee: { type: number, description: Lease only, $ per mile }
+        projected_miles_at_maturity: { type: integer }
+        payments_made: { type: integer }
+        days_past_due: { type: integer }
+        status: { type: string, enum: [current, late, missed, paid_off] }
+        due_day: { type: integer, minimum: 1, maximum: 31 }
+
+    ScenarioRequest:
+      type: object
+      required: [customer_id]
+      properties:
+        customer_id: { type: string }
+        options: { type: array, items: { $ref: "#/components/schemas/OptionType" }, description: Omit for all eligible options }
+        overrides:
+          type: object
+          properties:
+            down_payment: { type: number }
+            term_months: { type: integer }
+            apr: { type: number }
+            annual_miles: { type: integer }
+            months_from_now: { type: integer }
+            target_model: { $ref: "#/components/schemas/Model" }
+    ScenarioSet:
+      type: object
+      required: [customer_id, scenarios, assumptions, as_of]
+      properties:
+        customer_id: { type: string }
+        scenarios: { type: array, items: { $ref: "#/components/schemas/Scenario" } }
+        assumptions: { type: array, items: { type: string } }
+        as_of: { type: string, format: date-time }
+    Scenario:
+      type: object
+      description: One option computed by the deterministic engine. Every number here comes from the engine.
+      required: [option, label, eligible, monthly_payment, total_cost, equity, fees, assumptions]
+      properties:
+        option: { $ref: "#/components/schemas/OptionType" }
+        label: { type: string }
+        eligible: { type: boolean }
+        ineligible_reason: { type: string }
+        monthly_payment: { type: number }
+        total_cost: { type: number, description: Total out-of-pocket over the horizon }
+        horizon_months: { type: integer }
+        equity: { type: number }
+        fees: { type: number }
+        target_vehicle: { $ref: "#/components/schemas/Vehicle" }
+        true_cost: { $ref: "#/components/schemas/TrueCost" }
+        assumptions: { type: array, items: { type: string } }
+    TrueCost:
+      type: object
+      required: [payment, fuel, maintenance, insurance, total_monthly, co2_kg_per_year]
+      properties:
+        payment: { type: number }
+        fuel: { type: number }
+        maintenance: { type: number }
+        insurance: { type: number, description: Estimate only }
+        total_monthly: { type: number }
+        co2_kg_per_year: { type: number }
+
+    Recommendation:
+      type: object
+      required: [customer_id, situation, headline, recommended, alternatives, why, why_not, assumptions, action, guardian, generated_at]
+      properties:
+        customer_id: { type: string }
+        situation: { $ref: "#/components/schemas/Situation" }
+        headline: { type: string }
+        recommended: { $ref: "#/components/schemas/Scenario" }
+        alternatives: { type: array, items: { $ref: "#/components/schemas/Scenario" } }
+        baseline: { $ref: "#/components/schemas/Scenario" }
+        why: { type: string }
+        why_not:
+          type: array
+          items:
+            type: object
+            required: [option, reason]
+            properties:
+              option: { $ref: "#/components/schemas/OptionType" }
+              reason: { type: string }
+        assumptions: { type: array, items: { type: string } }
+        action: { $ref: "#/components/schemas/NextAction" }
+        guardian: { $ref: "#/components/schemas/GuardianVerdict" }
+        review:
+          type: object
+          properties:
+            status: { type: string, enum: [pending, approved, overridden] }
+            by: { type: string }
+            reason: { type: string }
+        generated_at: { type: string, format: date-time }
+        trace_id: { type: string }
+    RecommendationReview:
+      type: object
+      required: [decision, reviewer]
+      properties:
+        decision: { type: string, enum: [approve, override] }
+        reviewer: { type: string }
+        override_option: { $ref: "#/components/schemas/OptionType" }
+        reason: { type: string, description: Required when decision is override }
+    NextAction:
+      type: object
+      required: [type, label, autonomy_level]
+      properties:
+        type: { type: string, enum: [start_self_service, book_appointment, claim_offer, send_deal_packet, request_callback, start_inspection, start_hardship] }
+        label: { type: string }
+        autonomy_level: { $ref: "#/components/schemas/AutonomyLevel" }
+    GuardianVerdict:
+      type: object
+      required: [verdict, checks]
+      properties:
+        verdict: { type: string, enum: [pass, block, revise] }
+        checks:
+          type: array
+          items:
+            type: object
+            required: [name, passed]
+            properties:
+              name: { type: string, enum: [numbers_match_tools, fairness, tone, consent, disclosures, prompt_injection] }
+              passed: { type: boolean }
+              detail: { type: string }
+
+    TimingPlan:
+      type: object
+      required: [customer_id, months, best_month_offset, act_now_vs_wait_3, summary, as_of]
+      properties:
+        customer_id: { type: string }
+        months:
+          type: array
+          items:
+            type: object
+            required: [month_offset, date, equity, payment, fees, net_position]
+            properties:
+              month_offset: { type: integer }
+              date: { type: string, format: date }
+              equity: { type: number }
+              payment: { type: number }
+              fees: { type: number }
+              net_position: { type: number }
+        best_month_offset: { type: integer }
+        act_now_vs_wait_3: { type: number, description: "$ better (positive) by acting now vs waiting 3 months" }
+        summary: { type: string }
+        as_of: { type: string, format: date-time }
+
+    AdvisorAsk:
+      type: object
+      required: [customer_id, message]
+      properties:
+        customer_id: { type: string }
+        message: { type: string }
+        language: { $ref: "#/components/schemas/Language" }
+        session_id: { type: string }
+        surface: { $ref: "#/components/schemas/Surface" }
+    AdvisorAnswer:
+      type: object
+      required: [answer, numbers_used, guardian, trace_id]
+      properties:
+        answer: { type: string }
+        numbers_used:
+          type: array
+          items:
+            type: object
+            required: [label, value, source_tool]
+            properties:
+              label: { type: string }
+              value: { type: number }
+              source_tool: { type: string }
+        suggested_actions: { type: array, items: { $ref: "#/components/schemas/NextAction" } }
+        guardian: { $ref: "#/components/schemas/GuardianVerdict" }
+        trace_id: { type: string }
+        session_id: { type: string }
+
+    InspectionResult:
+      type: object
+      required: [id, customer_id, items, total_estimated_charge, is_estimate, disclaimer, created_at]
+      properties:
+        id: { type: string }
+        customer_id: { type: string }
+        items:
+          type: array
+          items:
+            type: object
+            required: [angle, area, issue, severity, estimated_charge]
+            properties:
+              angle: { $ref: "#/components/schemas/PhotoAngle" }
+              area: { type: string }
+              issue: { type: string }
+              severity: { type: string, enum: [none, minor, moderate, major] }
+              estimated_charge: { type: number }
+              box: { type: array, items: { type: number }, minItems: 4, maxItems: 4, description: "x, y, w, h as 0..1 fractions of the photo" }
+        total_estimated_charge: { type: number }
+        is_estimate: { type: boolean, const: true }
+        disclaimer: { type: string }
+        created_at: { type: string, format: date-time }
+
+    Handoff:
+      type: object
+      required: [id, customer_id, reason, surface, status, created_at]
+      properties:
+        id: { type: string }
+        customer_id: { type: string }
+        reason: { type: string }
+        surface: { $ref: "#/components/schemas/Surface" }
+        status: { type: string, enum: [waiting, claimed, resolved] }
+        claimed_by: { type: string }
+        context_summary: { type: string }
+        callback_at: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+    HandoffCreate:
+      type: object
+      required: [customer_id, reason, surface]
+      properties:
+        customer_id: { type: string }
+        reason: { type: string }
+        surface: { $ref: "#/components/schemas/Surface" }
+        callback_at: { type: string, format: date-time }
+        session_id: { type: string }
+    HandoffUpdate:
+      type: object
+      properties:
+        status: { type: string, enum: [waiting, claimed, resolved] }
+        claimed_by: { type: string }
+
+    DealPacket:
+      type: object
+      required: [id, customer_id, dealer, vehicle, scenario, eligibility, status, created_at]
+      properties:
+        id: { type: string }
+        customer_id: { type: string }
+        dealer: { $ref: "#/components/schemas/Dealer" }
+        vehicle: { $ref: "#/components/schemas/Vehicle" }
+        target_vehicle: { $ref: "#/components/schemas/Vehicle" }
+        scenario: { $ref: "#/components/schemas/Scenario" }
+        eligibility: { type: array, items: { type: string } }
+        status: { type: string, enum: [draft, sent, received] }
+        created_at: { type: string, format: date-time }
+    DealPacketCreate:
+      type: object
+      required: [customer_id, option]
+      properties:
+        customer_id: { type: string }
+        option: { $ref: "#/components/schemas/OptionType" }
+        dealer_id: { type: string }
+        target_model: { $ref: "#/components/schemas/Model" }
+
+    Alert:
+      type: object
+      required: [id, customer_id, type, title, body, autonomy_level, status, created_at]
+      properties:
+        id: { type: string }
+        customer_id: { type: string }
+        type: { $ref: "#/components/schemas/Situation" }
+        title: { type: string }
+        body: { type: string }
+        autonomy_level: { $ref: "#/components/schemas/AutonomyLevel" }
+        status: { $ref: "#/components/schemas/AlertStatus" }
+        consent: { type: boolean, description: Customer consent to proactive contact on this topic }
+        drafted_by: { $ref: "#/components/schemas/AgentName" }
+        trace_id: { type: string }
+        created_at: { type: string, format: date-time }
+    AlertUpdate:
+      type: object
+      properties:
+        status: { $ref: "#/components/schemas/AlertStatus" }
+        consent: { type: boolean }
+        actor: { type: string }
+
+    Session:
+      type: object
+      required: [id, customer_id, surface, started_at, current_screen]
+      properties:
+        id: { type: string }
+        customer_id: { type: string }
+        surface: { $ref: "#/components/schemas/Surface" }
+        started_at: { type: string, format: date-time }
+        current_screen: { type: string }
+        language: { $ref: "#/components/schemas/Language" }
+        last_trace_id: { type: string }
+
+    Opportunity:
+      type: object
+      required: [customer_id, customer_name, situation, next_best_action, expected_value, retention_odds, script, reason, priority]
+      properties:
+        customer_id: { type: string }
+        customer_name: { type: string }
+        model: { $ref: "#/components/schemas/Model" }
+        situation: { $ref: "#/components/schemas/Situation" }
+        next_best_action: { $ref: "#/components/schemas/OptionType" }
+        expected_value: { type: number, description: Expected profit in $ }
+        retention_odds: { type: number, minimum: 0, maximum: 1 }
+        days_to_maturity: { type: integer }
+        script: { type: string }
+        reason: { type: string, description: Why this customer is queued }
+        priority: { type: integer, description: 1 is highest }
+
+    Offer:
+      type: object
+      required: [id, name, rule, incentive, status, created_at]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        rule: { type: string, description: Readable eligibility rule }
+        target_situation: { $ref: "#/components/schemas/Situation" }
+        incentive:
+          type: object
+          required: [type, value]
+          properties:
+            type: { type: string, enum: [rate_reduction, cash, loyalty_credit, fee_waiver] }
+            value: { type: number }
+        status: { type: string, enum: [draft, active, paused] }
+        variant_of: { type: string, description: Parent offer id for A/B variants }
+        created_at: { type: string, format: date-time }
+    OfferCreate:
+      type: object
+      required: [name, rule, incentive]
+      properties:
+        name: { type: string }
+        rule: { type: string }
+        target_situation: { $ref: "#/components/schemas/Situation" }
+        incentive:
+          type: object
+          required: [type, value]
+          properties:
+            type: { type: string, enum: [rate_reduction, cash, loyalty_credit, fee_waiver] }
+            value: { type: number }
+        variant_of: { type: string }
+    OfferSimulation:
+      type: object
+      required: [offer_id, customers_targeted, variants]
+      properties:
+        offer_id: { type: string }
+        customers_targeted: { type: integer }
+        variants:
+          type: array
+          items:
+            type: object
+            required: [name, acceptance_rate, expected_profit, retention_lift]
+            properties:
+              name: { type: string }
+              acceptance_rate: { type: number }
+              expected_profit: { type: number }
+              retention_lift: { type: number }
+
+    KpiMetrics:
+      type: object
+      required: [retention_rate, calls_per_100_customers, delinquency_rate, revenue, cost_to_serve, avg_ltv]
+      properties:
+        retention_rate: { type: number }
+        calls_per_100_customers: { type: number }
+        delinquency_rate: { type: number }
+        revenue: { type: number }
+        cost_to_serve: { type: number }
+        avg_ltv: { type: number }
+        loyalty_revenue: { type: number }
+    KpiSnapshot:
+      type: object
+      required: [as_of, customers_simulated, months, assumptions, baseline, nextmove, series, maturity_pipeline]
+      properties:
+        as_of: { type: string, format: date-time }
+        customers_simulated: { type: integer }
+        months: { type: integer }
+        assumptions:
+          type: object
+          required: [adoption_rate, outreach_lead_days, hardship_uptake]
+          properties:
+            adoption_rate: { type: number }
+            outreach_lead_days: { type: integer }
+            hardship_uptake: { type: number }
+        baseline: { $ref: "#/components/schemas/KpiMetrics" }
+        nextmove: { $ref: "#/components/schemas/KpiMetrics" }
+        series:
+          type: array
+          items:
+            type: object
+            required: [month, baseline_retention, nextmove_retention]
+            properties:
+              month: { type: integer }
+              baseline_retention: { type: number }
+              nextmove_retention: { type: number }
+        maturity_pipeline:
+          type: object
+          required: [d90, d60, d30]
+          properties:
+            d90: { type: integer }
+            d60: { type: integer }
+            d30: { type: integer }
+
+    AgentTrace:
+      type: object
+      required: [id, agent, started_at, plan, tool_calls, guardian, action, model, prompt_version]
+      properties:
+        id: { type: string }
+        agent: { $ref: "#/components/schemas/AgentName" }
+        customer_id: { type: string }
+        session_id: { type: string }
+        started_at: { type: string, format: date-time }
+        duration_ms: { type: integer }
+        plan: { type: array, items: { type: string } }
+        tool_calls:
+          type: array
+          items:
+            type: object
+            required: [tool, input, output, duration_ms]
+            properties:
+              tool: { type: string }
+              input: { type: object, additionalProperties: true }
+              output: { type: object, additionalProperties: true }
+              duration_ms: { type: integer }
+        guardian: { $ref: "#/components/schemas/GuardianVerdict" }
+        action:
+          type: object
+          required: [type, autonomy_level, status]
+          properties:
+            type: { type: string }
+            autonomy_level: { $ref: "#/components/schemas/AutonomyLevel" }
+            status: { type: string, enum: [executed, pending_approval, blocked, escalated] }
+        model: { type: string }
+        prompt_version: { type: string }
+
+    AuditEntry:
+      type: object
+      required: [id, at, actor, action, autonomy_level]
+      properties:
+        id: { type: string }
+        at: { type: string, format: date-time }
+        actor: { type: string, description: Agent name or employee id }
+        action: { type: string }
+        customer_id: { type: string }
+        autonomy_level: { $ref: "#/components/schemas/AutonomyLevel" }
+        detail: { type: string }
+        override_reason: { type: string }
+        trace_id: { type: string }
+
+    FairnessReport:
+      type: object
+      required: [as_of, threshold, groups]
+      properties:
+        as_of: { type: string, format: date-time }
+        threshold: { type: number, description: Max allowed gap in rate between groups }
+        groups:
+          type: array
+          items:
+            type: object
+            required: [dimension, group, customers, recommendation_rate, offer_rate, flagged]
+            properties:
+              dimension: { type: string, enum: [region, credit_tier] }
+              group: { type: string }
+              customers: { type: integer }
+              recommendation_rate: { type: number }
+              offer_rate: { type: number }
+              flagged: { type: boolean }
+
+    Dealer:
+      type: object
+      required: [id, name, address]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        address: { type: string }
+        rating: { type: number }
+        review_count: { type: integer }
+        distance_mi: { type: number }
+    MarketQuote:
+      type: object
+      description: Market data from SerpApi (cached). Every number carries source + as_of.
+      required: [model, estimated_value, low, high, comps, recalls, dealers, source, as_of]
+      properties:
+        model: { $ref: "#/components/schemas/Model" }
+        year: { type: integer }
+        estimated_value: { type: number }
+        low: { type: number }
+        high: { type: number }
+        comps:
+          type: array
+          items:
+            type: object
+            required: [title, price, source_url]
+            properties:
+              title: { type: string }
+              price: { type: number }
+              miles: { type: integer }
+              source_url: { type: string }
+        trend:
+          type: object
+          properties:
+            direction: { type: string, enum: [up, flat, down] }
+            demand_index: { type: number }
+        recalls:
+          type: array
+          items:
+            type: object
+            required: [title, date, source_url]
+            properties:
+              title: { type: string }
+              date: { type: string, format: date }
+              source_url: { type: string }
+        reviews_summary: { type: string }
+        dealers: { type: array, items: { $ref: "#/components/schemas/Dealer" } }
+        source: { type: string }
+        as_of: { type: string, format: date-time }
+        cached: { type: boolean }
+
+    StudioAgent:
+      type: object
+      required: [id, name, template, tools, status, prompt_version]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        template: { type: string, enum: [recall_notifier, lease_end_nudge, rate_drop_alert, custom] }
+        tools: { type: array, items: { type: string } }
+        status: { type: string, enum: [draft, deployed, failed] }
+        prompt_version: { type: string }
+        health:
+          type: object
+          properties:
+            runs_24h: { type: integer }
+            success_rate: { type: number }
+            avg_latency_ms: { type: integer }
+        deployed_at: { type: string, format: date-time }
+    StudioAgentCreate:
+      type: object
+      required: [name, template, tools]
+      properties:
+        name: { type: string }
+        template: { type: string, enum: [recall_notifier, lease_end_nudge, rate_drop_alert, custom] }
+        tools: { type: array, items: { type: string } }
+    DeployResult:
+      type: object
+      required: [agent_id, passed, eval_results, injection_tests]
+      properties:
+        agent_id: { type: string }
+        passed: { type: boolean }
+        eval_results:
+          type: array
+          items:
+            type: object
+            required: [case, passed]
+            properties: { case: { type: string }, passed: { type: boolean }, detail: { type: string } }
+        injection_tests:
+          type: array
+          items:
+            type: object
+            required: [case, passed]
+            properties: { case: { type: string }, passed: { type: boolean }, detail: { type: string } }
+        deployed_at: { type: string, format: date-time }

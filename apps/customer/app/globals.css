@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@import "@nextmove/tokens/tokens.css";
+
+@theme inline {
+  --color-accent: var(--nm-red);
+  --color-on-accent: var(--nm-on-red);
+  --color-bg: var(--nm-bg);
+  --color-surface: var(--nm-surface);
+  --color-line: var(--nm-border);
+  --color-fg: var(--nm-text);
+  --color-muted: var(--nm-text-muted);
+  --font-sans: var(--nm-font);
+}
+
+body {
+  background: var(--nm-bg);
+  color: var(--nm-text);
+  font-family: var(--nm-font);
+}
+:focus-visible {
+  outline: none;
+  box-shadow: var(--nm-focus);
+}
+/* Kiosk touch targets ≥ 64px (CLAUDE.md). */
+.kiosk :is(button, a, select) {
+  min-height: var(--nm-touch-min);
+  min-width: var(--nm-touch-min);
+}

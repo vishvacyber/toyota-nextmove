@@ -1,0 +1,19 @@
+{
+  "app_title": "Toyota NextMove",
+  "tagline": "What's the smartest next move for you and your Toyota?",
+  "phone_mode": "Phone app",
+  "kiosk_mode": "Dealership kiosk",
+  "hello": "Hi, {name}",
+  "your_vehicle": "Your vehicle",
+  "lease_ends": "Lease ends in {days} days",
+  "loan_ends": "Loan ends {date}",
+  "monthly_payment": "Monthly payment",
+  "miles": "{miles} miles",
+  "your_next_move": "Your next move",
+  "why_this": "Why this",
+  "tap_to_reveal": "Tap to reveal",
+  "loading": "Loading…",
+  "error": "Something went wrong. Please try again.",
+  "language": "Language",
+  "idle_notice": "Session reset for privacy"
+}

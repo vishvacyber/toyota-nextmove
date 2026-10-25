@@ -1,0 +1,30 @@
+{
+  "name": "@nextmove/contracts",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./mocks/handlers": "./mocks/handlers.ts",
+    "./mocks/browser": "./mocks/browser.ts",
+    "./client": "./client.ts",
+    "./mocks/provider": "./mocks/provider.tsx"
+  },
+  "scripts": {
+    "gen": "openapi-typescript openapi.yaml -o types.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test mocks/handlers.test.ts"
+  },
+  "peerDependencies": {
+    "msw": "^2",
+    "react": "^19"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/react": "^19",
+    "msw": "^2",
+    "openapi-typescript": "^7",
+    "react": "^19",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}

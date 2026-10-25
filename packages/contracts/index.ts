@@ -1,0 +1,34 @@
+import type { components, paths } from "./types";
+
+export type { components, paths };
+type S = components["schemas"];
+
+export type Customer = S["Customer"];
+export type Vehicle = S["Vehicle"];
+export type Contract = S["Contract"];
+export type Scenario = S["Scenario"];
+export type ScenarioRequest = S["ScenarioRequest"];
+export type ScenarioSet = S["ScenarioSet"];
+export type Recommendation = S["Recommendation"];
+export type TimingPlan = S["TimingPlan"];
+export type AdvisorAsk = S["AdvisorAsk"];
+export type AdvisorAnswer = S["AdvisorAnswer"];
+export type InspectionResult = S["InspectionResult"];
+export type Handoff = S["Handoff"];
+export type DealPacket = S["DealPacket"];
+export type DealPacketCreate = S["DealPacketCreate"];
+export type Alert = S["Alert"];
+export type Session = S["Session"];
+export type Opportunity = S["Opportunity"];
+export type Offer = S["Offer"];
+export type OfferSimulation = S["OfferSimulation"];
+export type KpiSnapshot = S["KpiSnapshot"];
+export type AgentTrace = S["AgentTrace"];
+export type AuditEntry = S["AuditEntry"];
+export type FairnessReport = S["FairnessReport"];
+export type MarketQuote = S["MarketQuote"];
+export type Dealer = S["Dealer"];
+export type StudioAgent = S["StudioAgent"];
+export type DeployResult = S["DeployResult"];
+export type Model = S["Model"];
+export type OptionType = S["OptionType"];

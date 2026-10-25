@@ -1,0 +1,43 @@
+"use client";
+import { useEffect, useState, type ReactNode } from "react";
+import { PrivacyContext } from "@/components/private";
+import { useI18n } from "@/lib/i18n";
+
+const IDLE_MS = 60_000;
+
+/** Full-screen kiosk wrapper: privacy blur on, and a 60s idle reset that remounts the screen (re-blurring every number). */
+export function KioskShell({ children }: { children: ReactNode }) {
+  const [session, setSession] = useState(0);
+  const [notice, setNotice] = useState(false);
+  const { t, setLang } = useI18n();
+
+  useEffect(() => {
+    let timer = setTimeout(reset, IDLE_MS);
+    function reset() {
+      setSession((s) => s + 1);
+      setLang("en");
+      setNotice(true);
+      window.scrollTo(0, 0);
+    }
+    function activity() {
+      clearTimeout(timer);
+      timer = setTimeout(reset, IDLE_MS);
+      setNotice(false);
+    }
+    const events = ["pointerdown", "keydown", "touchstart", "wheel"] as const;
+    events.forEach((e) => window.addEventListener(e, activity, { passive: true }));
+    return () => {
+      clearTimeout(timer);
+      events.forEach((e) => window.removeEventListener(e, activity));
+    };
+  }, [setLang]);
+
+  return (
+    <PrivacyContext.Provider value={true}>
+      <div className="kiosk min-h-screen text-xl">
+        {notice && <p role="status" className="sr-only">{t("idle_notice")}</p>}
+        <div key={session}>{children}</div>
+      </div>
+    </PrivacyContext.Provider>
+  );
+}
