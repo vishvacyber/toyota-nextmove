@@ -5,6 +5,8 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import type { Customer, Recommendation } from "@nextmove/contracts";
 import { useApi } from "@nextmove/contracts/client";
 import { Card, Row, ScenarioCard } from "@/components/cards";
+import { AdvisorChat } from "@/components/advisor-chat";
+import { Alerts } from "@/components/alerts";
 import { DecideAct, HandoffBanner } from "@/components/decide-act";
 import { Private } from "@/components/private";
 import { SignIn } from "@/components/sign-in";
@@ -12,7 +14,7 @@ import { TopBar } from "@/components/top-bar";
 import { useI18n, type Key } from "@/lib/i18n";
 import { useHandoffChannel } from "@/lib/realtime";
 
-const STEPS = ["step_situation", "step_next_move", "step_why", "step_act"] as const;
+const STEPS = ["step_situation", "step_next_move", "step_why", "step_act", "step_ask"] as const;
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /** Shared by /app and /kiosk: the kiosk only changes the shell around it. The signed-in customer lives in `?id=`, which is also the QR deep link. */
@@ -102,6 +104,7 @@ function Flow({ id, onSignOut }: { id: string; onSignOut: () => void }) {
           {step === 1 && <NextMoveStep r={r} onAct={() => setStep(3)} />}
           {step === 2 && <WhyStep r={r} />}
           {step === 3 && <DecideAct c={c} r={r} channel={handoffChannel} />}
+          {step === 4 && <AdvisorChat customerId={c.id} />}
         </motion.div>
       </AnimatePresence>
 
@@ -178,6 +181,8 @@ function SituationStep({ c, r }: { c: Customer; r: Recommendation }) {
           </Row>
         </dl>
       </Card>
+
+      <Alerts customerId={c.id} />
     </div>
   );
 }
