@@ -5,11 +5,12 @@ Names are drawn from gender-neutral lists and never reach the LLM (customer IDs 
 """
 
 import random
-from datetime import date, timedelta
+from datetime import timedelta
 from functools import cache
 
 from app.models import Customer
 from engine import finance
+from engine.finance import add_months
 from engine.scenarios import CFG, TODAY, detect_situation
 
 SEED = 42
@@ -25,11 +26,6 @@ TRIMS = ["LE", "SE", "XLE", "XSE", "Limited"]
 COLORS = ["Silver", "White", "Gray", "Black", "Red", "Blue"]
 REGIONS = ["South", "West", "Midwest", "Northeast"]
 LIFE_EVENTS = ["job_change", "longer_commute", "relocation", "shorter_commute"]
-
-
-def add_months(d: date, months: int) -> date:
-    y, m = divmod(d.month - 1 + months, 12)
-    return date(d.year + y, m + 1, min(d.day, 28))
 
 
 def day(offset: int) -> str:

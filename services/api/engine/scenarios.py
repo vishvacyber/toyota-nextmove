@@ -5,6 +5,8 @@ Every number comes from engine.finance and config.toml. Eligibility comes from e
 
 import operator
 import tomllib
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import datetime
 from functools import cache
 from pathlib import Path
@@ -29,6 +31,10 @@ CFG = tomllib.loads((HERE / "config.toml").read_text())
 RULES = tomllib.loads((HERE / "eligibility.toml").read_text())
 AS_OF = datetime.fromisoformat(CFG["as_of"])
 TODAY = AS_OF.date()
+# shortcut: months ahead lives in a ContextVar so every builder's equity()/market_note() sees it without a new
+# parameter; pass it explicitly if builders ever run outside run()/timing().
+WEAR: dict[str, float] = {}   # customer_id → latest photo pre-inspection total (set by agents.vision)
+AHEAD: ContextVar[int] = ContextVar("months_ahead", default=0)
 OPS = {"eq": operator.eq, "ne": operator.ne, "lt": operator.lt, "lte": operator.le, "gt": operator.gt, "gte": operator.ge}
 
 
@@ -54,13 +60,20 @@ def comp_value(model: str, year: int) -> dict | None:
 
 
 def market_value(v: Vehicle) -> float:
-    """Comps median adjusted for miles vs a typical pace when cached comps exist; else the depreciation table."""
+    """Comps median adjusted for miles vs a typical pace when cached comps exist; else the depreciation table.
+    AHEAD months from now, it also loses that share of this year's drop on the retention curve."""
     m, age = CFG["market"], TODAY.year - v.year
     comp = comp_value(v.model, v.year)
     if comp:
-        return round(comp["median"] - (v.odometer_miles - age * m["expected_miles_per_year"]) * m["per_mile_adjust"])
-    return round(finance.market_value(m["msrp"][v.model], age, v.odometer_miles, m["retention"],
-                                      m["expected_miles_per_year"], m["per_mile_adjust"]))
+        value = comp["median"] - (v.odometer_miles - age * m["expected_miles_per_year"]) * m["per_mile_adjust"]
+    else:
+        value = finance.market_value(m["msrp"][v.model], age, v.odometer_miles, m["retention"],
+                                     m["expected_miles_per_year"], m["per_mile_adjust"])
+    if ahead := AHEAD.get():
+        r = m["retention"]
+        i = min(max(age, 0), len(r) - 2)
+        value *= 1 - (1 - r[i + 1] / r[i]) * ahead / 12
+    return round(value)
 
 
 def market_source(v: Vehicle) -> tuple[str, str]:
@@ -100,6 +113,32 @@ def projected_miles(c: Customer, o: Overrides) -> int:
     return round(c.vehicle.odometer_miles + annual_miles(c, o) * remaining_months(c) / 12)
 
 
+def advance(c: Customer, months: int) -> Customer:
+    """The customer `months` from now if nothing changes: more miles, more payments made, a lower loan payoff.
+    A past-due customer stays one payment behind (same days past due). Pair with `ahead(months)` for market value."""
+    if not months:
+        return c
+    k, rem = c.contract, remaining_months(c)
+    paid = min(months, rem)
+    miles = round(c.vehicle.odometer_miles + annual_miles(c, Overrides()) * months / 12)
+    upd: dict = {"payments_made": k.payments_made + paid}
+    if k.type == "lease":
+        upd["projected_miles_at_maturity"] = max(k.projected_miles_at_maturity or 0, miles)
+    else:
+        upd["payoff_amount"] = round(finance.remaining_balance(k.payoff_amount, k.apr, max(rem, 1), paid), 2)
+    return c.model_copy(update={"vehicle": c.vehicle.model_copy(update={"odometer_miles": miles}),
+                                "contract": k.model_copy(update=upd)})
+
+
+@contextmanager
+def ahead(months: int):
+    token = AHEAD.set(months)
+    try:
+        yield
+    finally:
+        AHEAD.reset(token)
+
+
 def payment_stress(c: Customer) -> bool:
     return c.contract.days_past_due > 0 or c.contract.status in (Status2.late, Status2.missed)
 
@@ -129,6 +168,21 @@ def ineligible_reason(option: OptionType, f: dict) -> str | None:
         if not OPS[rule["op"]](f[rule["field"]], rule["value"]):
             return rule["reason"]
     return None
+
+
+OP_WORDS = {"eq": "", "ne": "not ", "lt": "under ", "lte": "at most ", "gt": "over ", "gte": "at least "}
+
+
+def passed_rules(option: OptionType, f: dict) -> list[str]:
+    """Readable eligibility lines for an option that passed (deal packets show what was checked)."""
+    def fmt(field: str, v) -> str:
+        return usd(v) if field in ("equity", "payoff") else f"{v:g} pts" if field == "rate_drop" else str(v).lower()
+    lines = [f"{option.value.replace('_', ' ').capitalize()}: every eligibility rule passed"]
+    for r in RULES.get(option.value, []):
+        if r.get("only_for", f["contract_type"]) == f["contract_type"]:
+            lines.append(f"{r['field'].replace('_', ' ').capitalize()} {fmt(r['field'], f[r['field']])} "
+                         f"(needs {OP_WORDS[r['op']]}{fmt(r['field'], r['value'])})")
+    return lines
 
 
 def detect_situation(c: Customer) -> Situation:
@@ -194,8 +248,11 @@ def return_fees(c: Customer, o: Overrides) -> tuple[float, list[str]]:
     over, charge = finance.mileage_overage(projected_miles(c, o), k.annual_mile_allowance or 0, k.term_months,
                                            k.excess_mile_fee or 0)
     notes = [f"{over:,} miles over allowance × ${k.excess_mile_fee or 0:.2f} = {usd(charge)}"] if over else []
-    notes += [f"{usd(f['disposition'])} disposition fee", f"~{usd(f['wear_estimate'])} estimated wear (until photo pre-inspection)"]
-    return charge + f["disposition"] + f["wear_estimate"], notes
+    wear = WEAR.get(c.id)
+    notes += [f"{usd(f['disposition'])} disposition fee",
+              f"{usd(wear)} estimated wear from your photo pre-inspection" if wear is not None
+              else f"~{usd(f['wear_estimate'])} estimated wear (until photo pre-inspection)"]
+    return charge + f["disposition"] + (f["wear_estimate"] if wear is None else wear), notes
 
 
 # ---------- option builders ----------
@@ -269,7 +326,7 @@ def build_extend(c: Customer, o: Overrides) -> Scenario:
         notes = [f"Same {usd(k.monthly_payment)} payment for {m} more months",
                  f"About {extra_miles:,.0f} more miles over allowance (+{usd(extra)} at return)"]
         return scenario(OptionType.extend, f"Extend {m} months", k.monthly_payment, k.monthly_payment * m + fee + extra,
-                        equity(c), fee + extra, notes, m)
+                        equity(c), fee + extra, notes, m, true_cost=current_true_cost(c, o, k.monthly_payment))
     m, rem = t["loan_extension_months"], remaining_months(c)
     n = rem + m
     pmt = finance.monthly_payment(k.payoff_amount, k.apr, n)
@@ -289,11 +346,15 @@ def build_upgrade(c: Customer, o: Overrides) -> Scenario:
     pmt = finance.monthly_payment(financed, apr, n)
     vehicle = Vehicle(vin=f"SYNNEW{target.upper()}{cat['powertrain'].upper()}"[:17], model=target, year=TODAY.year + 1,
                       trim=cat["trim"], powertrain=cat["powertrain"], color="Supersonic Red", odometer_miles=12, mpg=cat["mpg"])
+    tc = true_cost(target, cat["powertrain"], cat["mpg"], pmt, annual_miles(c, o))
+    saved = current_true_cost(c, o, c.contract.monthly_payment).co2_kg_per_year - tc.co2_kg_per_year
     notes = [f"{usd(e)} equity applied to a {usd(cat['price'])} {target} {cat['trim']}",
              f"{usd(fee)} dealer fees, {usd(down)} down, {n} months at {apr:g}% APR",
              driving_note(c, o, cat["mpg"], cat["powertrain"]), market_note(c.vehicle), "Excludes sales tax and registration"]
+    if saved > 0:
+        notes.append(f"Saves {saved:,.0f} kg CO2/year vs your current {c.vehicle.model}")
     return scenario(OptionType.upgrade, f"Upgrade to {target} {cat['trim']}", pmt, pmt * n + down, e, fee, notes, n,
-                    target_vehicle=vehicle, true_cost=true_cost(target, cat["powertrain"], cat["mpg"], pmt, annual_miles(c, o)))
+                    target_vehicle=vehicle, true_cost=tc)
 
 
 def build_due_date_change(c: Customer, o: Overrides) -> Scenario:
@@ -303,7 +364,7 @@ def build_due_date_change(c: Customer, o: Overrides) -> Scenario:
     notes = [(f"Moves your due date from the {ordinal(k.due_day)} to the {ordinal(new_day)}, "
              f"right after your {c.pay_frequency.value} payday"), f"{usd(fee)} fee; one-time change"]
     return scenario(OptionType.due_date_change, f"Move due date to the {ordinal(new_day)}", k.monthly_payment,
-                    k.monthly_payment * n + fee, equity(c), fee, notes, n)
+                    k.monthly_payment * n + fee, equity(c), fee, notes, n, true_cost=current_true_cost(c, o, k.monthly_payment))
 
 
 def build_deferral(c: Customer, o: Overrides) -> Scenario:
@@ -312,7 +373,7 @@ def build_deferral(c: Customer, o: Overrides) -> Scenario:
     notes = [f"Moves one {usd(k.monthly_payment)} payment to the end of your loan", f"About {usd(extra)} extra interest",
              "Needs approval from a TFS specialist"]
     return scenario(OptionType.deferral, "Defer one payment", k.monthly_payment, k.monthly_payment * n + extra,
-                    equity(c), 0, notes, n)
+                    equity(c), 0, notes, n, true_cost=current_true_cost(c, o, k.monthly_payment))
 
 
 BUILDERS = {
@@ -324,8 +385,19 @@ BUILDERS = {
 
 
 def run(req: ScenarioRequest, c: Customer) -> ScenarioSet:
-    """All eligible options (do_nothing first), or exactly the requested ones with ineligible ones explained."""
-    o, f, fee = req.overrides or Overrides(), facts(c), late_fee(c)
+    """All eligible options (do_nothing first), or exactly the requested ones with ineligible ones explained.
+    `months_from_now` projects the customer forward (advance + ahead) before building."""
+    o = req.overrides or Overrides()
+    m = o.months_from_now or 0
+    with ahead(m):
+        ss = _run(req, advance(c, m), o)
+    if m:
+        ss.assumptions.append(f"Projected {m} months from now ({finance.add_months(TODAY, m).isoformat()}) if nothing changes")
+    return ss
+
+
+def _run(req: ScenarioRequest, c: Customer, o: Overrides) -> ScenarioSet:
+    f, fee = facts(c), late_fee(c)
     out = []
     # keep only applies to loans, where it equals the do_nothing baseline; list it only when asked for.
     for option in req.options or [x for x in BUILDERS if x != OptionType.keep]:

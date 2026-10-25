@@ -88,11 +88,11 @@ def test_action_tools_respect_autonomy():
     assert actions.STORE["audit"][-1].id == a.id
 
 
-def test_inspect_photos_is_labelled_minimal():
-    r = models.InspectionResult.model_validate(call("inspect_photos", {"customer_id": "CUST-MARIA",
-                                                                       "photos": [{"angle": "front"}]}))
+def test_inspect_photos_without_photos_is_the_standard_estimate(monkeypatch):
+    monkeypatch.setitem(actions.STORE, "inspections", [])
+    r = models.InspectionResult.model_validate(call("inspect_photos", {"customer_id": "CUST-MARIA"}))
     assert r.is_estimate and r.items == [] and r.total_estimated_charge == scenarios.CFG["fees"]["wear_estimate"]
-    assert "isn't available yet" in r.disclaimer
+    assert "No photo pre-inspection yet" in r.disclaimer
 
 
 @pytest.mark.parametrize("cid", ["CUST-MARIA", "CUST-JAMES", "CUST-PRIYA"])

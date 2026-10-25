@@ -122,3 +122,22 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Engine comps load in one Supabase query per engine** (`client.cached_only`, read once per process) instead of one lookup per model-year. The first request after startup went from 5.5 s to 0.65 s.
 - **PII:** the model gets the customer ID only (`get_customer` already masks names). Emails, phones, SSNs and card numbers are masked out of the customer's message before the model and the logs.
 
+
+## Stage B4
+- **Timing optimizer** (`engine/timing.py`): for months 0–6, `net_position = equity − fees added by waiting − payments made by then` (loans only). On a loan the principal comes back as equity, so waiting costs depreciation + interest. Lease payments before maturity are shared by every option and left out; past maturity the extra miles go over the allowance. A past-due account adds a late fee for each month it stays unresolved. Time depreciation takes this year's drop on the retention curve, pro-rated by month. Persona results for act now vs wait 3 months: Maria +$721, James +$820, Priya +$841. Best month is now for all three.
+- **`months_from_now`** projects the customer forward (`scenarios.advance`: miles, payments, loan payoff) and values the car that many months ahead. The offset sits in a ContextVar (`scenarios.ahead`) so the builders don't each need a new parameter. Allowed range: 0–24.
+- **True cost + CO2** is on every option where the customer keeps driving: lease extend, due-date change and deferral are new. Return, trade-in and lease do-nothing have no car going forward, so they have none. Upgrade lists the CO2 saved per year (James: 1,718 kg).
+- **Inspection vision** runs on the Claude Agent SDK, locked down like B3 with zero tools and `max_turns=1`. Images go as base64 content blocks in one streamed user message, with a 25 s timeout. The model only names angle, area (from a config list), position, issue, severity and a box. **Charges come from `[inspection.charges]`**, keyed by area and severity. Any output that mentions money, or has an unknown key, area, severity or a bad box, is rejected whole.
+  - Fallback: canned items from config for Maria (front bumper $150, rear-left door $250, wheel $0 = $400, matching the K3 mock), or the standard $400 estimate with no items for anyone else, each with its own disclaimer.
+  - Each run writes an `inspector` trace without the photos. Photos are read into memory and never stored or logged. Only the result is kept, in memory, and the latest total replaces the flat $400 wear estimate in the return option.
+  - Upload limits: 1–6 photos, JPEG/PNG/WebP, 5 MB each, angles default to front, rear, left, right, interior, wheels.
+  - The `inspect_photos` tool now takes only `customer_id` and returns the latest result, because the model can't upload photos.
+- **Deal packets are kept in memory** (`tools.actions.STORE`), not in Supabase, to keep the demo simple: no table and no migration. The packet holds the engine scenario for the option, readable passed-rule lines from `eligibility.toml`, and a dealer from the cached Google Maps search only, so it never spends SerpApi quota. Northeast has no cached dealers and gets 404. Pressing "Send" in the app is the customer's L3 consent, so status is `sent`, plus a `log_decision` audit entry. An ineligible option gets 422.
+- **NBA $ scoring** (`engine/nba.py`, weights in `[nba]`, replacing the `[opportunity]` placeholders):
+  - `retention_odds = logistic(situation intercept + equity + on-time payment share + days past due + option)`, clamped to 0.05–0.95.
+  - `expected_value = odds × 6% margin × payment × horizon`, plus `payoff × cure lift × 45% loss-given-default` (credit loss avoided) for customers in payment stress. Options with no payment use a config flat value.
+  - No protected attributes, no credit tier, no region.
+  - Persona results: Maria buyout $1,428 at 0.89, James upgrade $1,391 at 0.90, Priya due-date change $1,215 at 0.74.
+  - `reason` and `script` still use only engine numbers and pass the Guardian.
+- **`python-multipart`** is now a direct dependency (it was already in the lock through `mcp`).
+- **Live spend:** 2 SDK vision calls (7.9 s direct, 7.5 s over HTTP) and 0 SerpApi calls.

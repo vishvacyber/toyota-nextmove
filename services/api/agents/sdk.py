@@ -67,7 +67,7 @@ def _empty_cwd() -> str:
     return tempfile.mkdtemp(prefix="nextmove-agent-")
 
 
-def options(system: str, names: list[str], log: list[ToolCall]) -> ClaudeAgentOptions:
+def options(system: str, names: list[str], log: list[ToolCall], max_turns: int = 8) -> ClaudeAgentOptions:
     return ClaudeAgentOptions(
         system_prompt=system,
         model=MODEL,
@@ -79,15 +79,21 @@ def options(system: str, names: list[str], log: list[ToolCall]) -> ClaudeAgentOp
         setting_sources=[],                         # no user/project/local settings, CLAUDE.md or skills
         plugins=[],
         cwd=_empty_cwd(),
-        max_turns=8,
+        max_turns=max_turns,
         env={"CLAUDE_CONFIG_DIR": os.environ.get("CLAUDE_CONFIG_DIR", ""), "ANTHROPIC_API_KEY": ""},
     )
 
 
-async def _run(system: str, prompt: str, names: list[str]) -> Run:
+async def _stream(content: list[dict]):
+    yield {"type": "user", "message": {"role": "user", "content": content}, "parent_tool_use_id": None}
+
+
+async def _run(system: str, prompt: str | list[dict], names: list[str], max_turns: int = 8) -> Run:
+    """`prompt` is text, or content blocks (text + base64 images) sent as one streamed user message."""
     log: list[ToolCall] = []
     start, run = time.monotonic(), Run(text="")
-    async for m in query(prompt=prompt, options=options(system, names, log)):
+    async for m in query(prompt=prompt if isinstance(prompt, str) else _stream(prompt),
+                         options=options(system, names, log, max_turns)):
         if isinstance(m, SystemMessage) and m.subtype == "init":
             run.init_tools = list(m.data.get("tools", []))
         elif isinstance(m, AssistantMessage):
@@ -102,11 +108,12 @@ async def _run(system: str, prompt: str, names: list[str]) -> Run:
     return run
 
 
-async def run(system: str, prompt: str, names: list[str]) -> Run:
+async def run(system: str, prompt: str | list[dict], names: list[str], timeout: float = TIMEOUT_S,
+              max_turns: int = 8) -> Run:
     if not os.environ.get("CLAUDE_CONFIG_DIR"):
         raise SdkUnavailable("CLAUDE_CONFIG_DIR not set")
     os.environ.pop("ANTHROPIC_API_KEY", None)   # never bill an API key; the subscription login only
     try:
-        return await asyncio.wait_for(_run(system, prompt, names), TIMEOUT_S)
+        return await asyncio.wait_for(_run(system, prompt, names, max_turns), timeout)
     except (ClaudeSDKError, TimeoutError, OSError) as e:
         raise SdkUnavailable(type(e).__name__) from e
