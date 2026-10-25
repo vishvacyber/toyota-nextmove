@@ -1,5 +1,7 @@
 import { NextMoveScreen } from "@/components/next-move-screen";
 
-export default function KioskHome() {
-  return <NextMoveScreen />;
+// `?id=CUST-…` is the signed-in customer, and the deep link a QR code encodes.
+export default async function KioskHome({ searchParams }: { searchParams: Promise<{ id?: string | string[] }> }) {
+  const { id } = await searchParams;
+  return <NextMoveScreen customerId={typeof id === "string" && id ? id : undefined} />;
 }

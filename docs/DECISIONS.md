@@ -12,3 +12,13 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Kiosk idle reset** remounts the screen (re-blurring every number) and resets language to English. Sign-out comes with K1 sign-in.
 - **Framer Motion / GSAP / R3F not installed yet**: added in the stage that first uses them (K1, K4).
 - **Python 3.12 via uv**; Node 24, pnpm 10.
+
+## Stage K1 (customer app)
+- **Signed-in customer lives in `?id=CUST-…`** on `/app` and `/kiosk`. That URL is also the QR deep link, so there's no auth state to store. Sign-out (and the kiosk's 60s idle reset) goes back to the bare path, which shows sign-in. IDs are upper-cased, and `CUST-` is added if it's missing.
+- **No camera QR scanning** in K1: the phone's own camera opens the deep link. `BarcodeDetector` isn't available on desktop Safari or Firefox, so it would need a fallback anyway.
+- **Demo persona buttons** (Maria, James, Priya) on sign-in, for the dealership demo. All data is synthetic.
+- **The three steps (Situation → Next move → Why this) are client state**, not routes, so the kiosk remount resets them for free.
+- **The recommendation action button isn't wired yet.** The action center is K2.
+- **Engine copy (headline, labels, why, assumptions) stays English** until the Advisor returns localized text (B3). Everything in the UI around it is EN/ES.
+- **Kiosk blur covers every dollar figure**, including the why text, why-not reasons and assumptions (each one is its own tap). APR and miles stay visible.
+- **A Guardian `block` verdict hides the recommendation** and shows "a specialist is reviewing".

@@ -22,7 +22,7 @@ body {
   box-shadow: var(--nm-focus);
 }
 /* Kiosk touch targets ≥ 64px (CLAUDE.md). */
-.kiosk :is(button, a, select) {
+.kiosk :is(button, a, select, input) {
   min-height: var(--nm-touch-min);
   min-width: var(--nm-touch-min);
 }
