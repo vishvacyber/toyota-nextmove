@@ -12,7 +12,7 @@
 | **Customer phone app** | **[app.ToyotaNXT.tech](https://app.toyotanxt.tech)** | [toyota-nextmove-customer.vercel.app/app](https://toyota-nextmove-customer.vercel.app/app?id=CUST-SAMEERA2026) |
 | **TFS employee console** | **[console.ToyotaNXT.tech](https://console.toyotanxt.tech)** | [toyota-nextmove-console.vercel.app](https://toyota-nextmove-console.vercel.app) |
 
-The hosted copies run on recorded sample data, so they need no setup. The live engine, AI agents, voice calls and realtime run from the demo laptop (see [Run it](#run-it)).
+The hosted sites run on the **live** API from the demo laptop, reached through a Cloudflare tunnel: real engine numbers, AI answers, voice calls and realtime, while the laptop runs `pnpm dev` and `cloudflared tunnel --url http://localhost:8000`. The quick tunnel's address changes each time cloudflared restarts, so `NEXT_PUBLIC_API_URL` on both Vercel projects is updated and the sites redeployed. With the laptop off, set `NEXT_PUBLIC_API_MOCKING=enabled` on Vercel to fall back to sample data.
 
 > **Updated October 25, 2026:** every diagram, configuration table and statistic below was refreshed from the live code and API: the NXT name and Toyota Financial Services branding, the live voice agent with voice sign-in and rep takeover, the walk-in kiosk tools, real MSRPs for all six models, the new endpoints and tools, and current KPI, fairness and portfolio numbers.
 

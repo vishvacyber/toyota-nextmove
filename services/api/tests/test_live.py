@@ -250,3 +250,22 @@ def test_rep_voice_falls_back_to_the_next_tts_model(monkeypatch):
             {"inlineData": {"mimeType": "audio/l16; rate=24000", "data": b64.b64encode(b"\x01\x00").decode()}}]}}]})
     monkeypatch.setattr(httpx.AsyncClient, "post", post)
     assert asyncio.run(live.speak("Hi")) == b"\x01\x00" and tried == ["first", "second"]
+
+
+def test_hosted_sites_may_call_but_lookalikes_may_not(gemini):
+    from starlette.websockets import WebSocketDisconnect
+
+    from app.main import ALLOWED_ORIGIN
+    assert all(ALLOWED_ORIGIN.fullmatch(o) for o in ["https://toyotanxt.tech", "https://app.toyotanxt.tech",
+                                                       "https://console.toyotanxt.tech", "http://localhost:3000"])
+    assert not any(ALLOWED_ORIGIN.fullmatch(o) for o in ["https://toyotanxt.tech.evil.example", "http://toyotanxt.tech",
+                                                         "https://evil-toyotanxt.tech"])
+    gemini(said("Hi."), DONE)
+    with TestClient(app) as api, api.websocket_connect("/voice/CUST-HUNG2026", headers={"origin": "https://toyotanxt.tech"}) as ws:
+        until(ws, checked)
+        ws.send_json({"type": "hangup"})
+    with TestClient(app) as api, pytest.raises(WebSocketDisconnect), \
+            api.websocket_connect("/voice/CUST-HUNG2026", headers={"origin": "https://toyotanxt.tech.evil.example"}) as ws:
+        ws.receive_json()
+    r = TestClient(app).options("/customers", headers={"Origin": "https://app.toyotanxt.tech", "Access-Control-Request-Method": "GET"})
+    assert r.headers.get("access-control-allow-origin") == "https://app.toyotanxt.tech"

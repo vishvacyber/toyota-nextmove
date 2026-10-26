@@ -261,3 +261,9 @@ Simplest option that satisfies the spec, per CLAUDE.md.
 - **Trade-in year is a list (2010-2027)**, not a number box that priced half-typed years and spent live SerpApi searches.
 - **`normalizeId` moved to `lib/ids.ts`** with a test.
 - **NXT wordmark** (`NxtMark` in `packages/tokens`): even-weight geometric letters; the X's rising stroke runs past the letter into a Toyota-red arrow, for "next move". Shown beside the TFS lockup in both apps.
+
+## Hosted sites on the live API (laptop tunnel)
+- **Team decision:** voice and AI must work on toyotanxt.tech, with the API staying on the demo laptop (keeps the Claude backup login and costs nothing). A Cloudflare quick tunnel (`cloudflared tunnel --url http://localhost:8000`, no account) gives the laptop API a public https address; both Vercel projects build with `NEXT_PUBLIC_API_MOCKING=disabled`, `NEXT_PUBLIC_API_URL=<tunnel>` and the Supabase URL + publishable key for realtime.
+- **Allowed origins:** the API's CORS and the `/voice` origin check accept localhost, `https://toyotanxt.tech`, `https://app.toyotanxt.tech`, `https://console.toyotanxt.tech` and the two Vercel addresses (`ALLOWED_ORIGIN` in `app/main.py`, tested against look-alike domains).
+- **Limits, known and accepted:** the sites work only while the laptop runs `pnpm dev` and the tunnel; the quick tunnel's address changes on every restart (update the Vercel env and redeploy, or move the domain's DNS to Cloudflare for a fixed `api.toyotanxt.tech`); the API has no login, so anyone who finds the tunnel address can use it while it runs (generated data only; SerpApi live calls are capped at 10 per run); Gemini stays on the free tier, so answers fall back to Claude when it runs out.
+
